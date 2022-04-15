@@ -31,12 +31,12 @@ Evy.FileHandler = {
 		}
 		else if(
 			type.startsWith( 'text/' ) ||
-			(
-				ext === 'bat' &&
-				type === 'application/x-msdos-program'
-			)
+			( ext === 'bat' && type === 'application/x-msdos-program' )
 		) {
 			return new Evy.UI.TextView( parser );
+		}
+		else if( type.startsWith( 'video/' ) ) {
+			return new Evy.UI.VideoView( parser );
 		}
 
 		return new Evy.UI.BaseView( parser );

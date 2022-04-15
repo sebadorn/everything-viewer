@@ -1,6 +1,5 @@
 :root {
 	--button-radius: 4px;
-	--color-primary: rgb(124, 224, 12);
 	--font-size-ss: 16px;
 	--font-size-ms: 16px;
 	--font-ss: "Open Sans", Arial, sans-serif;
@@ -67,6 +66,38 @@ button[disabled] {
 }
 
 
+aside.app {
+	background-color: rgba(0, 0, 0, 0.1);
+	border-radius: 4px;
+	color: #ffffff;
+	left: 20px;
+	padding: 10px 20px;
+	position: absolute;
+	top: 20px;
+	z-index: 1;
+}
+
+	.app-name {
+		font-size: 18px;
+		font-style: italic;
+		font-weight: 600;
+		user-select: none;
+	}
+
+	.meta-container {
+		font-family: var(--font-ms);
+		margin-top: 10px;
+		max-width: 400px;
+	}
+
+		.meta-container td {
+			line-height: 20px;
+			padding-bottom: 5px;
+			vertical-align: top;
+			white-space: pre-wrap;
+		}
+
+
 #main-header {
 	align-content: center;
 	display: flex;
@@ -98,7 +129,6 @@ main {
 	flex-grow: 1;
 	justify-content: center;
 	margin: 0 auto;
-	overflow: auto;
 	width: 100%;
 }
 

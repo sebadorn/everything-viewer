@@ -56,7 +56,8 @@ const Evy = {
 			'ui/DropHandler.js',
 			'ui/views/BaseView.js',
 			'ui/views/ImageView.js',
-			'ui/views/TextView.js'
+			'ui/views/TextView.js',
+			'ui/views/VideoView.js'
 		];
 
 		const next = i => {

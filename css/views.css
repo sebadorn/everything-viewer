@@ -5,7 +5,8 @@
 
 .view-base,
 .view-image,
-.view-text {
+.view-text,
+.view-video {
 	display: flex;
 	justify-content: center;
 }
@@ -24,7 +25,12 @@
 	overflow: auto;
 }
 
-	.view-image image {
+	.view-image img {
+		background: repeating-conic-gradient(
+			rgba(0, 0, 0, 0.1) 0% 25%,
+			rgba(255, 255, 255, 0.1) 0% 50%
+		);
+		background-size: 20px 20px;
 		flex-grow: 0;
 		flex-shrink: 0;
 	}
@@ -39,10 +45,23 @@
 	}
 
 	.view-text div.code {
+		height: 100vh;
 		line-height: 23px;
 		max-width: 900px;
 		overflow: auto;
 		padding: 20px;
 		white-space: pre-wrap;
 		width: 100%;
+	}
+
+
+.view-video {
+	align-items: center;
+}
+
+	.view-video video {
+		flex-grow: 0;
+		flex-shrink: 0;
+		max-height: 100%;
+		max-width: 100%;
 	}

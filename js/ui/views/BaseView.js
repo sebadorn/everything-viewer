@@ -9,13 +9,57 @@ class BaseView {
 	/**
 	 *
 	 * @constructor
-	 * @param {Evy.BaseParser} parser
+	 * @param {Evy.BaseParser}  parser
+	 * @param {string}         [type="base"]
 	 */
-	constructor( parser ) {
+	constructor( parser, type = 'base' ) {
+		this.metaData = {};
 		this.parser = parser;
+		this.type = type;
 
-		this.node = document.createElement( 'div' );
-		this.node.className = 'view';
+		this.nodeView = document.createElement( 'div' );
+		this.nodeView.className = 'view view-' + this.type;
+
+		this.nodeMeta = document.createElement( 'div' );
+		this.nodeMeta.className = 'meta meta-' + this.type;
+	}
+
+
+	/**
+	 *
+	 */
+	buildMetaNode() {
+		if( Object.keys( this.metaData ).length === 0 ) {
+			return;
+		}
+
+		const table = document.createElement( 'table' );
+
+		for( const key in this.metaData ) {
+			const tdName = document.createElement( 'td' );
+			tdName.className = 'name';
+			tdName.textContent = key + ': ';
+
+			const tdValue = document.createElement( 'td' );
+			tdValue.className = 'value';
+			tdValue.textContent = this.metaData[key];
+
+			const row = document.createElement( 'tr' );
+			row.append( tdName, tdValue );
+
+			table.append( row );
+		}
+
+		this.nodeMeta.append( table );
+	}
+
+
+	/**
+	 *
+	 */
+	destroy() {
+		this.nodeView.remove();
+		this.nodeMeta.remove();
 	}
 
 
@@ -27,8 +71,7 @@ class BaseView {
 		const note = document.createElement( 'p' );
 		note.textContent = `No parser found for file of type "${this.parser.file.type}".`;
 
-		this.node.className += ' view-base';
-		this.node.appendChild( note );
+		this.nodeView.append( note );
 
 		cb();
 	}

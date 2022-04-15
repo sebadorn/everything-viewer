@@ -12,8 +12,21 @@ class ImageView extends Evy.UI.BaseView {
 	 * @param {Evy.BaseParser} parser
 	 */
 	constructor( parser ) {
-		super( parser );
-		this.node.className += ' view-image';
+		super( parser, 'image' );
+
+		this._objectURL = null;
+	}
+
+
+	/**
+	 *
+	 */
+	destroy() {
+		super.destroy();
+
+		if( this._objectURL ) {
+			URL.revokeObjectURL( this._objectURL );
+		}
 	}
 
 
@@ -28,11 +41,12 @@ class ImageView extends Evy.UI.BaseView {
 			image.height = image.naturalHeight;
 			image.width = image.naturalWidth;
 
-			this.node.appendChild( image );
+			this.nodeView.appendChild( image );
 			cb();
 		};
 
-		image.src = URL.createObjectURL( this.parser.file );
+		this._objectURL = URL.createObjectURL( this.parser.file );
+		image.src = this._objectURL;
 	}
 
 

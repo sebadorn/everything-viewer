@@ -12,8 +12,7 @@ class TextView extends Evy.UI.BaseView {
 	 * @param {Evy.BaseParser} parser
 	 */
 	constructor( parser ) {
-		super( parser );
-		this.node.className += ' view-text';
+		super( parser, 'text' );
 	}
 
 
@@ -25,7 +24,7 @@ class TextView extends Evy.UI.BaseView {
 		const block = document.createElement( 'div' );
 		block.className = 'code';
 
-		this.node.appendChild( block );
+		this.nodeView.appendChild( block );
 
 		this.parser.getText( text => {
 			block.textContent = text;
