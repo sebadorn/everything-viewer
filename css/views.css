@@ -1,0 +1,48 @@
+.view {
+	width: 100%;
+}
+
+
+.view-base,
+.view-image,
+.view-text {
+	display: flex;
+	justify-content: center;
+}
+
+
+.view-base {
+	align-items: center;
+	color: #c0c0c0;
+	font-family: var(--font-ms);
+	font-size: 24px;
+}
+
+
+.view-image {
+	align-items: center;
+	overflow: auto;
+}
+
+	.view-image image {
+		flex-grow: 0;
+		flex-shrink: 0;
+	}
+
+
+.view-text {}
+
+	.view-text textarea {
+		resize: none;
+		max-width: 900px;
+		width: 100%;
+	}
+
+	.view-text div.code {
+		line-height: 23px;
+		max-width: 900px;
+		overflow: auto;
+		padding: 20px;
+		white-space: pre-wrap;
+		width: 100%;
+	}
