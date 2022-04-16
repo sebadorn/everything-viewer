@@ -18,7 +18,7 @@ class BaseView {
 
 		this.metaData = {
 			Filename: this.parser.file.name,
-			Type: this.parser.file.type,
+			Type: this.parser.mimeType,
 			Filesize: Evy.UI.formatSize( this.parser.file.size )
 		};
 
@@ -74,7 +74,7 @@ class BaseView {
 	 */
 	load( cb ) {
 		const note = document.createElement( 'p' );
-		note.textContent = `No parser found for file of type "${this.parser.file.type}".`;
+		note.textContent = `No parser found for file of type "${this.parser.mimeType}".`;
 
 		this.buildMetaNode();
 

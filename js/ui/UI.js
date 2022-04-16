@@ -43,10 +43,10 @@ Evy.UI = {
 			return;
 		}
 
-		const parser = Evy.FileHandler.getParser( file );
-		const view = Evy.FileHandler.getView( parser );
-
-		view.load( () => this.update( view ) );
+		Evy.FileHandler.getParser( file, ( _err, parser ) => {
+			const view = Evy.FileHandler.getView( parser );
+			view.load( () => this.update( view ) );
+		} );
 	},
 
 

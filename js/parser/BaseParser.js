@@ -9,10 +9,12 @@ class BaseParser {
 	/**
 	 *
 	 * @constructor
-	 * @param {File} file
+	 * @param {File}   file
+	 * @param {string} mimeType
 	 */
-	constructor( file ) {
+	constructor( file, mimeType ) {
 		this.file = file;
+		this.mimeType = mimeType;
 	}
 
 
@@ -24,7 +26,7 @@ class BaseParser {
 		const ext = this.getFileExt();
 
 		const extIsType = [
-			'c', 'cpp',
+			'c', 'cc', 'cpp',
 			'css', 'scss',
 			'diff',
 			'htm', 'html',
@@ -34,7 +36,8 @@ class BaseParser {
 			'php',
 			'sh',
 			'vb',
-			'xml'
+			'xml',
+			'yml'
 		];
 
 		if( extIsType.includes( ext ) ) {
@@ -42,7 +45,10 @@ class BaseParser {
 		}
 
 		const extMap = {
+			'gitignore': 'ini',
 			'h': 'cpp',
+			'in': 'cpp',
+			'jshintrc': 'json',
 			'md': 'markdown',
 			'py': 'python',
 			'ts': 'typescript',
@@ -53,11 +59,23 @@ class BaseParser {
 			return extMap[ext];
 		}
 
+		// MIME type
+		const mimeMap = {
+			'application/x-shellscript': 'sh'
+		};
+
+		if( mimeMap[this.mimeType] ) {
+			return mimeMap[this.mimeType];
+		}
+
 		// Special cases
 		const name = this.file.name.toLowerCase();
 
 		if( name === 'cmakelists.txt' ) {
 			return 'cmake';
+		}
+		else if( name === 'makefile' ) {
+			return 'make';
 		}
 
 		return null;
@@ -72,8 +90,11 @@ class BaseParser {
 		const promise = this.file.arrayBuffer();
 
 		promise
-			.then( arrayBuffer => cb( arrayBuffer ) )
-			.catch( err => console.error( err ) );
+			.then( arrayBuffer => cb( null, arrayBuffer ) )
+			.catch( err => {
+				console.error( err );
+				cb( err, null );
+			} );
 	}
 
 
@@ -94,8 +115,11 @@ class BaseParser {
 		const promise = this.file.text();
 
 		promise
-			.then( text => cb( text ) )
-			.catch( err => console.error( err ) );
+			.then( text => cb( null, text ) )
+			.catch( err => {
+				console.error( err );
+				cb( err, null );
+			} );
 	}
 
 

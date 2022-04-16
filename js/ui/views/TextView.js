@@ -26,7 +26,7 @@ class TextView extends Evy.UI.BaseView {
 
 		this.nodeView.appendChild( block );
 
-		this.parser.getText( text => {
+		this.parser.getText( ( _err, text ) => {
 			block.textContent = text;
 
 			const lang = this.parser.detectLanguage();

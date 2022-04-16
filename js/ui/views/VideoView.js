@@ -43,8 +43,11 @@ class VideoView extends Evy.UI.BaseView {
 		video.volume = 0.25;
 
 		video.addEventListener( 'loadedmetadata', () => {
-			video.height = video.videoHeight;
-			video.width = video.videoWidth;
+			if( video.videoHeight ) {
+				video.height = video.videoHeight;
+			}
+
+			video.width = video.videoWidth || 900;
 
 			this.metaData.Dimensions = video.width + '×' + video.height + ' px';
 			this.metaData.Duration = Evy.UI.formatDuration( video.duration * 1000 );
