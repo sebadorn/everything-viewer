@@ -27,14 +27,18 @@ class BaseParser {
 
 		const extIsType = [
 			'c', 'cc', 'cpp',
+			'cmake',
 			'css', 'scss',
 			'diff',
+			'glsl',
 			'htm', 'html',
+			'ini',
 			'java',
 			'js', 'json',
 			'less',
 			'php',
 			'sh',
+			'tex',
 			'vb',
 			'xml',
 			'yml'
@@ -45,6 +49,7 @@ class BaseParser {
 		}
 
 		const extMap = {
+			'frag': 'glsl',
 			'gitignore': 'ini',
 			'h': 'cpp',
 			'in': 'cpp',
@@ -52,7 +57,8 @@ class BaseParser {
 			'md': 'markdown',
 			'py': 'python',
 			'ts': 'typescript',
-			'tsx': 'typescript'
+			'tsx': 'typescript',
+			'vert': 'glsl'
 		};
 
 		if( extMap[ext] ) {
@@ -71,7 +77,10 @@ class BaseParser {
 		// Special cases
 		const name = this.file.name.toLowerCase();
 
-		if( name === 'cmakelists.txt' ) {
+		if( name === '.gitmodules' ) {
+			return 'ini';
+		}
+		else if( name === 'cmakelists.txt' ) {
 			return 'cmake';
 		}
 		else if( name === 'makefile' ) {

@@ -189,9 +189,14 @@ Evy.FileHandler = {
 
 		// Extensions
 		const knownExts = [
+			'cfg',
+			'frag',
+			'glsl',
 			'in',
+			'ini',
 			'less',
-			'proto'
+			'proto',
+			'vert'
 		];
 
 		if( knownExts.includes( ext ) ) {
