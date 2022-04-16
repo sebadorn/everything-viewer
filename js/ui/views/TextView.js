@@ -36,6 +36,8 @@ class TextView extends Evy.UI.BaseView {
 				hljs.highlightElement( block );
 			}
 
+			this.buildMetaNode();
+
 			cb();
 		} );
 	}

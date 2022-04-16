@@ -40,19 +40,14 @@ class VideoView extends Evy.UI.BaseView {
 		const video = document.createElement( 'video' );
 		video.setAttribute( 'controls', '' );
 		video.setAttribute( 'preload', 'metadata' );
-		video.volume = 0.5;
+		video.volume = 0.25;
 
 		video.addEventListener( 'loadedmetadata', () => {
 			video.height = video.videoHeight;
 			video.width = video.videoWidth;
 
-			this.metaData = {
-				Filename: this.parser.file.name,
-				Type: this.parser.file.type,
-				Filesize: Evy.UI.formatSize( this.parser.file.size ),
-				Dimensions: video.width + '×' + video.height,
-				Duration: Evy.UI.formatDuration( video.duration * 1000 )
-			};
+			this.metaData.Dimensions = video.width + '×' + video.height + ' px';
+			this.metaData.Duration = Evy.UI.formatDuration( video.duration * 1000 );
 			this.buildMetaNode();
 
 			this.nodeView.appendChild( video );

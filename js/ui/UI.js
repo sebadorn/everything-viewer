@@ -14,7 +14,49 @@ Evy.UI = {
 	 *
 	 */
 	init() {
+		this._registerButtons();
 		this._registerDrop();
+	},
+
+
+	/**
+	 *
+	 * @private
+	 */
+	_handleButtonOpen() {
+		const input = document.createElement( 'input' );
+		input.type = 'file';
+		input.addEventListener( 'change', _ev => {
+			this._onFile( input.files[0] );
+		} );
+		input.click();
+	},
+
+
+	/**
+	 *
+	 * @private
+	 * @param {File} file
+	 */
+	_onFile( file ) {
+		if( !file ) {
+			return;
+		}
+
+		const parser = Evy.FileHandler.getParser( file );
+		const view = Evy.FileHandler.getView( parser );
+
+		view.load( () => this.update( view ) );
+	},
+
+
+	/**
+	 *
+	 * @private
+	 */
+	_registerButtons() {
+		const btnOpen = document.querySelector( '#file-open' );
+		btnOpen.addEventListener( 'click', () => this._handleButtonOpen() );
 	},
 
 
@@ -25,13 +67,7 @@ Evy.UI = {
 	_registerDrop() {
 		const area = document.querySelector( 'main .viewer' );
 		this._dropHandler = new this.DropHandler( area );
-
-		this._dropHandler.on( 'file', file => {
-			const parser = Evy.FileHandler.getParser( file );
-			const view = Evy.FileHandler.getView( parser );
-
-			view.load( () => this.update( view ) );
-		} );
+		this._dropHandler.on( 'file', file => this._onFile( file ) );
 	},
 
 
@@ -41,8 +77,15 @@ Evy.UI = {
 	 * @param {?Evy.UI.BaseView} view
 	 */
 	_updateMetaInfo( view ) {
-		const meta = document.querySelector( '.app .meta-container' );
-		meta.appendChild( view.nodeMeta );
+		const meta = document.querySelector( 'aside.meta-container' );
+
+		if( view ) {
+			meta.style.display = 'block';
+			meta.appendChild( view.nodeMeta );
+		}
+		else {
+			meta.style.display = '';
+		}
 	},
 
 
@@ -78,9 +121,9 @@ Evy.UI = {
 			return value;
 		}
 
-		let units = ['sec', 'min', 'h'];
-		let unit = 'ms';
 		let i = 0;
+		let units = ['ms', 'sec', 'min', 'h'];
+		let unit = units[i++];
 
 		if( duration >= 1000 ) {
 			duration /= 1000;
@@ -96,9 +139,9 @@ Evy.UI = {
 
 		let result = Math.floor( duration ) + unit;
 
-		if( unit !== 'ms' ) {
+		if( unit !== units[0] ) {
 			let remainder = duration - Math.floor( duration );
-			remainder *= 60;
+			remainder *= unit === units[1] ? 1000 : 60;
 
 			if( remainder > 0 ) {
 				result += ' ' + Math.floor( remainder ) + units[i - 2];

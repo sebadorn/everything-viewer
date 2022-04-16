@@ -13,9 +13,14 @@ class BaseView {
 	 * @param {string}         [type="base"]
 	 */
 	constructor( parser, type = 'base' ) {
-		this.metaData = {};
 		this.parser = parser;
 		this.type = type;
+
+		this.metaData = {
+			Filename: this.parser.file.name,
+			Type: this.parser.file.type,
+			Filesize: Evy.UI.formatSize( this.parser.file.size )
+		};
 
 		this.nodeView = document.createElement( 'div' );
 		this.nodeView.className = 'view view-' + this.type;
@@ -70,6 +75,8 @@ class BaseView {
 	load( cb ) {
 		const note = document.createElement( 'p' );
 		note.textContent = `No parser found for file of type "${this.parser.file.type}".`;
+
+		this.buildMetaNode();
 
 		this.nodeView.append( note );
 
