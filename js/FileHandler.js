@@ -51,7 +51,10 @@ Evy.FileHandler = {
 		this.getMimeType( file, ( _err, mimeType ) => {
 			let parser = null;
 
-			if( ext === 'eml' ) {
+			if( ext === 'csv' ) {
+				parser = new Evy.CSVParser( file, mimeType );
+			}
+			else if( ext === 'eml' ) {
 				parser = new Evy.EMLParser( file, mimeType );
 			}
 			else {
@@ -79,6 +82,9 @@ Evy.FileHandler = {
 			}
 			else if( type.startsWith( 'audio/' ) ) {
 				return new Evy.UI.AudioView( parser );
+			}
+			else if( parser instanceof Evy.CSVParser ) {
+				return new Evy.UI.CSVView( parser );
 			}
 			else if( parser instanceof Evy.EMLParser ) {
 				return new Evy.UI.EMLView( parser );

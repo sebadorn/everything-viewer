@@ -51,12 +51,14 @@ const Evy = {
 	_loadScripts( cb ) {
 		const scripts = [
 			'FileHandler.js',
-			'parser/BaseParser.js',
+			'parser/BaseParser.js', // Include first of the parsers.
+			'parser/CSVParser.js',
 			'parser/EMLParser.js',
 			'ui/UI.js',
 			'ui/DropHandler.js',
-			'ui/views/BaseView.js',
+			'ui/views/BaseView.js', // Include first of the views.
 			'ui/views/AudioView.js',
+			'ui/views/CSVView.js',
 			'ui/views/EMLView.js',
 			'ui/views/ImageView.js',
 			'ui/views/PDFView.js',

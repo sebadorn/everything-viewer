@@ -5,6 +5,7 @@
 
 .view-base,
 .view-audio,
+.view-csv,
 .view-eml,
 .view-image,
 .view-pdf,
@@ -33,6 +34,9 @@
 		max-width: 100%;
 		width: 900px;
 	}
+
+
+.view-csv {}
 
 
 .view-eml {
