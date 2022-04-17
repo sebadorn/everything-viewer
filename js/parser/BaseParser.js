@@ -23,12 +23,13 @@ class BaseParser {
 	 * @return {?string}
 	 */
 	detectLanguage() {
-		const ext = this.getFileExt();
+		const ext = Evy.FileHandler.getFileExt( this.file );
 
 		const extIsType = [
 			'c', 'cc', 'cpp',
 			'cmake',
 			'css', 'scss',
+			'dart',
 			'diff',
 			'glsl',
 			'htm', 'html',
@@ -41,7 +42,7 @@ class BaseParser {
 			'tex',
 			'vb',
 			'xml',
-			'yml'
+			'yaml', 'yml'
 		];
 
 		if( extIsType.includes( ext ) ) {
@@ -104,15 +105,6 @@ class BaseParser {
 				console.error( err );
 				cb( err, null );
 			} );
-	}
-
-
-	/**
-	 *
-	 * @return {string}
-	 */
-	getFileExt() {
-		return this.file.name.split( '.' ).pop().toLowerCase();
 	}
 
 

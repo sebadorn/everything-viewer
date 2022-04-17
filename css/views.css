@@ -5,6 +5,7 @@
 
 .view-base,
 .view-audio,
+.view-eml,
 .view-image,
 .view-pdf,
 .view-text,
@@ -32,6 +33,53 @@
 		max-width: 100%;
 		width: 900px;
 	}
+
+
+.view-eml {
+	align-items: center;
+	flex-direction: column;
+}
+
+	.view-eml iframe {
+		flex-shrink: 0;
+		height: 80vh;
+		max-width: 900px;
+		width: 100%;
+	}
+
+	.view-eml .headers {
+		background-color: #303030;
+		color: #f0f0f0;
+		height: 20vh;
+		max-width: 900px;
+		overflow: auto;
+		width: 100%;
+	}
+
+		.view-eml .headers table {
+			font-family: var(--font-ms);
+			font-size: var(--font-size-ms);
+			width: 100%;
+		}
+
+			.view-eml tr:nth-child( 2n + 1 ) {
+				background-color: rgba( 255, 255, 255, 0.05 );
+			}
+
+			.view-eml .headers td,
+			.view-eml .headers th {
+				line-height: 23px;
+				word-break: break-word;
+			}
+
+			.view-eml .header-name {
+				padding: 10px 10px 10px 20px;
+				width: 30%;
+			}
+
+			.view-eml .header-value {
+				padding: 10px 20px 10px 10px;
+			}
 
 
 .view-image {

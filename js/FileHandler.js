@@ -9,6 +9,16 @@ Evy.FileHandler = {
 
 	/**
 	 *
+	 * @param  {File}
+	 * @return {string}
+	 */
+	getFileExt( file ) {
+		return file.name.split( '.' ).pop().toLowerCase();
+	},
+
+
+	/**
+	 *
 	 * @param {File}     file
 	 * @param {function} cb
 	 */
@@ -36,8 +46,18 @@ Evy.FileHandler = {
 	 * @param {function} cb
 	 */
 	getParser( file, cb ) {
+		const ext = this.getFileExt( file );
+
 		this.getMimeType( file, ( _err, mimeType ) => {
-			const parser = new Evy.BaseParser( file, mimeType );
+			let parser = null;
+
+			if( ext === 'eml' ) {
+				parser = new Evy.EMLParser( file, mimeType );
+			}
+			else {
+				parser = new Evy.BaseParser( file, mimeType );
+			}
+
 			cb( null, parser );
 		} );
 	},
@@ -50,7 +70,7 @@ Evy.FileHandler = {
 	 */
 	getView( parser ) {
 		if( parser.mimeType || parser.file.size > 0 ) {
-			const ext = parser.getFileExt();
+			const ext = this.getFileExt( parser.file );
 			const type = parser.mimeType.toLowerCase();
 			const name = parser.file.name.toLowerCase();
 
@@ -59,6 +79,9 @@ Evy.FileHandler = {
 			}
 			else if( type.startsWith( 'audio/' ) ) {
 				return new Evy.UI.AudioView( parser );
+			}
+			else if( parser instanceof Evy.EMLParser ) {
+				return new Evy.UI.EMLView( parser );
 			}
 			else if( type.startsWith( 'image/' ) ) {
 				return new Evy.UI.ImageView( parser );
@@ -152,7 +175,10 @@ Evy.FileHandler = {
 	 */
 	isTypeText( type, ext, name ) {
 		// Generic types
-		if( type.startsWith( 'text/' ) ) {
+		if(
+			type.startsWith( 'text/' ) ||
+			type.startsWith( 'message/' )
+		) {
 			return true;
 		}
 
@@ -190,6 +216,7 @@ Evy.FileHandler = {
 		// Extensions
 		const knownExts = [
 			'cfg',
+			'dart',
 			'frag',
 			'glsl',
 			'in',

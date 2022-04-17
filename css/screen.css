@@ -70,6 +70,16 @@ button[disabled] {
 	opacity: 0.7;
 }
 
+table {
+	border-spacing: 0;
+}
+
+	td,
+	th {
+		text-align: left;
+		vertical-align: top;
+	}
+
 
 #main-header,
 .meta-container {
@@ -131,7 +141,9 @@ button[disabled] {
 	z-index: 2;
 }
 
-	.meta-container td {
+	.meta-container td,
+	.meta-container th {
+		font-weight: normal;
 		line-height: 20px;
 		padding-bottom: 5px;
 		vertical-align: top;
@@ -139,12 +151,13 @@ button[disabled] {
 		word-break: break-all;
 	}
 
-	.meta-container td.name {
+	.meta-container th.name {
 		color: #c0c0c0;
 		white-space: pre;
 	}
 
-	.meta-container tr:last-of-type td {
+	.meta-container tr:last-of-type td,
+	.meta-container tr:last-of-type th {
 		padding-bottom: 0;
 	}
 

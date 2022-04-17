@@ -41,16 +41,16 @@ class BaseView {
 		const table = document.createElement( 'table' );
 
 		for( const key in this.metaData ) {
-			const tdName = document.createElement( 'td' );
-			tdName.className = 'name';
-			tdName.textContent = key + ': ';
+			const name = document.createElement( 'th' );
+			name.className = 'name';
+			name.textContent = key + ': ';
 
-			const tdValue = document.createElement( 'td' );
-			tdValue.className = 'value';
-			tdValue.textContent = this.metaData[key];
+			const value = document.createElement( 'td' );
+			value.className = 'value';
+			value.textContent = this.metaData[key];
 
 			const row = document.createElement( 'tr' );
-			row.append( tdName, tdValue );
+			row.append( name, value );
 
 			table.append( row );
 		}

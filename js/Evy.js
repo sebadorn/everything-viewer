@@ -52,10 +52,12 @@ const Evy = {
 		const scripts = [
 			'FileHandler.js',
 			'parser/BaseParser.js',
+			'parser/EMLParser.js',
 			'ui/UI.js',
 			'ui/DropHandler.js',
 			'ui/views/BaseView.js',
 			'ui/views/AudioView.js',
+			'ui/views/EMLView.js',
 			'ui/views/ImageView.js',
 			'ui/views/PDFView.js',
 			'ui/views/TextView.js',
