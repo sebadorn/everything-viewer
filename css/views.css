@@ -2,6 +2,14 @@
 	width: 100%;
 }
 
+	.view .note {
+		color: #c0c0c0;
+		font-family: var(--font-ms);
+		font-size: 24px;
+		max-width: var(--max-width);
+		text-align: center;
+	}
+
 
 .view-base,
 .view-audio,
@@ -18,9 +26,6 @@
 
 .view-base {
 	align-items: center;
-	color: #c0c0c0;
-	font-family: var(--font-ms);
-	font-size: 24px;
 }
 
 
@@ -32,11 +37,35 @@
 		flex-grow: 0;
 		flex-shrink: 0;
 		max-width: 100%;
-		width: 900px;
+		width: var(--max-width);
 	}
 
 
 .view-csv {}
+
+	.view-csv table {
+		background-color: #303030;
+		color: #f0f0f0;
+		font-family: var(--font-ms);
+		max-width: var(--max-width);
+		padding: 10px 20px;
+		white-space: pre-wrap;
+		width: 100%;
+	}
+
+		.view-csv td {
+			border-bottom: 1px solid #505050;
+			padding: 4px 10px;
+		}
+
+		.view-csv th {
+			border-bottom: 1px solid #505050;
+			padding: 4px 10px;
+		}
+
+			.view-csv table span:hover {
+				background-color: #474747;
+			}
 
 
 .view-eml {
@@ -47,7 +76,7 @@
 	.view-eml iframe {
 		flex-shrink: 0;
 		height: 80vh;
-		max-width: 900px;
+		max-width: var(--max-width);
 		width: 100%;
 	}
 
@@ -55,7 +84,7 @@
 		background-color: #303030;
 		color: #f0f0f0;
 		height: 20vh;
-		max-width: 900px;
+		max-width: var(--max-width);
 		overflow: auto;
 		width: 100%;
 	}
@@ -106,7 +135,7 @@
 
 	.view-pdf iframe {
 		height: 100vh;
-		max-width: 900px;
+		max-width: var(--max-width);
 		width: 100%;
 	}
 
@@ -115,14 +144,14 @@
 
 	.view-text textarea {
 		resize: none;
-		max-width: 900px;
+		max-width: var(--max-width);
 		width: 100%;
 	}
 
 	.view-text div.code {
 		height: 100vh;
 		line-height: 23px;
-		max-width: 900px;
+		max-width: var(--max-width);
 		overflow: auto;
 		padding: 20px;
 		white-space: pre-wrap;

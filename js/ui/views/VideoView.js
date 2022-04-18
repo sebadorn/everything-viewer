@@ -42,22 +42,34 @@ class VideoView extends Evy.UI.BaseView {
 		video.setAttribute( 'preload', 'metadata' );
 		video.volume = 0.25;
 
-		video.addEventListener( 'loadedmetadata', () => {
-			if( video.videoHeight ) {
-				video.height = video.videoHeight;
-			}
+		if( !video.canPlayType( this.parser.mimeType ) ) {
+			const note = document.createElement( 'p' );
+			note.className = 'note';
+			note.textContent = `Playback for video format not supported: "${this.parser.mimeType}"`;
 
-			video.width = video.videoWidth || 900;
-
-			this.metaData.Dimensions = video.width + '×' + video.height + ' px';
-			this.metaData.Duration = Evy.UI.formatDuration( video.duration * 1000 );
 			this.buildMetaNode();
 
-			this.nodeView.appendChild( video );
+			this.nodeView.append( note );
 			cb();
-		} );
+		}
+		else {
+			video.addEventListener( 'loadedmetadata', () => {
+				if( video.videoHeight ) {
+					video.height = video.videoHeight;
+				}
 
-		video.src = this._objectURL;
+				video.width = video.videoWidth || 900;
+
+				this.metaData.Dimensions = video.width + '×' + video.height + ' px';
+				this.metaData.Duration = Evy.UI.formatDuration( video.duration * 1000 );
+				this.buildMetaNode();
+
+				this.nodeView.append( video );
+				cb();
+			} );
+
+			video.src = this._objectURL;
+		}
 	}
 
 

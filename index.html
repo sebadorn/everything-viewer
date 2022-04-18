@@ -8,20 +8,29 @@
 	<link rel="stylesheet" href="css/views.css" />
 	<link rel="stylesheet" href="css/stackoverflow-dark.min.css" />
 	<script src="js/Evy.js"></script>
-	<script src="js/lib/csv.min.js"></script>
-	<script src="js/lib/highlight.min.js"></script>
 	<script>
 		window.addEventListener( 'load', () => Evy.init() );
 	</script>
 </head>
 <body>
 
-<header id="main-header">
-	<span class="app-name">Everything Viewer</span>
-	<button id="file-open">Open…</button>
-</header>
+<aside id="main-header" class="window window-open" style="left: 20px; top: 20px;">
+	<header class="app-name">
+		<span class="toggle"></span>
+		Everything Viewer
+	</header>
+	<div class="content">
+		<button id="file-open">Open…</button>
+	</div>
+</aside>
 
-<aside class="meta-container"></aside>
+<aside class="meta-container window window-open" style="left: 20px; top: 116px;">
+	<header>
+		<span class="toggle"></span>
+		Information
+	</header>
+	<div class="content"></div>
+</aside>
 
 <main>
 	<div class="viewer">

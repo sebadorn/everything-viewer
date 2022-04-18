@@ -74,7 +74,8 @@ class BaseView {
 	 */
 	load( cb ) {
 		const note = document.createElement( 'p' );
-		note.textContent = `No parser found for file of type "${this.parser.mimeType}".`;
+		note.className = 'note';
+		note.textContent = `No parser found for file of type: "${this.parser.mimeType}"`;
 
 		this.buildMetaNode();
 

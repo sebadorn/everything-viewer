@@ -4,6 +4,8 @@
 	"esversion": 10,
 	"globals": {
 		"console": false,
-		"Evy": true
+		"CSV": false,
+		"Evy": true,
+		"hljs": false
 	}
 }

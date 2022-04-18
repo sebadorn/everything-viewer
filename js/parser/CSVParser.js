@@ -31,8 +31,11 @@ class CSVParser extends Evy.BaseParser {
 			const tag = i === 0 ? 'th' : 'td';
 
 			for( let j = 0; j < dataRow.length; j++ ) {
+				const span = document.createElement( 'span' );
+				span.textContent = dataRow[j];
+
 				const cell = document.createElement( tag );
-				cell.textContent = dataRow[j];
+				cell.append( span );
 
 				row.append( cell );
 			}
@@ -50,23 +53,24 @@ class CSVParser extends Evy.BaseParser {
 	 */
 	getHTML( cb ) {
 		this.getText( ( _err, text ) => {
-			const table = this.parse( text );
-			const html = this.buildHTML( table );
-
-			cb( null, html );
+			this.parse( text, table => {
+				const html = this.buildHTML( table );
+				cb( null, html );
+			} );
 		} );
 	}
 
 
 	/**
 	 *
-	 * @param  {string} text
-	 * @return {array}
+	 * @param {string}   text
+	 * @param {function} cb
 	 */
-	parse( text ) {
-		const table = CSV.parse( text );
-
-		return table;
+	parse( text, cb ) {
+		Evy.ensureScript( 'csv', () => {
+			const table = CSV.parse( text );
+			cb( table );
+		} );
 	}
 
 

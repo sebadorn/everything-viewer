@@ -1,6 +1,20 @@
 # Everything Viewer
 
-_(Cannot be used to view everything.)_
+Okay, not *everything*. The idea is to support different formats and maybe provide some additional information or tools.
+
+
+## Supported formats
+
+* Audio – *if the browser supports the format*
+* CSV
+* EML
+	* Show the email headers
+	* Show the email body with external resources removed
+* Image – *if the browser supports the format*
+* PDF – *if the browser supports it*
+* Text
+	* With syntax highlighting for selected languages
+* Video – *if the browser supports the format*
 
 
 ## Libraries

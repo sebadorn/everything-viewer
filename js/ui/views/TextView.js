@@ -29,16 +29,18 @@ class TextView extends Evy.UI.BaseView {
 		this.parser.getText( ( _err, text ) => {
 			block.textContent = text;
 
-			const lang = this.parser.detectLanguage();
+			Evy.ensureScript( 'hljs', () => {
+				const lang = this.parser.detectLanguage();
 
-			if( lang ) {
-				block.className += ' language-' + lang;
-				hljs.highlightElement( block );
-			}
+				if( lang ) {
+					block.className += ' language-' + lang;
+					hljs.highlightElement( block );
+				}
 
-			this.buildMetaNode();
+				this.buildMetaNode();
 
-			cb();
+				cb();
+			} );
 		} );
 	}
 

@@ -54,7 +54,7 @@ class DropHandler {
 	 * @param {File} file
 	 */
 	_handleFile( file ) {
-		console.log( '[DropHandler._handleFile] File dropped: ' + file.name );
+		console.log( '[Evy.UI.DropHandler._handleFile] File dropped: ' + file.name );
 
 		const listeners = this._events.file;
 

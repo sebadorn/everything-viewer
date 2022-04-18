@@ -16,6 +16,7 @@ Evy.UI = {
 	init() {
 		this._registerButtons();
 		this._registerDrop();
+		this._registerWindows();
 	},
 
 
@@ -74,6 +75,16 @@ Evy.UI = {
 	/**
 	 *
 	 * @private
+	 */
+	_registerWindows() {
+		const nodes = document.querySelectorAll( 'aside.window' );
+		nodes.forEach( node => new Evy.UI.Window( node ) );
+	},
+
+
+	/**
+	 *
+	 * @private
 	 * @param {?Evy.UI.BaseView} view
 	 */
 	_updateMetaInfo( view ) {
@@ -81,7 +92,7 @@ Evy.UI = {
 
 		if( view ) {
 			meta.style.display = 'block';
-			meta.appendChild( view.nodeMeta );
+			meta.querySelector( '.content' ).append( view.nodeMeta );
 		}
 		else {
 			meta.style.display = '';
@@ -105,7 +116,7 @@ Evy.UI = {
 
 		note.style.display = 'none';
 
-		viewer.appendChild( view.nodeView );
+		viewer.append( view.nodeView );
 	},
 
 

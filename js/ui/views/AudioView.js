@@ -42,15 +42,27 @@ class AudioView extends Evy.UI.BaseView {
 		audio.setAttribute( 'preload', 'metadata' );
 		audio.volume = 0.5;
 
-		audio.addEventListener( 'loadedmetadata', () => {
-			this.metaData.Duration = Evy.UI.formatDuration( audio.duration * 1000 );
+		if( !audio.canPlayType( this.parser.mimeType ) ) {
+			const note = document.createElement( 'p' );
+			note.className = 'note';
+			note.textContent = `Playback for audio format not supported: "${this.parser.mimeType}"`;
+
 			this.buildMetaNode();
 
-			this.nodeView.appendChild( audio );
+			this.nodeView.append( note );
 			cb();
-		} );
+		}
+		else {
+			audio.addEventListener( 'loadedmetadata', () => {
+				this.metaData.Duration = Evy.UI.formatDuration( audio.duration * 1000 );
+				this.buildMetaNode();
 
-		audio.src = this._objectURL;
+				this.nodeView.appendChild( audio );
+				cb();
+			} );
+
+			audio.src = this._objectURL;
+		}
 	}
 
 

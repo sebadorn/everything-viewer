@@ -134,7 +134,7 @@ Evy.FileHandler = {
 		if( !type ) {
 			if( typeFromExt ) {
 				type = typeFromExt;
-				console.log( `[FileHandler.headerToMimeType] Using "${type}" based on extension.` );
+				console.log( `[Evy.FileHandler.headerToMimeType] Using "${type}" based on extension.` );
 			}
 			else {
 				// Starts with "#!"
@@ -156,16 +156,16 @@ Evy.FileHandler = {
 				}
 
 				if( type ) {
-					console.log( `[FileHandler.headerToMimeType] Guessing "${header}" -> ${type}` );
+					console.log( `[Evy.FileHandler.headerToMimeType] Guessing "${header}" -> ${type}` );
 				}
 			}
 		}
 		else {
-			console.log( `[FileHandler.headerToMimeType] "${header}" -> ${type}` );
+			console.log( `[Evy.FileHandler.headerToMimeType] "${header}" -> ${type}` );
 		}
 
 		if( !type ) {
-			console.log( `[FileHandler.headerToMimeType] Failed to find MIME type for header "${header}".` );
+			console.log( `[Evy.FileHandler.headerToMimeType] Failed to find MIME type for header "${header}".` );
 		}
 
 		return type;

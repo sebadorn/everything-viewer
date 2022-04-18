@@ -1,9 +1,11 @@
 :root {
 	--button-radius: 4px;
+	--color-highlight: orange;
 	--font-size-ss: 16px;
 	--font-size-ms: 16px;
 	--font-ss: "Open Sans", Arial, sans-serif;
 	--font-ms: "DejaVu Sans Mono", monospace;
+	--max-width: 900px;
 }
 
 * {
@@ -81,37 +83,59 @@ table {
 	}
 
 
-#main-header,
-.meta-container {
+.window {
 	background-color: rgba(0, 0, 0, 0.3);
-	border-radius: 4px;
+	border-radius: 9px;
 	box-sizing: border-box;
 	color: #ffffff;
 	min-width: 350px;
+	overflow: hidden;
 	position: fixed;
-}
-
-#main-header {
-	align-content: center;
-	display: flex;
-	flex-grow: 0;
-	flex-shrink: 0;
-	height: 60px;
-	justify-content: space-between;
-	left: 20px;
-	padding: 10px 10px 10px 20px;
-	top: 20px;
 	z-index: 1;
 }
 
-	.app-name {
-		align-self: center;
-		font-size: 18px;
-		font-style: italic;
+	.window header {
+		align-items: center;
+		background-color: rgba(0, 0, 0, 0.2);
+		cursor: move;
+		display: flex;
 		font-weight: 600;
-		margin-right: 30px;
+		padding: 5px 10px;
 		user-select: none;
 	}
+
+		.window header .toggle {
+			cursor: default;
+			display: inline-block;
+			flex-grow: 0;
+			flex-shrink: 0;
+			font-family: var(--font-ms);
+			margin-right: 5px;
+			min-width: 20px;
+			text-align: center;
+		}
+
+		.window header .toggle:hover  {
+			color: var(--color-highlight);
+		}
+
+		.window header .toggle:before {
+			content: "▾";
+		}
+
+		.window.window-closed header .toggle:before {
+			content: "▸";
+		}
+
+	.window .content {
+		padding: 10px;
+	}
+
+	.window.window-closed .content {
+		display: none;
+	}
+
+#main-header {}
 
 	#main-header button {
 		border-right-width: 0;
@@ -132,14 +156,14 @@ table {
 
 .meta-container {
 	display: none;
-	font-family: var(--font-ms);
-	left: 20px;
-	margin-top: 10px;
 	max-width: 400px;
-	padding: 15px 20px;
-	top: 80px;
 	z-index: 2;
 }
+
+	.meta-container .content {
+		font-family: var(--font-ms);
+		font-size: 14px;
+	}
 
 	.meta-container td,
 	.meta-container th {
