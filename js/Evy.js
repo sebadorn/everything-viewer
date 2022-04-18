@@ -34,6 +34,7 @@ const Evy = {
 			'parser/BaseParser.js', // Include first of the parsers.
 			'parser/CSVParser.js',
 			'parser/EMLParser.js',
+			'parser/ZIPParser.js',
 			'ui/UI.js',
 			'ui/DropHandler.js',
 			'ui/Window.js',
@@ -44,7 +45,8 @@ const Evy = {
 			'ui/views/ImageView.js',
 			'ui/views/PDFView.js',
 			'ui/views/TextView.js',
-			'ui/views/VideoView.js'
+			'ui/views/VideoView.js',
+			'ui/views/ZIPView.js'
 		];
 
 		const next = i => {
@@ -80,6 +82,10 @@ const Evy = {
 			hljs: {
 				path: 'lib/highlight.min.js',
 				testLoaded: () => typeof hljs !== 'undefined'
+			},
+			jszip: {
+				path: 'lib/jszip.min.js',
+				testLoaded: () => typeof JSZip !== 'undefined'
 			}
 		};
 

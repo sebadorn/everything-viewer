@@ -19,5 +19,6 @@ Okay, not *everything*. The idea is to support different formats and maybe provi
 
 ## Libraries
 
-* https://github.com/vanillaes/csv
-* https://highlightjs.org/
+* CSV – https://github.com/vanillaes/csv
+* highlight.js – https://highlightjs.org/
+* JSZip – https://github.com/Stuk/jszip

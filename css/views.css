@@ -18,7 +18,8 @@
 .view-image,
 .view-pdf,
 .view-text,
-.view-video {
+.view-video,
+.view-zip {
 	display: flex;
 	justify-content: center;
 }
@@ -174,4 +175,23 @@
 		max-height: 100%;
 		max-width: 100%;
 		min-width: 300px;
+	}
+
+
+.view-zip {
+	align-items: center;
+}
+
+	.view-zip ol.zip {
+		background-color: #303030;
+		box-sizing: border-box;
+		color: #f0f0f0;
+		font-family: var(--font-ms);
+		height: 100vh;
+		list-style: none;
+		max-width: var(--max-width);
+		overflow: auto;
+		padding: 20px;
+		white-space: nowrap;
+		width: 100%;
 	}

@@ -57,6 +57,9 @@ Evy.FileHandler = {
 			else if( ext === 'eml' ) {
 				parser = new Evy.EMLParser( file, mimeType );
 			}
+			else if( mimeType === 'application/zip' ) {
+				parser = new Evy.ZIPParser( file, mimeType );
+			}
 			else {
 				parser = new Evy.BaseParser( file, mimeType );
 			}
@@ -88,6 +91,9 @@ Evy.FileHandler = {
 			}
 			else if( parser instanceof Evy.EMLParser ) {
 				return new Evy.UI.EMLView( parser );
+			}
+			else if( parser instanceof Evy.ZIPParser ) {
+				return new Evy.UI.ZIPView( parser );
 			}
 			else if( type.startsWith( 'image/' ) ) {
 				return new Evy.UI.ImageView( parser );
