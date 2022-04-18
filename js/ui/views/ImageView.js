@@ -44,7 +44,18 @@ class ImageView extends Evy.UI.BaseView {
 			this.metaData.Dimensions = image.naturalWidth + '×' + image.naturalHeight + ' px';
 			this.buildMetaNode();
 
-			this.nodeView.appendChild( image );
+			this.nodeView.append( image );
+			cb();
+		};
+
+		image.onerror = () => {
+			const note = document.createElement( 'p' );
+			note.className = 'note';
+			note.textContent = `Image format not supported: "${this.parser.mimeType}"`;
+
+			this.buildMetaNode();
+
+			this.nodeView.append( note );
 			cb();
 		};
 
