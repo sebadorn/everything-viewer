@@ -23,17 +23,62 @@ class ZIPParser extends Evy.BaseParser {
 	 * @return {?HTMLDocument}
 	 */
 	buildHTML( zip ) {
-		const list = document.createElement( 'ol' );
-		list.className = 'zip';
+		const table = document.createElement( 'table' );
+		table.className = 'zip';
 
-		for( const name in zip.files ) {
-			const item = document.createElement( 'li' );
-			item.textContent = name;
+		const name = document.createElement( 'th' );
+		name.className = 'name';
+		name.textContent = 'Name';
 
-			list.append( item );
+		const size = document.createElement( 'th' );
+		size.className = 'size';
+		size.textContent = 'Size';
+
+		const date = document.createElement( 'th' );
+		date.className = 'date';
+		date.textContent = 'Date';
+
+		const headRow = document.createElement( 'tr' );
+		headRow.append( name, size, date );
+
+		table.append( headRow );
+
+		for( const key in zip.files ) {
+			const file = zip.files[key];
+
+			let fileName = file.name;
+			let depth = ( file.name.match( /\//g ) || [] ).length;
+
+			if( file.dir ) {
+				depth--;
+				fileName = fileName.split( '/' ).slice( -2, -1 ) + '/';
+			}
+			else {
+				fileName = fileName.split( '/' ).pop();
+			}
+
+			const levelIndent = '    '.repeat( depth );
+
+			const name = document.createElement( 'td' );
+			name.className = 'name';
+			name.textContent = levelIndent + fileName;
+
+			const size = document.createElement( 'td' );
+			size.className = 'size';
+			size.textContent = file.dir ? '' : Evy.UI.formatSize( file._data.uncompressedSize );
+
+			const date = document.createElement( 'td' );
+			date.className = 'date';
+			date.textContent = Evy.UI.formatDate( file.date );
+
+			const row = document.createElement( 'tr' );
+			row.className = file.dir ? 'zip-dir' : 'zip-file';
+			row.append( name, size, date );
+
+			table.append( row );
 		}
 
-		return list;
+		return table;
 	}
 
 

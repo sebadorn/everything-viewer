@@ -122,6 +122,27 @@ Evy.UI = {
 
 	/**
 	 *
+	 * @param  {Date} date
+	 * @return {string}
+	 */
+	formatDate( date ) {
+		if( !date ) {
+			return '';
+		}
+
+		let year = date.getUTCFullYear();
+		let month = date.getUTCMonth() + 1;
+		let day = date.getUTCDate();
+
+		month = String( month ).padStart( 2, '0' );
+		day = String( day ).padStart( 2, '0' );
+
+		return `${year}-${month}-${day}`;
+	},
+
+
+	/**
+	 *
 	 * @param  {number} value - Duration in milliseconds.
 	 * @return {string}
 	 */

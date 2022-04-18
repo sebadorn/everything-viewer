@@ -6,6 +6,7 @@
 		"console": false,
 		"CSV": false,
 		"Evy": true,
-		"hljs": false
+		"hljs": false,
+		"JSZip": false
 	}
 }

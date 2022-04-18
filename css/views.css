@@ -182,16 +182,27 @@
 	align-items: center;
 }
 
-	.view-zip ol.zip {
+	.view-zip .zip {
 		background-color: #303030;
 		box-sizing: border-box;
 		color: #f0f0f0;
 		font-family: var(--font-ms);
 		height: 100vh;
-		list-style: none;
 		max-width: var(--max-width);
 		overflow: auto;
 		padding: 20px;
 		white-space: nowrap;
 		width: 100%;
 	}
+
+		.zip .name {
+			white-space: pre;
+		}
+
+		.zip-dir .name {
+			font-weight: 600;
+		}
+
+		.zip td.size {
+			text-align: right;
+		}
