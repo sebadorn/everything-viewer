@@ -53,9 +53,9 @@ class CSVParser extends Evy.BaseParser {
 	 */
 	getHTML( cb ) {
 		this.getText( ( _err, text ) => {
-			this.parse( text, table => {
-				const html = this.buildHTML( table );
-				cb( null, html );
+			this.parse( text, tableData => {
+				const html = this.buildHTML( tableData );
+				cb( null, html, tableData );
 			} );
 		} );
 	}
@@ -68,8 +68,8 @@ class CSVParser extends Evy.BaseParser {
 	 */
 	parse( text, cb ) {
 		Evy.ensureScript( 'csv', () => {
-			const table = CSV.parse( text );
-			cb( table );
+			const tableData = CSV.parse( text );
+			cb( tableData );
 		} );
 	}
 
