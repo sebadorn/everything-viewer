@@ -1,5 +1,5 @@
 :root {
-	--button-radius: 4px;
+	--button-radius: 6px;
 	--color-highlight: orange;
 	--font-size-ss: 16px;
 	--font-size-ms: 16px;
@@ -46,21 +46,18 @@ div.code {
 }
 
 button {
-	background-color: #a0a0a0;
-	background-image: linear-gradient(0deg, transparent, rgba(255, 255, 255, 0.3));
-	border: 1px solid #505050;
-	box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-	color: #202020;
-	font-family: var(--font-ss);
-	font-size: var(--font-size-ss);
-	padding: 4px 10px;
+	background-color: #842f4f;
+	border: 0;
+	border-radius: var(--button-radius);
+	box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+	color: #f0f0f0;
+	font-family: var(--font-ms);
+	padding: 6px 18px;
 	text-align: center;
-	text-shadow: 0px 1px 1px rgba(255, 255, 255, 0.4);
 }
 
 button:hover {
-	background-color: #b0b0b0;
-	box-shadow: 0 0 2px rgba(255, 255, 255, 0.1);
+	box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.3);
 	cursor: pointer;
 }
 
@@ -99,6 +96,8 @@ table {
 		background-color: rgba(0, 0, 0, 0.2);
 		cursor: move;
 		display: flex;
+		font-family: var(--font-ms);
+		font-size: 14px;
 		font-weight: 600;
 		padding: 5px 10px;
 		user-select: none;
@@ -109,7 +108,6 @@ table {
 			display: inline-block;
 			flex-grow: 0;
 			flex-shrink: 0;
-			font-family: var(--font-ms);
 			margin-right: 5px;
 			min-width: 20px;
 			text-align: center;
@@ -138,19 +136,7 @@ table {
 #main-header {}
 
 	#main-header button {
-		border-right-width: 0;
-		min-width: 100px;
-	}
-
-	#main-header button:first-of-type {
-		border-bottom-left-radius: var(--button-radius);
-		border-top-left-radius: var(--button-radius);
-	}
-
-	#main-header button:last-of-type {
-		border-bottom-right-radius: var(--button-radius);
-		border-right-width: 1px;
-		border-top-right-radius: var(--button-radius);
+		min-width: 60px;
 	}
 
 

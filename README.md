@@ -15,6 +15,8 @@ Okay, not *everything*. The idea is to support different formats and maybe provi
 * Text
 	* With syntax highlighting for selected languages
 * Video – *if the browser supports the format*
+* ZIP
+	* Show a list of the directory structure and files
 
 
 ## Libraries

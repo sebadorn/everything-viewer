@@ -160,6 +160,13 @@ Evy.FileHandler = {
 				) {
 					type = 'text/plain';
 				}
+				else if(
+					header.startsWith( '504b34' ) ||
+					header.startsWith( '504b0304' ) ||
+					header.startsWith( '504b0506' )
+				) {
+					type = 'application/zip';
+				}
 
 				if( type ) {
 					console.log( `[Evy.FileHandler.headerToMimeType] Guessing "${header}" -> ${type}` );

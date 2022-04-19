@@ -37,6 +37,7 @@ class TextView extends Evy.UI.BaseView {
 					hljs.highlightElement( block );
 				}
 
+				this.metaData.Lines = ( text.match( /\n/g ) || [] ).length;
 				this.buildMetaNode();
 
 				cb();
