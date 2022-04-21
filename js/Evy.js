@@ -83,6 +83,10 @@ const Evy = {
 				path: 'lib/highlight.min.js',
 				testLoaded: () => typeof hljs !== 'undefined'
 			},
+			ical: {
+				path: 'lib/ical.min.js',
+				testLoaded: () => typeof ICAL !== 'undefined'
+			},
 			jszip: {
 				path: 'lib/jszip.min.js',
 				testLoaded: () => typeof JSZip !== 'undefined'

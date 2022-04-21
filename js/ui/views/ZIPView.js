@@ -30,7 +30,11 @@ class ZIPView extends Evy.UI.BaseView {
 
 			this.buildMetaNode();
 
-			this.nodeView.append( html );
+			const wrap = document.createElement( 'div' );
+			wrap.className = 'wrap';
+			wrap.append( html );
+
+			this.nodeView.append( wrap );
 
 			cb();
 		} );

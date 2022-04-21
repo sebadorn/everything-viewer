@@ -23,4 +23,5 @@ Okay, not *everything*. The idea is to support different formats and maybe provi
 
 * CSV – https://github.com/vanillaes/csv
 * highlight.js – https://highlightjs.org/
+* ical.js – https://github.com/mozilla-comm/ical.js
 * JSZip – https://github.com/Stuk/jszip

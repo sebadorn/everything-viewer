@@ -39,6 +39,7 @@ class ZIPParser extends Evy.BaseParser {
 		date.textContent = 'Date';
 
 		const headRow = document.createElement( 'tr' );
+		headRow.className = 'head';
 		headRow.append( name, size, date );
 
 		table.append( headRow );
@@ -57,11 +58,19 @@ class ZIPParser extends Evy.BaseParser {
 				fileName = fileName.split( '/' ).pop();
 			}
 
-			const levelIndent = '    '.repeat( depth );
+			const levelIndent = '····'.repeat( depth );
+
+			const indent = document.createElement( 'span' );
+			indent.className = 'indent';
+			indent.textContent = levelIndent;
+
+			const text = document.createElement( 'span' );
+			text.className = 'text';
+			text.textContent = fileName;
 
 			const name = document.createElement( 'td' );
 			name.className = 'name';
-			name.textContent = levelIndent + fileName;
+			name.append( indent, text );
 
 			const size = document.createElement( 'td' );
 			size.className = 'size';
