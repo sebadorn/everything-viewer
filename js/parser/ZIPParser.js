@@ -20,7 +20,7 @@ class ZIPParser extends Evy.BaseParser {
 	/**
 	 *
 	 * @param  {JSZip} zip
-	 * @return {?HTMLDocument}
+	 * @return {HTMLElement}
 	 */
 	buildHTML( zip ) {
 		const table = document.createElement( 'table' );

@@ -34,6 +34,7 @@ const Evy = {
 			'parser/BaseParser.js', // Include first of the parsers.
 			'parser/CSVParser.js',
 			'parser/EMLParser.js',
+			'parser/ICalParser.js',
 			'parser/ZIPParser.js',
 			'ui/UI.js',
 			'ui/DropHandler.js',
@@ -42,6 +43,7 @@ const Evy = {
 			'ui/views/AudioView.js',
 			'ui/views/CSVView.js',
 			'ui/views/EMLView.js',
+			'ui/views/ICalView.js',
 			'ui/views/ImageView.js',
 			'ui/views/PDFView.js',
 			'ui/views/TextView.js',

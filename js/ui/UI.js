@@ -143,6 +143,30 @@ Evy.UI = {
 
 	/**
 	 *
+	 * @param  {Date} date
+	 * @return {string}
+	 */
+	formatDateTime( date ) {
+		if( !date ) {
+			return '';
+		}
+
+		const dateStr = this.formatDate( date );
+
+		let hours = date.getUTCHours();
+		let minutes = date.getUTCMinutes();
+		let seconds = date.getUTCSeconds();
+
+		hours = String( hours ).padStart( 2, '0' );
+		minutes = String( minutes ).padStart( 2, '0' );
+		seconds = String( seconds ).padStart( 2, '0' );
+
+		return dateStr + ` ${hours}:${minutes}:${seconds}`;
+	},
+
+
+	/**
+	 *
 	 * @param  {number} value - Duration in milliseconds.
 	 * @return {string}
 	 */

@@ -189,13 +189,13 @@ main {
 
 		.viewer .note-dragdrop {
 			color: rgba(255, 255, 255, 0.3);
-			font-size: 36px;
-			font-weight: 600;
+			font-family: var(--font-ms);
+			font-size: 32px;
 			height: 60px;
 			letter-spacing: -1px;
 			position: relative;
 			text-align: center;
 			text-transform: uppercase;
-			top: 40%;
+			top: 45%;
 			user-select: none;
 		}
