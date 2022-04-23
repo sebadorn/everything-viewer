@@ -7,6 +7,7 @@
 		"CSV": false,
 		"Evy": true,
 		"hljs": false,
+		"ICAL": false,
 		"JSZip": false
 	}
 }

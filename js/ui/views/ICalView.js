@@ -21,8 +21,7 @@ class ICalView extends Evy.UI.BaseView {
 	 * @param {function} cb
 	 */
 	load( cb ) {
-		this.parser.getHTML( ( _err, html, data ) => {
-			this.metaData.Events = data[2].length;
+		this.parser.getHTML( ( _err, html ) => {
 			this.buildMetaNode();
 
 			this.nodeView.append( html );

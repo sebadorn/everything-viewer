@@ -57,7 +57,10 @@ Evy.FileHandler = {
 			else if( ext === 'eml' ) {
 				parser = new Evy.EMLParser( file, mimeType );
 			}
-			else if( ext === 'ics' || ext === 'ical' ) {
+			else if(
+				mimeType === 'text/calendar' ||
+				['ical', 'ics', 'ifb', 'vcs'].includes( ext )
+			) {
 				parser = new Evy.ICalParser( file, mimeType );
 			}
 			else if( mimeType === 'application/zip' ) {
