@@ -35,6 +35,7 @@ const Evy = {
 			'parser/CSVParser.js',
 			'parser/EMLParser.js',
 			'parser/ICalParser.js',
+			'parser/VCFParser.js',
 			'parser/ZIPParser.js',
 			'ui/UI.js',
 			'ui/DropHandler.js',
@@ -47,6 +48,7 @@ const Evy = {
 			'ui/views/ImageView.js',
 			'ui/views/PDFView.js',
 			'ui/views/TextView.js',
+			'ui/views/VCFView.js',
 			'ui/views/VideoView.js',
 			'ui/views/ZIPView.js'
 		];
@@ -92,6 +94,10 @@ const Evy = {
 			jszip: {
 				path: 'lib/jszip.min.js',
 				testLoaded: () => typeof JSZip !== 'undefined'
+			},
+			vcf: {
+				path: 'lib/vcardjs-0.3.min.js',
+				testLoaded: () => typeof VCF !== 'undefined'
 			}
 		};
 

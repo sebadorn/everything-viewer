@@ -122,6 +122,26 @@ Evy.UI = {
 
 	/**
 	 *
+	 * @param  {string} name
+	 * @param  {string} value
+	 * @return {HTMLElement}
+	 */
+	buildTableRow( name, value ) {
+		const th = document.createElement( 'th' );
+		th.textContent = name;
+
+		const td = document.createElement( 'td' );
+		td.textContent = value;
+
+		const row = document.createElement( 'tr' );
+		row.append( th, td );
+
+		return row;
+	},
+
+
+	/**
+	 *
 	 * @param  {Date} date
 	 * @return {string}
 	 */

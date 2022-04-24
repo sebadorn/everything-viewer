@@ -63,6 +63,9 @@ Evy.FileHandler = {
 			) {
 				parser = new Evy.ICalParser( file, mimeType );
 			}
+			else if( ext === 'vcf' || mimeType === 'text/vcard' ) {
+				parser = new Evy.VCFParser( file, mimeType );
+			}
 			else if( mimeType === 'application/zip' ) {
 				parser = new Evy.ZIPParser( file, mimeType );
 			}
@@ -106,6 +109,9 @@ Evy.FileHandler = {
 			}
 			else if( type.startsWith( 'image/' ) ) {
 				return new Evy.UI.ImageView( parser );
+			}
+			else if( parser instanceof Evy.VCFParser ) {
+				return new Evy.UI.VCFView( parser );
 			}
 			else if( type.startsWith( 'video/' ) ) {
 				return new Evy.UI.VideoView( parser );

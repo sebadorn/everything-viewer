@@ -86,7 +86,7 @@ class ICalParser extends Evy.BaseParser {
 
 			if( vevent.duration ) {
 				const value = vevent.duration.toSeconds() * 1000;
-				const row = this._buildHTMLTableRow( 'Duration', Evy.UI.formatDuration( value ) );
+				const row = Evy.UI.buildTableRow( 'Duration', Evy.UI.formatDuration( value ) );
 				table.append( row );
 			}
 		}
@@ -113,7 +113,7 @@ class ICalParser extends Evy.BaseParser {
 					sep = ' / ';
 				}
 
-				const row = this._buildHTMLTableRow( 'Period', '' );
+				const row = Evy.UI.buildTableRow( 'Period', '' );
 				const cell = row.querySelector( 'td' );
 				cell.innerHTML = '';
 				cell.append( nodeStart, sep, nodeEnd );
@@ -134,7 +134,7 @@ class ICalParser extends Evy.BaseParser {
 		// Location
 
 		if( vevent.location ) {
-			const row = this._buildHTMLTableRow( 'Location', vevent.location );
+			const row = Evy.UI.buildTableRow( 'Location', vevent.location );
 			row.className = 'location';
 			table.append( row );
 		}
@@ -150,7 +150,7 @@ class ICalParser extends Evy.BaseParser {
 				orgName = orgData[1].cn;
 			}
 
-			const row = this._buildHTMLTableRow( 'Organizer', orgName );
+			const row = Evy.UI.buildTableRow( 'Organizer', orgName );
 			row.className = 'organizer';
 
 			if( vevent.organizer.startsWith( 'mailto:' ) ) {
@@ -170,7 +170,7 @@ class ICalParser extends Evy.BaseParser {
 			Array.isArray( vevent.attendees ) &&
 			vevent.attendees.length > 0
 		) {
-			const row = this._buildHTMLTableRow( 'Attendees', '' );
+			const row = Evy.UI.buildTableRow( 'Attendees', '' );
 			row.className = 'attendees';
 
 			const list = document.createElement( 'ul' );
@@ -205,14 +205,14 @@ class ICalParser extends Evy.BaseParser {
 		const comment = this._getParameterValue( vevent, 'comment' );
 
 		if( comment ) {
-			const row = this._buildHTMLTableRow( 'Comment', comment );
+			const row = Evy.UI.buildTableRow( 'Comment', comment );
 			table.append( row );
 		}
 
 		const url = this._getParameterValue( vevent, 'url' );
 
 		if( url ) {
-			const row = this._buildHTMLTableRow( 'URL', url );
+			const row = Evy.UI.buildTableRow( 'URL', url );
 
 			const link = document.createElement( 'a' );
 			link.href = url;
@@ -245,27 +245,6 @@ class ICalParser extends Evy.BaseParser {
 	/**
 	 *
 	 * @private
-	 * @param  {string} name
-	 * @param  {string} value
-	 * @return {HTMLElement}
-	 */
-	_buildHTMLTableRow( name, value ) {
-		const th = document.createElement( 'th' );
-		th.textContent = name;
-
-		const td = document.createElement( 'td' );
-		td.textContent = value;
-
-		const row = document.createElement( 'tr' );
-		row.append( th, td );
-
-		return row;
-	}
-
-
-	/**
-	 *
-	 * @private
 	 * @param  {string}    name
 	 * @param  {ICAL.Time} icalTime
 	 * @return {HTMLElement}
@@ -273,7 +252,7 @@ class ICalParser extends Evy.BaseParser {
 	_buildHTMLTableRowTime( name, icalTime ) {
 		const select = this._buildTimeSelect( icalTime );
 
-		const row = this._buildHTMLTableRow( name, '' );
+		const row = Evy.UI.buildTableRow( name, '' );
 		row.className = name.toLowerCase();
 		row.querySelector( 'td' ).append( select );
 
@@ -310,35 +289,35 @@ class ICalParser extends Evy.BaseParser {
 		const trigger = alarm.find( a => a[0] === 'trigger' );
 
 		if( trigger && trigger[3] ) {
-			const row = this._buildHTMLTableRow( 'Trigger', trigger[3] );
+			const row = Evy.UI.buildTableRow( 'Trigger', trigger[3] );
 			table.append( row );
 		}
 
 		const duration = alarm.find( a => a[0] === 'duration' );
 
 		if( duration && duration[3] ) {
-			const row = this._buildHTMLTableRow( 'Duration', duration[3] );
+			const row = Evy.UI.buildTableRow( 'Duration', duration[3] );
 			table.append( row );
 		}
 
 		const repeat = alarm.find( a => a[0] === 'repeat' );
 
 		if( repeat && repeat[3] ) {
-			const row = this._buildHTMLTableRow( 'Repeat', repeat[3] );
+			const row = Evy.UI.buildTableRow( 'Repeat', repeat[3] );
 			table.append( row );
 		}
 
 		const action = alarm.find( a => a[0] === 'action' );
 
 		if( action && action[3] ) {
-			const row = this._buildHTMLTableRow( 'Action', action[3] );
+			const row = Evy.UI.buildTableRow( 'Action', action[3] );
 			table.append( row );
 		}
 
 		const attach = alarm.find( a => a[0] === 'attach' );
 
 		if( attach && attach[3] ) {
-			const row = this._buildHTMLTableRow( 'Attach', attach[3] );
+			const row = Evy.UI.buildTableRow( 'Attach', attach[3] );
 			table.append( row );
 		}
 

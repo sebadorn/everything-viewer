@@ -19,6 +19,7 @@
 .view-image,
 .view-pdf,
 .view-text,
+.view-vcf,
 .view-video,
 .view-zip {
 	display: flex;
@@ -269,6 +270,49 @@
 		white-space: pre;
 		width: 100%;
 	}
+
+
+.view-vcf {
+	align-items: center;
+}
+
+	.view-vcf .container {
+		max-width: 600px;
+		width: 100%;
+	}
+
+		.view-vcf .vcard {
+			background-color: #303030;
+			border-radius: var(--button-radius);
+			box-sizing: border-box;
+			color: #f0f0f0;
+			margin: 10px;
+			overflow: hidden;
+			padding: 20px;
+			width: 100%;
+		}
+
+		.vcard table {
+			margin-top: 10px;
+			width: 100%;
+		}
+
+			.vcard td,
+			.vcard th {
+				border-bottom: 2px solid #303030;
+				padding: 2px 10px;
+			}
+
+			.vcard th {
+				background-color: rgba(255, 255, 255, 0.05);
+				font-weight: 600;
+				white-space: nowrap;
+			}
+
+			.vcard td {
+				background-color: rgba(0, 0, 0, 0.1);
+				border-left: 2px solid #303030;
+			}
 
 
 .view-video {

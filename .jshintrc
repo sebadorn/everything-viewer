@@ -8,6 +8,7 @@
 		"Evy": true,
 		"hljs": false,
 		"ICAL": false,
-		"JSZip": false
+		"JSZip": false,
+		"VCF": false
 	}
 }
