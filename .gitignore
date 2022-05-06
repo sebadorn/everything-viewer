@@ -1,7 +1,9 @@
 # Directories
 /build/
+/node_modules/
 /resources/
 
 # Files
 *.sublime-*
 .DS_Store
+/package*.json

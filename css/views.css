@@ -47,7 +47,7 @@
 .view-csv {}
 
 	.view-csv table {
-		background-color: #303030;
+		background-color: rgba(0, 0, 0, 0.3);
 		color: #f0f0f0;
 		font-family: var(--font-ms);
 		max-width: var(--max-width);
@@ -57,17 +57,17 @@
 	}
 
 		.view-csv td {
-			border-bottom: 1px solid #505050;
+			border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 			padding: 4px 10px;
 		}
 
 		.view-csv th {
-			border-bottom: 1px solid #505050;
+			border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 			padding: 4px 10px;
 		}
 
 			.view-csv table span:hover {
-				background-color: #474747;
+				background-color: rgba(255, 255, 255, 0.1);
 			}
 
 
@@ -84,7 +84,7 @@
 	}
 
 	.view-eml .headers {
-		background-color: #303030;
+		background-color: rgba(0, 0, 0, 0.3);
 		color: #f0f0f0;
 		height: 20vh;
 		max-width: var(--max-width);
@@ -99,7 +99,7 @@
 		}
 
 			.view-eml tr:nth-child( 2n + 1 ) {
-				background-color: rgba( 255, 255, 255, 0.05 );
+				background-color: rgba(255, 255, 255, 0.05);
 			}
 
 			.view-eml .headers td,
@@ -129,7 +129,7 @@
 
 	.view-ical .container,
 	.view-ical .valarm {
-		background-color: #303030;
+		background-color: rgba(0, 0, 0, 0.3);
 		border-radius: var(--button-radius);
 		box-sizing: border-box;
 		color: #f0f0f0;
@@ -176,7 +176,8 @@
 
 			.ical td,
 			.ical th {
-				border-bottom: 2px solid #303030;
+				background-clip: padding-box;
+				border-bottom: 2px solid transparent;
 				padding: 2px 10px;
 			}
 
@@ -187,7 +188,7 @@
 
 			.ical td {
 				background-color: rgba(0, 0, 0, 0.1);
-				border-left: 2px solid #303030;
+				border-left: 2px solid transparent;
 			}
 
 		.ical ul {
@@ -200,12 +201,12 @@
 
 				.ical .state {
 					background-color: rgba(255, 255, 255, 0.1);
-					border-radius: 4px;
+					border-radius: 9px;
 					display: inline-block;
 					font-family: var(--font-ms);
 					font-size: 12px;
 					margin-left: 10px;
-					padding: 2px 4px;
+					padding: 2px 8px;
 				}
 
 		.view-ical .valarms {
@@ -213,7 +214,7 @@
 		}
 
 			.view-ical .valarm {
-				background-color: #272727;
+				background-color: rgba(255, 255, 255, 0.05);
 				margin: 10px 0 0;
 				padding: 10px;
 			}
@@ -221,11 +222,6 @@
 			.view-ical .valarm::before {
 				margin: -10px -10px 10px;
 			}
-
-				.valarm td,
-				.valarm th {
-					border-color: #272727;
-				}
 
 
 .view-image {
@@ -282,7 +278,7 @@
 	}
 
 		.view-vcf .vcard {
-			background-color: #303030;
+			background-color: rgba(0, 0, 0, 0.3);
 			border-radius: var(--button-radius);
 			box-sizing: border-box;
 			color: #f0f0f0;
@@ -299,7 +295,8 @@
 
 			.vcard td,
 			.vcard th {
-				border-bottom: 2px solid #303030;
+				background-clip: padding-box;
+				border-bottom: 2px solid transparent;
 				padding: 2px 10px;
 			}
 
@@ -311,7 +308,7 @@
 
 			.vcard td {
 				background-color: rgba(0, 0, 0, 0.1);
-				border-left: 2px solid #303030;
+				border-left: 2px solid transparent;
 			}
 
 
