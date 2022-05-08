@@ -24,14 +24,15 @@ class VCFParser extends Evy.BaseParser {
 	 * @return {?string[]}
 	 */
 	_getTypes( data ) {
-		if( !Array.isArray( data.type ) ) {
+		if( !Array.isArray( data.type ) || data.type.length === 0 ) {
 			return null;
 		}
 
 		let types = data.type.find( t => t.startsWith( 'TYPE#' ) );
 
+		// If no entries are marked as "TYPE", assume all are.
 		if( !types ) {
-			return null;
+			return data.type;
 		}
 
 		types = types.substring( 'TYPE#'.length );
@@ -42,10 +43,11 @@ class VCFParser extends Evy.BaseParser {
 
 	/**
 	 *
-	 * @param  {array} data
+	 * @param  {array}  data
+	 * @param  {string} text
 	 * @return {?HTMLDocument}
 	 */
-	buildHTML( data ) {
+	buildHTML( data, text ) {
 		console.log( data ); // TODO: remove
 
 		const card = document.createElement( 'div' );
@@ -86,12 +88,70 @@ class VCFParser extends Evy.BaseParser {
 		if( data.photo ) {
 			const row = Evy.UI.buildTableRow( 'Photo', data.photo );
 
-			if( data.photo.includes( '://' ) ) {
+			// Check for embedded base64 image data.
+			const match = text.match(/\nPHOTO.+[\r]?\n/);
+			let typeBase64 = null;
+
+			if( match ) {
+				let line = match[0];
+
+				// v4.0
+				if(
+					line.startsWith( 'PHOTO:data:' ) &&
+					line.includes( 'base64' )
+				) {
+					typeBase64 = line.substring( 'PHOTO:data:'.length, line.indexOf( ';base64' ) );
+				}
+				// v3.0
+				else if( line.includes( 'ENCODING=b') ) {
+					const type = line.match( /;TYPE=([a-z0-9\/]+)[;:]/i );
+
+					if( type && type.length >= 2 ) {
+						typeBase64 = type[0];
+					}
+				}
+				// v2.1
+				else if( line.includes( 'ENCODING=BASE64' ) ) {
+					const type = line.match( /;([a-z0-9\/]+)[;:]/i );
+
+					if( type && type.length >= 2 ) {
+						typeBase64 = type[0];
+					}
+				}
+
+				if( typeBase64 ) {
+					typeBase64 = typeBase64.toLowerCase();
+
+					if( !typeBase64.startsWith( 'image/' ) ) {
+						typeBase64 = 'image/' + typeBase64;
+					}
+				}
+			}
+
+			if( typeBase64 ) {
+				const td = row.querySelector( 'td' );
+				td.innerHTML = `<img src="data:${typeBase64};base64,${data.photo}" />`;
+			}
+			else if( data.photo.includes( '://' ) ) {
 				const td = row.querySelector( 'td' );
 				td.innerHTML = `<a href="${data.photo}">${data.photo}</a>`;
 			}
 
 			table.append( row );
+		}
+
+		if( data.adr ) {
+			data.adr.forEach( adr => {
+				let name = 'Adr.';
+				const types = this._getTypes( adr );
+
+				if( types ) {
+					name += ` (${types.join( ', ' )})`;
+				}
+
+				const row = Evy.UI.buildTableRow( name, adr.value );
+				table.append( row );
+			} );
 		}
 
 		if( data.org ) {
@@ -162,7 +222,7 @@ class VCFParser extends Evy.BaseParser {
 	 */
 	getHTML( cb ) {
 		this.getText( ( _err, text ) => {
-			const numCards = ( text.match( /BEGIN:VCARD\n/g ) || [] ).length;
+			const numCards = ( text.match( /BEGIN:VCARD[\r]?\n/g ) || [] ).length;
 			let i = 0;
 
 			const container = document.createElement( 'div' );
@@ -171,7 +231,7 @@ class VCFParser extends Evy.BaseParser {
 			this.parse( text, data => {
 				i++;
 
-				const card = this.buildHTML( data );
+				const card = this.buildHTML( data, text );
 				container.append( card );
 
 				if( i === numCards ) {

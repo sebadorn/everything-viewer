@@ -3,9 +3,8 @@
 }
 
 	.view .note {
-		color: #c0c0c0;
-		font-family: var(--font-ms);
-		font-size: 24px;
+		color: #f0f0f0;
+		font-size: 32px;
 		max-width: var(--max-width);
 		text-align: center;
 	}
@@ -48,8 +47,10 @@
 
 	.view-csv table {
 		background-color: rgba(0, 0, 0, 0.3);
+		border-radius: var(--button-radius);
 		color: #f0f0f0;
 		font-family: var(--font-ms);
+		margin: 40px 0;
 		max-width: var(--max-width);
 		padding: 10px 20px;
 		white-space: pre-wrap;
@@ -69,6 +70,10 @@
 			.view-csv table span:hover {
 				background-color: rgba(255, 255, 255, 0.1);
 			}
+
+		.view-csv tr:last-child td {
+			border-bottom: 0;
+		}
 
 
 .view-eml {
