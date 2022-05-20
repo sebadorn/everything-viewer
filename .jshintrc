@@ -6,8 +6,10 @@
 		"console": false,
 		"CSV": false,
 		"Evy": true,
+		"GifReader": false,
 		"hljs": false,
 		"ICAL": false,
+		"ImageData": false,
 		"JSZip": false,
 		"VCF": false
 	}

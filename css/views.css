@@ -14,6 +14,7 @@
 .view-audio,
 .view-csv,
 .view-eml,
+.view-gif,
 .view-ical,
 .view-image,
 .view-pdf,
@@ -121,6 +122,12 @@
 			.view-eml .header-value {
 				padding: 10px 20px 10px 10px;
 			}
+
+
+.view-gif {
+	align-items: center;
+	flex-direction: column;
+}
 
 
 .view-ical {

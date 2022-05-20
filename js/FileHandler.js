@@ -69,6 +69,9 @@ Evy.FileHandler = {
 			else if( mimeType === 'application/zip' ) {
 				parser = new Evy.ZIPParser( file, mimeType );
 			}
+			else if( mimeType === 'image/gif' ) {
+				parser = new Evy.GIFParser( file, mimeType );
+			}
 			else {
 				parser = new Evy.BaseParser( file, mimeType );
 			}
@@ -106,6 +109,9 @@ Evy.FileHandler = {
 			}
 			else if( parser instanceof Evy.ZIPParser ) {
 				return new Evy.UI.ZIPView( parser );
+			}
+			else if( parser instanceof Evy.GIFParser ) {
+				return new Evy.UI.GIFView( parser );
 			}
 			else if( type.startsWith( 'image/' ) ) {
 				return new Evy.UI.ImageView( parser );

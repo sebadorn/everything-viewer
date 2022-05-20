@@ -112,7 +112,7 @@ class ZIPParser extends Evy.BaseParser {
 
 	/**
 	 *
-	 * @param {ArrayBuffer} text
+	 * @param {ArrayBuffer} arrayBuffer
 	 * @param {function}    cb
 	 */
 	parse( arrayBuffer, cb ) {

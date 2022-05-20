@@ -10,7 +10,7 @@ Okay, not *everything*. The idea is to support different formats and maybe provi
 * EML
 	* Show the email headers
 	* Show the email body with external resources removed
-* iCAL
+* iCal
 * Image – *if the browser supports the format*
 * PDF – *if the browser supports it*
 * Text
@@ -27,4 +27,5 @@ Okay, not *everything*. The idea is to support different formats and maybe provi
 * highlight.js – https://highlightjs.org/
 * ical.js – https://github.com/mozilla-comm/ical.js
 * JSZip – https://github.com/Stuk/jszip
+* omggif – https://github.com/deanm/omggif
 * vCardJS – https://github.com/nilclass/vcardjs

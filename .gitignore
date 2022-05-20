@@ -7,3 +7,4 @@
 *.sublime-*
 .DS_Store
 /package*.json
+/TODO.md

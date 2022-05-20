@@ -34,6 +34,7 @@ const Evy = {
 			'parser/BaseParser.js', // Include first of the parsers.
 			'parser/CSVParser.js',
 			'parser/EMLParser.js',
+			'parser/GIFParser.js',
 			'parser/ICalParser.js',
 			'parser/VCFParser.js',
 			'parser/ZIPParser.js',
@@ -44,6 +45,7 @@ const Evy = {
 			'ui/views/AudioView.js',
 			'ui/views/CSVView.js',
 			'ui/views/EMLView.js',
+			'ui/views/GIFView.js',
 			'ui/views/ICalView.js',
 			'ui/views/ImageView.js',
 			'ui/views/PDFView.js',
@@ -94,6 +96,10 @@ const Evy = {
 			jszip: {
 				path: 'lib/jszip.min.js',
 				testLoaded: () => typeof JSZip !== 'undefined'
+			},
+			omggif: {
+				path: 'lib/omggif.js',
+				testLoaded: () => typeof GifReader !== 'undefined'
 			},
 			vcf: {
 				path: 'lib/vcardjs-0.3.min.js',

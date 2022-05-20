@@ -122,6 +122,21 @@ Evy.UI = {
 
 	/**
 	 *
+	 * @param  {string} str
+	 * @return {DocumentFragment}
+	 */
+	buildHTML( str ) {
+		const parser = new DOMParser();
+		const doc = parser.parseFromString( str.trim(), 'text/html' );
+		const fragment = document.createDocumentFragment();
+		fragment.append( ...doc.body.children );
+
+		return fragment;
+	},
+
+
+	/**
+	 *
 	 * @param  {string} name
 	 * @param  {string} value
 	 * @return {HTMLElement}
