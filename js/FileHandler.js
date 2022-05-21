@@ -8,6 +8,33 @@ Evy.FileHandler = {
 
 
 	/**
+	 * Some fallback MIME type detection just going by file extension.
+	 * But only for a few ones, that some browsers may not report when
+	 * importing the file.
+	 * @param  {string} ext
+	 * @return {?string}
+	 */
+	extToMimeType( ext ) {
+		if( !ext ) {
+			return null;
+		}
+
+		ext = ext.toLowerCase().trim();
+
+		const map = {
+			csv: 'text/csv',
+			ical: 'text/calendar',
+			ics: 'text/calendar',
+			ifb: 'text/calendar',
+			vcf: 'text/vcard',
+			vcs: 'text/calendar'
+		};
+
+		return map[ext] || null;
+	},
+
+
+	/**
 	 *
 	 * @param  {File}
 	 * @return {string}
@@ -29,7 +56,8 @@ Evy.FileHandler = {
 			.then( arrayBuffer => {
 				const arr = new Uint8Array( arrayBuffer );
 				const header = arr.reduce( ( prev, current ) => prev + current.toString( 16 ), '' );
-				const type = this.headerToMimeType( header, file.type );
+				const fallbackType = file.type || this.extToMimeType( this.getFileExt( file ) );
+				const type = this.headerToMimeType( header, fallbackType );
 
 				cb( null, type );
 			} )
@@ -89,7 +117,7 @@ Evy.FileHandler = {
 	getView( parser ) {
 		if( parser.mimeType || parser.file.size > 0 ) {
 			const ext = this.getFileExt( parser.file );
-			const type = parser.mimeType.toLowerCase();
+			const type = String(parser.mimeType).toLowerCase();
 			const name = parser.file.name.toLowerCase();
 
 			if( type === 'application/pdf' ) {

@@ -398,7 +398,7 @@
 }
 
 	.view-zip .wrap {
-		background-color: #303030;
+		background-color: rgba(0, 0, 0, 0.3);
 		box-sizing: border-box;
 		color: #f0f0f0;
 		font-family: var(--font-ms);
