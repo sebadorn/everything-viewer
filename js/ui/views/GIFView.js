@@ -14,51 +14,172 @@ class GIFView extends Evy.UI.BaseView {
 	constructor( parser ) {
 		super( parser, 'gif' );
 
-		this._canvas = null;
-		this._ctx = null;
+		this._currentCanvas = null;
 		this._frameIndex = 0;
+		this._frames = [];
 		this._gifReader = null;
+		this._listenerKeyNav = null;
 	}
 
 
 	/**
 	 *
 	 * @private
-	 * @return {HTMLElement}
+	 * @param {function} cb
 	 */
-	_buildSlideshow() {
+	_buildSlideshow( cb ) {
+		const numFrames = this._gifReader.numFrames();
+
 		const node = Evy.UI.buildHTML( `
-			<canvas class="frame"></canvas>
+			<div class="frame-container"></div>
 			<div class="actions">
-				<button class="frame-prev">&larr;</button>
-				<span class="counter"></span>
-				<button class="frame-next">&rarr;</button>
+				<input type="range" min="1" max="${numFrames}" value="1" />
+				<div class="line">
+					<button class="frame-prev">&larr;</button>
+					<span class="counter"></span>
+					<button class="frame-next">&rarr;</button>
+				</div>
 			</div>
 		` );
 
 		this._frameIndex = 0;
 
-		const btnPrev = node.querySelector( 'button.frame-prev' );
-		btnPrev.addEventListener( 'click', _ev => this.showFrame( --this._frameIndex ) );
+		this._generateFrames( () => {
+			const slider = node.querySelector( 'input[type="range"]' );
+			slider.addEventListener( 'change', ev => {
+				this._frameIndex = ev.target.valueAsNumber - 1;
+				this.showFrame( this._frameIndex );
+			} );
 
-		const btnNext = node.querySelector( 'button.frame-next' );
-		btnNext.addEventListener( 'click', _ev => this.showFrame( ++this._frameIndex ) );
+			const btnPrev = node.querySelector( 'button.frame-prev' );
+			btnPrev.addEventListener( 'click', _ev => {
+				this.showFrame( --this._frameIndex );
+				slider.value = this._frameIndex + 1;
+			} );
 
-		this._canvas = node.querySelector( 'canvas.frame' );
-		this._ctx = this._canvas.getContext( '2d' );
-		this._counter = node.querySelector( '.counter' );
+			const btnNext = node.querySelector( 'button.frame-next' );
+			btnNext.addEventListener( 'click', _ev => {
+				this.showFrame( ++this._frameIndex );
+				slider.value = this._frameIndex + 1;
+			} );
 
-		const w = this._gifReader.width;
-		const h = this._gifReader.height;
+			this._listenerKeyNav = ev => {
+				const active = document.activeElement;
 
-		this._canvas.width = w;
-		this._canvas.height = h;
-		this._canvas.style.width = w + 'px';
-		this._canvas.style.height = h + 'px';
+				if( active && active.type === 'range' ) {
+					return;
+				}
 
-		this.showFrame( this._frameIndex );
+				if( ev.key === 'ArrowLeft' ) {
+					this.showFrame( --this._frameIndex );
+					slider.value = this._frameIndex + 1;
+				}
+				else if( ev.key === 'ArrowRight' ) {
+					this.showFrame( ++this._frameIndex );
+					slider.value = this._frameIndex + 1;
+				}
+			};
 
-		return node;
+			document.body.addEventListener( 'keyup', this._listenerKeyNav );
+
+			this._counter = node.querySelector( '.counter' );
+
+			cb( node );
+		} );
+	}
+
+
+	/**
+	 * Generate a frame. Make sure to generate them in order
+	 * because of the "disposal" handling of frames.
+	 * @private
+	 * @param {number}   index
+	 * @param {function} cb
+	 */
+	_generateFrame( index, cb ) {
+		const imgWidth = this._gifReader.width;
+		const imgHeight = this._gifReader.height;
+
+		const newCanvas = document.createElement( 'canvas' );
+		newCanvas.width = imgWidth;
+		newCanvas.height = imgHeight;
+		newCanvas.style.width = imgWidth + 'px';
+		newCanvas.style.height = imgHeight + 'px';
+
+		const newCtx = newCanvas.getContext( '2d' );
+
+		// First frame.
+		if( index === 0 ) {
+			const imgData = new ImageData( imgWidth, imgHeight );
+			this._lastNonDisposedImgData = imgData;
+			this._gifReader.decodeAndBlitFrameRGBA( index, imgData.data );
+
+			newCtx.putImageData( imgData, 0, 0 );
+			cb( newCanvas );
+
+			return;
+		}
+
+		const prevInfo = this._gifReader.frameInfo( index - 1 );
+		let imgData = null;
+
+		// 1: Draw over previous canvas.
+		// 3: Use the last canvas before the "disposal=3" frames.
+		if( prevInfo.disposal <= 1 || prevInfo.disposal === 3 ) {
+			const data = Uint8ClampedArray.from( this._lastNonDisposedImgData.data );
+			imgData = new ImageData( data, imgWidth, imgHeight );
+		}
+		// 2: Clear before drawing. => Start with a clear canvas.
+		// 4-7: undefined behaviour
+		else {
+			imgData = new ImageData( imgWidth, imgHeight );
+		}
+
+		this._gifReader.decodeAndBlitFrameRGBA( index, imgData.data );
+
+		const info = this._gifReader.frameInfo( index );
+
+		if( info.disposal <= 1 ) {
+			this._lastNonDisposedImgData = imgData;
+		}
+
+		newCtx.putImageData( imgData, 0, 0 );
+
+		cb( newCanvas );
+	}
+
+
+	/**
+	 *
+	 * @private
+	 * @param {function} cb
+	 */
+	_generateFrames( cb ) {
+		const numFrames = this._gifReader.numFrames();
+
+		const next = i => {
+			if( i >= numFrames ) {
+				cb();
+				return;
+			}
+
+			this._generateFrame( i, frame => {
+				this._frames.push( frame );
+				next( i + 1 );
+			} );
+		};
+
+		next( 0 );
+	}
+
+
+	/**
+	 *
+	 */
+	destroy() {
+		super.destroy();
+
+		document.body.removeEventListener( 'keyup', this._listenerKeyNav );
 	}
 
 
@@ -74,10 +195,11 @@ class GIFView extends Evy.UI.BaseView {
 			this.metaData.Frames = gifReader.numFrames();
 			this.buildMetaNode();
 
-			const node = this._buildSlideshow( gifReader );
-			this.nodeView.append( node );
-
-			cb();
+			this._buildSlideshow( node => {
+				this.nodeView.append( node );
+				this.showFrame( this._frameIndex );
+				cb();
+			} );
 		} );
 	}
 
@@ -96,31 +218,15 @@ class GIFView extends Evy.UI.BaseView {
 			index = numFrames - 1;
 		}
 
+		if( this._currentCanvas ) {
+			this._currentCanvas.remove();
+		}
+
 		this._frameIndex = index;
+		this._currentCanvas = this._frames[index];
 
-		const info = this._gifReader.frameInfo( index );
-		const imgData = new ImageData( info.width, info.height );
-		this._gifReader.decodeAndBlitFrameRGBA( index, imgData.data );
-
-		console.log(index, info); // TODO: remove
-
-		// TODO: handle "disposal"
-		// 0/1: stack each frame, no clearing
-		// 2: after showing the frame, clear canvas
-		// 3: after showing the frame, restore to the previous canvas state
-		// 4: ?
-		// 5: ?
-		//
-		// TODO: this complicates stepping through the frames in reverse order
-
-		const canvas = document.createElement( 'canvas' );
-		canvas.width = info.width;
-		canvas.height = info.height;
-
-		const ctx = canvas.getContext( '2d' );
-		ctx.putImageData( imgData, 0, 0 );
-
-		this._ctx.drawImage( canvas, info.x, info.y );
+		const container = this.nodeView.querySelector( '.frame-container' );
+		container.append( this._currentCanvas );
 
 		this._counter.textContent = ( index + 1 ) + '/' + numFrames;
 	}

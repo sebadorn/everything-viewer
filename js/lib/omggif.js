@@ -24,7 +24,9 @@
 // including animation and compression.  It does not rely on any specific
 // underlying system, so should run in the browser, Node, or Plask.
 
-// Modification for "Everything Viewer" project: Removed GifWriter functionality.
+// Sebastian Dorn, 2022-05
+// Modification for "Everything Viewer" project:
+// - Removed GifWriter functionality.
 
 "use strict";
 

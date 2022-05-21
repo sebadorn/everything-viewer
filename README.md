@@ -12,6 +12,7 @@ Okay, not *everything*. The idea is to support different formats and maybe provi
 	* Show the email body with external resources removed
 * iCal
 * Image – *if the browser supports the format*
+	* GIF: Step through each frame
 * PDF – *if the browser supports it*
 * Text
 	* With syntax highlighting for selected languages
