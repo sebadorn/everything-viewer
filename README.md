@@ -10,6 +10,7 @@ Okay, not *everything*. The idea is to support different formats and maybe provi
 * EML
 	* Show the email headers
 	* Show the email body with external resources removed
+	* Show the email body with loaded external resources
 * iCal
 * Image – *if the browser supports the format*
 	* GIF: Step through each frame

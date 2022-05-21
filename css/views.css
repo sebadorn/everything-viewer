@@ -82,9 +82,24 @@
 	flex-direction: column;
 }
 
+	.view-eml .actions {
+		align-items: center;
+		background-color: rgba(0, 0, 0, 0.3);
+		box-sizing: border-box;
+		display: flex;
+		justify-content: center;
+		height: 10vh;
+		max-width: var(--max-width);
+		padding: 20px;
+		width: 100%;
+	}
+
+		.view-eml .actions button {
+			margin: 0 10px;
+		}
+
 	.view-eml iframe {
-		flex-shrink: 0;
-		height: 80vh;
+		height: 90vh;
 		max-width: var(--max-width);
 		width: 100%;
 	}
@@ -92,7 +107,7 @@
 	.view-eml .headers {
 		background-color: rgba(0, 0, 0, 0.3);
 		color: #f0f0f0;
-		height: 20vh;
+		height: 90vh;
 		max-width: var(--max-width);
 		overflow: auto;
 		width: 100%;
@@ -121,6 +136,7 @@
 
 			.view-eml .header-value {
 				padding: 10px 20px 10px 10px;
+				white-space: pre-wrap;
 			}
 
 

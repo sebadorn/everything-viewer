@@ -21,12 +21,22 @@ class EMLParser extends Evy.BaseParser {
 
 	/**
 	 *
-	 * @param  {string} body
+	 * @param  {string}   body
+	 * @param  {object}   options
+	 * @param  {boolean} [options.remove_external = true]
 	 * @return {?HTMLDocument}
 	 */
-	buildBodyDOM( body ) {
+	buildBodyDOM( body, options ) {
 		if( !body ) {
 			return null;
+		}
+
+		if( !options ) {
+			options = {};
+		}
+
+		if( typeof options.remove_external !== 'boolean' ) {
+			options.remove_external = true;
 		}
 
 		let html = body;
@@ -41,53 +51,52 @@ class EMLParser extends Evy.BaseParser {
 			}
 		} );
 
-
-		// Try to remove or disable everything that loads external resources.
-
 		const domParser = new DOMParser();
 		const doc = domParser.parseFromString( html, 'text/html' );
 
-		// Remove src of images, except if the data is inlined.
-		const images = doc.querySelectorAll( 'img' );
-		images.forEach( img => {
-			const src = img.getAttribute( 'src' ) || '';
+		// Try to remove or disable everything that loads external resources.
+		if( options.remove_external ) {
+			// Remove src of images, except if the data is inlined.
+			const images = doc.querySelectorAll( 'img' );
+			images.forEach( img => {
+				const src = img.getAttribute( 'src' ) || '';
 
-			if( !src.startsWith( 'data:' ) ) {
-				img.removeAttribute( 'src' );
-			}
-		} );
+				if( !src.startsWith( 'data:' ) ) {
+					img.removeAttribute( 'src' );
+				}
+			} );
 
-		// Remove certain elements completely.
-		const toRemove = doc.querySelectorAll( [
-			'audio[src]',
-			'embed',
-			'iframe',
-			'link[rel="stylesheet"]',
-			'object',
-			'script',
-			'source',
-			'video[src]'
-		].join( ',' ) );
-		toRemove.forEach( node => node.remove() );
+			// Remove certain elements completely.
+			const toRemove = doc.querySelectorAll( [
+				'audio[src]',
+				'embed',
+				'iframe',
+				'link[rel="stylesheet"]',
+				'object',
+				'script',
+				'source',
+				'video[src]'
+			].join( ',' ) );
+			toRemove.forEach( node => node.remove() );
 
-		// Remove certain attributes.
-		const attr = doc.querySelectorAll( '[background]' );
-		attr.forEach( node => {
-			const value = node.getAttribute( 'background' ) || '';
+			// Remove certain attributes.
+			const attr = doc.querySelectorAll( '[background]' );
+			attr.forEach( node => {
+				const value = node.getAttribute( 'background' ) || '';
 
-			if( value.includes( '//' ) ) {
-				node.removeAttribute( 'background' );
-			}
-		} );
+				if( value.includes( '//' ) ) {
+					node.removeAttribute( 'background' );
+				}
+			} );
 
-		// Styles
-		const styles = doc.querySelectorAll( 'style' );
-		styles.forEach( node => {
-			let style = node.textContent;
-			style = style.replaceAll( /url[ \t]*\([ \t]*.+[ \t]*\)/gi, 'url()' );
-			node.textContent = style;
-		} );
-
+			// Styles
+			const styles = doc.querySelectorAll( 'style' );
+			styles.forEach( node => {
+				let style = node.textContent;
+				style = style.replaceAll( /url[ \t]*\([ \t]*.+[ \t]*\)/gi, 'url()' );
+				node.textContent = style;
+			} );
+		}
 
 		return doc;
 	}
@@ -126,18 +135,20 @@ class EMLParser extends Evy.BaseParser {
 
 	/**
 	 *
+	 * @param {object}   options
+	 * @param {boolean} [options.remove_external = true]
 	 * @param {function} cb
 	 */
-	getBodyDOM( cb ) {
+	getBodyDOM( options, cb ) {
 		if( this._lastParsed ) {
-			const dom = this.buildBodyDOM( this._lastParsed.body );
+			const dom = this.buildBodyDOM( this._lastParsed.body, options );
 
 			cb( null, dom );
 		}
 		else {
 			this.getText( ( _err, text ) => {
 				const data = this.parse( text );
-				const dom = this.buildBodyDOM( data.body );
+				const dom = this.buildBodyDOM( data.body, options );
 
 				cb( null, dom );
 			} );
