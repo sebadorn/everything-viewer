@@ -2,6 +2,7 @@
 	--button-radius: 6px;
 	--color-link: #CC497A;
 	--color-primary: #842f4f;
+	--color-primary-dark: #68253F;
 	--font-size-ss: 16px;
 	--font-size-ms: 16px;
 	--font-ss: "Open Sans", Arial, sans-serif;
@@ -64,18 +65,32 @@ div.code {
 	padding: 4px;
 }
 
+a#github {
+	background-image: url("../img/GitHub-Mark-Light-32px.png");
+	background-position: 8px center;
+	background-repeat: no-repeat;
+	background-size: 16px;
+	display: inline-block;
+	margin-left: 10px;
+	padding-left: 30px !important;
+	text-decoration: none;
+}
+
+a#github,
 button {
 	background-color: var(--color-primary);
 	border: 0;
 	border-radius: var(--button-radius);
 	color: #f0f0f0;
 	font-family: var(--font-ms);
+	font-size: 14px;
 	padding: 6px 18px;
 	text-align: center;
 }
 
+a#github:hover,
 button:hover {
-	box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.3);
+	background-color: var(--color-primary-dark);
 	cursor: pointer;
 }
 
