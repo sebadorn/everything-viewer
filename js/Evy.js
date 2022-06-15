@@ -33,6 +33,7 @@ const Evy = {
 			'FileHandler.js',
 			'parser/BaseParser.js', // Include first of the parsers.
 			'parser/CSVParser.js',
+			'parser/DICOMParser.js',
 			'parser/EMLParser.js',
 			'parser/GIFParser.js',
 			'parser/ICalParser.js',
@@ -44,6 +45,7 @@ const Evy = {
 			'ui/views/BaseView.js', // Include first of the views.
 			'ui/views/AudioView.js',
 			'ui/views/CSVView.js',
+			'ui/views/DICOMView.js',
 			'ui/views/EMLView.js',
 			'ui/views/GIFView.js',
 			'ui/views/ICalView.js',
@@ -104,6 +106,10 @@ const Evy = {
 			vcf: {
 				path: 'lib/vcardjs-0.3.min.js',
 				testLoaded: () => typeof VCF !== 'undefined'
+			},
+			xtk: {
+				path: 'lib/xtk_edge.js',
+				testLoaded: () => typeof X !== 'undefined'
 			}
 		};
 

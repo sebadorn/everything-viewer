@@ -31,3 +31,4 @@ Okay, not *everything*. The idea is to support different formats and maybe provi
 * JSZip – https://github.com/Stuk/jszip
 * omggif – https://github.com/deanm/omggif
 * vCardJS – https://github.com/nilclass/vcardjs
+* XTK – https://github.com/xtk/X

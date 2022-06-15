@@ -13,6 +13,7 @@
 .view-base,
 .view-audio,
 .view-csv,
+.view-dicom,
 .view-eml,
 .view-gif,
 .view-ical,
@@ -75,6 +76,13 @@
 		.view-csv tr:last-child td {
 			border-bottom: 0;
 		}
+
+
+.view-dicom {
+	align-self: center;
+	max-height: 1000px;
+	max-width: 1000px;
+}
 
 
 .view-eml {

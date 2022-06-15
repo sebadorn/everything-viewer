@@ -50,12 +50,17 @@ Evy.FileHandler = {
 	 * @param {function} cb
 	 */
 	getMimeType( file, cb ) {
-		const promise = file.slice( 0, 4 ).arrayBuffer();
+		// Normally it is only the first 4 bytes. But
+		// DICOM files have a 128 bytes before that.
+		const promise = file.slice( 0, 128 + 4 ).arrayBuffer();
 
 		promise
 			.then( arrayBuffer => {
 				const arr = new Uint8Array( arrayBuffer );
-				const header = arr.reduce( ( prev, current ) => prev + current.toString( 16 ), '' );
+				const header = arr.reduce(
+					( prev, current ) => prev + current.toString( 16 ).padStart( 2, '0' ),
+					''
+				);
 				const fallbackType = file.type || this.extToMimeType( this.getFileExt( file ) );
 				const type = this.headerToMimeType( header, fallbackType );
 
@@ -81,6 +86,9 @@ Evy.FileHandler = {
 
 			if( ext === 'csv' ) {
 				parser = new Evy.CSVParser( file, mimeType );
+			}
+			else if( mimeType === 'application/dicom' ) {
+				parser = new Evy.DICOMParser( file, mimeType );
 			}
 			else if( ext === 'eml' ) {
 				parser = new Evy.EMLParser( file, mimeType );
@@ -129,6 +137,9 @@ Evy.FileHandler = {
 			else if( parser instanceof Evy.CSVParser ) {
 				return new Evy.UI.CSVView( parser );
 			}
+			else if( parser instanceof Evy.DICOMParser ) {
+				return new Evy.UI.DICOMView( parser );
+			}
 			else if( parser instanceof Evy.EMLParser ) {
 				return new Evy.UI.EMLView( parser );
 			}
@@ -167,8 +178,9 @@ Evy.FileHandler = {
 	 */
 	headerToMimeType( header, typeFromExt = null ) {
 		let type = null;
+		let header8 = header.substring( 0, 8 );
 
-		switch( header ) {
+		switch( header8 ) {
 			case '47494638':
 				type = 'image/gif';
 				break;
@@ -186,6 +198,15 @@ Evy.FileHandler = {
 				break;
 		}
 
+		// Check for DICOM.
+		if( !type && header.length >= 264 ) {
+			// Spells out "DICM".
+			if( header.substring( 256, 264 ) === '4449434d' ) {
+				header8 = '4449434d';
+				type = 'application/dicom';
+			}
+		}
+
 		if( !type ) {
 			if( typeFromExt ) {
 				type = typeFromExt;
@@ -193,41 +214,41 @@ Evy.FileHandler = {
 			}
 			else {
 				// Starts with "#!"
-				if( header.startsWith( '2321' ) ) {
+				if( header8.startsWith( '2321' ) ) {
 					type = 'application/x-shellscript';
 				}
 				// Byte order mark
 				else if(
-					header.startsWith( 'efbbbf' ) ||
-					header.startsWith( 'feff' ) ||
-					header.startsWith( 'fffe' ) ||
-					header.startsWith( '0000feff' ) ||
-					header.startsWith( '2b2f7638' ) ||
-					header.startsWith( '2b2f7639' ) ||
-					header.startsWith( '2b2f762b' ) ||
-					header.startsWith( '2b2f762f' )
+					header8.startsWith( 'efbbbf' ) ||
+					header8.startsWith( 'feff' ) ||
+					header8.startsWith( 'fffe' ) ||
+					header8.startsWith( '0000feff' ) ||
+					header8.startsWith( '2b2f7638' ) ||
+					header8.startsWith( '2b2f7639' ) ||
+					header8.startsWith( '2b2f762b' ) ||
+					header8.startsWith( '2b2f762f' )
 				) {
 					type = 'text/plain';
 				}
 				else if(
-					header.startsWith( '504b34' ) ||
-					header.startsWith( '504b0304' ) ||
-					header.startsWith( '504b0506' )
+					header8.startsWith( '504b34' ) ||
+					header8.startsWith( '504b0304' ) ||
+					header8.startsWith( '504b0506' )
 				) {
 					type = 'application/zip';
 				}
 
 				if( type ) {
-					console.log( `[Evy.FileHandler.headerToMimeType] Guessing "${header}" -> ${type}` );
+					console.log( `[Evy.FileHandler.headerToMimeType] Guessing "${header8}" -> ${type}` );
 				}
 			}
 		}
 		else {
-			console.log( `[Evy.FileHandler.headerToMimeType] "${header}" -> ${type}` );
+			console.log( `[Evy.FileHandler.headerToMimeType] "${header8}" -> ${type}` );
 		}
 
 		if( !type ) {
-			console.log( `[Evy.FileHandler.headerToMimeType] Failed to find MIME type for header "${header}".` );
+			console.log( `[Evy.FileHandler.headerToMimeType] Failed to find MIME type for header "${header8}".` );
 		}
 
 		return type;
