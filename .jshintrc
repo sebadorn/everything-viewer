@@ -1,10 +1,14 @@
 {
+	"-W030": true,
 	"-W097": true,
 	"browser": true,
 	"esversion": 10,
 	"globals": {
 		"console": false,
+		"cornerstone": false,
+		"cornerstoneWADOImageLoader": false,
 		"CSV": false,
+		"dicomParser": false,
 		"Evy": true,
 		"GifReader": false,
 		"hljs": false,

@@ -22,8 +22,14 @@ class DICOMParser extends Evy.BaseParser {
 	 * @param {function} cb
 	 */
 	parse( cb ) {
-		this.getArrayBuffer( ( _err, buffer ) => {
-			cb( null, buffer );
+		this.getArrayBuffer( ( _err, arrayBuffer ) => {
+			Evy.ensureScript( 'dicom', () => {
+				// Allow raw files
+				const options = { TransferSyntaxUID: '1.2.840.10008.1.2' };
+				const dataSet = dicomParser.parseDicom( new Uint8Array( arrayBuffer ), options );
+
+				cb( null, dataSet );
+			} );
 		} );
 	}
 

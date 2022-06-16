@@ -7,6 +7,7 @@ Okay, not *everything*. The idea is to support different formats and maybe provi
 
 * Audio – *if the browser supports the format*
 * CSV
+* DCM, DICOM
 * EML
 	* Show the email headers
 	* Show the email body with external resources removed
@@ -25,10 +26,12 @@ Okay, not *everything*. The idea is to support different formats and maybe provi
 
 ## Libraries
 
+* cornerstone – https://github.com/cornerstonejs/cornerstone
+* cornerstoneWADOImageLoader – https://github.com/cornerstonejs/cornerstoneWADOImageLoader
 * CSV – https://github.com/vanillaes/csv
+* dicomParser – https://github.com/cornerstonejs/dicomParser
 * highlight.js – https://highlightjs.org/
 * ical.js – https://github.com/mozilla-comm/ical.js
 * JSZip – https://github.com/Stuk/jszip
 * omggif – https://github.com/deanm/omggif
 * vCardJS – https://github.com/nilclass/vcardjs
-* XTK – https://github.com/xtk/X

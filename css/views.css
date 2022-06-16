@@ -80,9 +80,39 @@
 
 .view-dicom {
 	align-self: center;
-	max-height: 1000px;
+	flex-direction: column;
 	max-width: 1000px;
 }
+
+	.view-dicom .image-container {
+		height: 900px;
+	}
+
+	.view-dicom .actions {
+		background-color: rgba(0, 0, 0, 0.3);
+		border-radius: var(--button-radius);
+		font-family: var(--font-ms);
+		margin-top: 20px;
+		min-width: 300px;
+		padding: 10px;
+	}
+
+		.view-dicom input[type="range"] {
+			width: 100%;
+		}
+
+		.view-dicom .line {
+			align-items: center;
+			display: flex;
+			justify-content: space-between;
+		}
+
+			.view-dicom .counter {
+				color: #f0f0f0;
+				display: inline-block;
+				min-width: 80px;
+				text-align: center;
+			}
 
 
 .view-eml {

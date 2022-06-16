@@ -76,8 +76,8 @@ const Evy = {
 
 	/**
 	 *
-	 * @param {string}   key
-	 * @param {function} cb
+	 * @param {string}    key
+	 * @param {?function} cb
 	 */
 	ensureScript( key, cb ) {
 		key = key.toLowerCase();
@@ -86,6 +86,14 @@ const Evy = {
 			csv: {
 				path: 'lib/csv.min.js',
 				testLoaded: () => typeof CSV !== 'undefined'
+			},
+			dicom: {
+				path: [
+					'lib/cornerstone.min.js',
+					'lib/dicomParser.min.js',
+					'lib/cornerstoneWADOImageLoader.bundle.min.js'
+				],
+				testLoaded: () => typeof cornerstone !== 'undefined'
 			},
 			hljs: {
 				path: 'lib/highlight.min.js',
@@ -106,10 +114,6 @@ const Evy = {
 			vcf: {
 				path: 'lib/vcardjs-0.3.min.js',
 				testLoaded: () => typeof VCF !== 'undefined'
-			},
-			xtk: {
-				path: 'lib/xtk_edge.js',
-				testLoaded: () => typeof X !== 'undefined'
 			}
 		};
 
@@ -121,18 +125,31 @@ const Evy = {
 		}
 
 		if( item.testLoaded() ) {
-			cb();
+			cb && cb();
 			return;
 		}
 
-		const node = document.createElement( 'script' );
-		node.onload = () => {
-			console.log( '[Evy.ensureScript] Loaded script: ' + item.path );
-			cb();
-		};
-		node.src = 'js/' + item.path;
+		const scripts = Array.isArray( item.path ) ? item.path : [item.path];
 
-		document.head.append( node );
+		const loadScript = i => {
+			if( i >= scripts.length ) {
+				cb && cb();
+				return;
+			}
+
+			const script = scripts[i];
+
+			const node = document.createElement( 'script' );
+			node.onload = () => {
+				console.log( '[Evy.ensureScript] Loaded script: ' + script );
+				loadScript( i + 1 );
+			};
+			node.src = 'js/' + script;
+
+			document.head.append( node );
+		};
+
+		loadScript( 0 );
 	},
 
 
