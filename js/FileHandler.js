@@ -50,9 +50,10 @@ Evy.FileHandler = {
 	 * @param {function} cb
 	 */
 	getMimeType( file, cb ) {
-		// Normally it is only the first 4 bytes. But
-		// DICOM files have a 128 bytes before that.
-		const promise = file.slice( 0, 128 + 4 ).arrayBuffer();
+		// Normally it is only the first 4 bytes. But:
+		// - DICOM files have 128 bytes before that.
+		// - NIFTI files have 344 bytes before that.
+		const promise = file.slice( 0, 344 + 4 ).arrayBuffer();
 
 		promise
 			.then( arrayBuffer => {
@@ -198,12 +199,17 @@ Evy.FileHandler = {
 				break;
 		}
 
-		// Check for DICOM.
-		if( !type && header.length >= 264 ) {
-			// Spells out "DICM".
-			if( header.substring( 256, 264 ) === '4449434d' ) {
+		// Files with magic bytes not at the beginning.
+		if( !type && header.length > 8 ) {
+			// DICOM: Spells out "DICM".
+			if( header.substring( 256, 256 + 8 ) === '4449434d' ) {
 				header8 = '4449434d';
 				type = 'application/dicom';
+			}
+			// Spells out "n+1" for NIFTI/.nii files.
+			else if( header.substring( 688, 688 + 6 ) === '6e2b31' ) {
+				header8 = '6e2b3100';
+				type = 'application/octet-stream';
 			}
 		}
 

@@ -50,7 +50,16 @@ class BaseView {
 			value.textContent = this.metaData[key];
 
 			const row = document.createElement( 'tr' );
-			row.append( name, value );
+
+			if( key.startsWith( '_HR_' ) ) {
+				value.colSpan = 2;
+				value.textContent = '';
+				row.classList.add( 'hr' );
+				row.append( value );
+			}
+			else {
+				row.append( name, value );
+			}
 
 			table.append( row );
 		}

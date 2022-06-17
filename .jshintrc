@@ -1,5 +1,6 @@
 {
 	"-W030": true,
+	"-W069": true,
 	"-W097": true,
 	"browser": true,
 	"esversion": 10,
