@@ -54,7 +54,7 @@ class AudioView extends Evy.UI.BaseView {
 		}
 		else {
 			audio.addEventListener( 'loadedmetadata', () => {
-				this.metaData.Duration = Evy.UI.formatDuration( audio.duration * 1000 );
+				this.mdAdd( 'Duration', Evy.UI.formatDuration( audio.duration * 1000 ) );
 				this.buildMetaNode();
 
 				this.nodeView.appendChild( audio );

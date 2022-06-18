@@ -60,8 +60,8 @@ class VideoView extends Evy.UI.BaseView {
 
 				video.width = video.videoWidth || 900;
 
-				this.metaData.Dimensions = video.width + '×' + video.height + ' px';
-				this.metaData.Duration = Evy.UI.formatDuration( video.duration * 1000 );
+				this.mdAdd( 'Dimensions', video.width + '×' + video.height + ' px' );
+				this.mdAdd( 'Duration', Evy.UI.formatDuration( video.duration * 1000 ) );
 				this.buildMetaNode();
 
 				this.nodeView.append( video );

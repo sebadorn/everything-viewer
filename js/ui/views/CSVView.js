@@ -52,8 +52,8 @@ class CSVView extends Evy.UI.BaseView {
 	 */
 	load( cb ) {
 		this.parser.parse( ( _err, tableData ) => {
-			this.metaData.Columns = tableData.length > 0 ? tableData[0].length : 0;
-			this.metaData.Rows = tableData.length;
+			this.mdAdd( 'Columns', tableData.length > 0 ? tableData[0].length : 0 );
+			this.mdAdd( 'Rows', tableData.length );
 			this.buildMetaNode();
 
 			const html = this._buildHTML( tableData );

@@ -92,7 +92,7 @@
 		background-color: rgba(0, 0, 0, 0.3);
 		border-radius: var(--button-radius);
 		font-family: var(--font-ms);
-		margin-top: 20px;
+		margin-top: 10px;
 		min-width: 300px;
 		padding: 10px;
 	}
@@ -104,15 +104,29 @@
 		.view-dicom .line {
 			align-items: center;
 			display: flex;
-			justify-content: space-between;
+			justify-content: center;
 		}
 
-			.view-dicom .counter {
-				color: #f0f0f0;
-				display: inline-block;
-				min-width: 80px;
-				text-align: center;
+		.view-dicom button {
+			min-width: 50px;
+		}
+
+			.view-dicom .wrap-playback {
+				border-left: 1px solid rgba(255, 255, 255, 0.3);
+				margin-left: 10px;
+				padding-left: 10px;
 			}
+
+			.view-dicom select.speed {
+				height: 29px;
+			}
+
+				.view-dicom .counter {
+					color: #f0f0f0;
+					display: inline-block;
+					min-width: 80px;
+					text-align: center;
+				}
 
 
 .view-eml {

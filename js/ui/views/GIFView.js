@@ -191,8 +191,8 @@ class GIFView extends Evy.UI.BaseView {
 		this.parser.parse( ( _err, gifReader ) => {
 			this._gifReader = gifReader;
 
-			this.metaData.Dimensions = gifReader.width + '×' + gifReader.height + ' px';
-			this.metaData.Frames = gifReader.numFrames();
+			this.mdAdd( 'Dimensions', gifReader.width + '×' + gifReader.height + ' px' );
+			this.mdAdd( 'Frames', gifReader.numFrames() );
 			this.buildMetaNode();
 
 			this._buildSlideshow( node => {

@@ -41,7 +41,7 @@ class ImageView extends Evy.UI.BaseView {
 			image.height = image.naturalHeight;
 			image.width = image.naturalWidth;
 
-			this.metaData.Dimensions = image.naturalWidth + '×' + image.naturalHeight + ' px';
+			this.mdAdd( 'Dimensions', image.naturalWidth + '×' + image.naturalHeight + ' px' );
 			this.buildMetaNode();
 
 			this.nodeView.append( image );
