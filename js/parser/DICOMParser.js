@@ -9,11 +9,72 @@ class DICOMParser extends Evy.BaseParser {
 	/**
 	 *
 	 * @constructor
-	 * @param {File}   file
-	 * @param {string} mimeType
+	 * @param {(File|FileSystemEntry[])} file
+	 * @param {string}                   mimeType
 	 */
 	constructor( file, mimeType ) {
-		super( file, mimeType );
+		const isDir = Array.isArray( file );
+		super( file, mimeType, isDir );
+	}
+
+
+	/**
+	 *
+	 * @private
+	 * @param {function} cb
+	 */
+	_parseHandlerDir( cb ) {
+		const entries = this.file;
+		const dicomdirEntry = entries.find( entry => {
+			return (
+				entry.isFile &&
+				entry.name.toLowerCase() === 'dicomdir'
+			);
+		} );
+
+		dicomdirEntry.file(
+			file => {
+				const promise = file.arrayBuffer();
+
+				promise
+					.then( arrayBuffer => {
+						const options = { TransferSyntaxUID: '1.2.840.10008.1.2' };
+						const dataSet = dicomParser.parseDicom( new Uint8Array( arrayBuffer ), options );
+						const record = dataSet.elements.x00041220;
+
+						if( !record || !Array.isArray( record.items ) ) {
+							console.error( '[Evy.DICOMParser._parseHandlerDir]' +
+								' Record is either not set or has no entries.', record );
+						}
+						else {
+							cb( null, record );
+						}
+					} )
+					.catch( err => {
+						console.error( err );
+					} );
+			},
+			err => {
+				console.error( '[Evy.DICOMParser._parseHandlerDir] ' + err.message );
+				cb( err );
+			}
+		);
+	}
+
+
+	/**
+	 *
+	 * @private
+	 * @param {function} cb
+	 */
+	_parseHandlerFile( cb ) {
+		this.getArrayBuffer( ( _err, arrayBuffer ) => {
+			// Allow raw files
+			const options = { TransferSyntaxUID: '1.2.840.10008.1.2' };
+			const dataSet = dicomParser.parseDicom( new Uint8Array( arrayBuffer ), options );
+
+			cb( null, dataSet );
+		} );
 	}
 
 
@@ -22,7 +83,7 @@ class DICOMParser extends Evy.BaseParser {
 	 * @param  {string} key
 	 * @return {string}
 	 */
-	getModalityName( key ) {
+	static getModalityName( key ) {
 		if( !key ) {
 			return key;
 		}
@@ -44,7 +105,7 @@ class DICOMParser extends Evy.BaseParser {
 	 * @param  {number} value
 	 * @return {(string|number)}
 	 */
-	getPregnancyStatus( value ) {
+	static getPregnancyStatus( value ) {
 		if( isNaN( Number( value ) ) ) {
 			return value;
 		}
@@ -67,14 +128,13 @@ class DICOMParser extends Evy.BaseParser {
 	 * @param {function} cb
 	 */
 	parse( cb ) {
-		this.getArrayBuffer( ( _err, arrayBuffer ) => {
-			Evy.ensureScript( 'dicom', () => {
-				// Allow raw files
-				const options = { TransferSyntaxUID: '1.2.840.10008.1.2' };
-				const dataSet = dicomParser.parseDicom( new Uint8Array( arrayBuffer ), options );
-
-				cb( null, dataSet );
-			} );
+		Evy.ensureScript( 'dicom', () => {
+			if( this.isDir ) {
+				this._parseHandlerDir( cb );
+			}
+			else {
+				this._parseHandlerFile( cb );
+			}
 		} );
 	}
 

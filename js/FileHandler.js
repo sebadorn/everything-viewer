@@ -124,7 +124,12 @@ Evy.FileHandler = {
 	 * @return {Evy.UI.BaseView}
 	 */
 	getView( parser ) {
-		if( parser.mimeType || parser.file.size > 0 ) {
+		if( parser.isDir ) {
+			if( parser instanceof Evy.DICOMParser ) {
+				return new Evy.UI.DICOMView( parser );
+			}
+		}
+		else if( parser.mimeType || parser.file.size > 0 ) {
 			const ext = this.getFileExt( parser.file );
 			const type = String(parser.mimeType).toLowerCase();
 			const name = parser.file.name.toLowerCase();

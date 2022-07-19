@@ -37,6 +37,23 @@ Evy.UI = {
 	/**
 	 *
 	 * @private
+	 * @param {FileSystemDirectoryEntry} dir
+	 */
+	_onDirectory( dir ) {
+		if( !dir ) {
+			return;
+		}
+
+		Evy.DirectoryHandler.getParser( dir, ( _err, parser ) => {
+			const view = Evy.FileHandler.getView( parser );
+			view.load( () => this.update( view ) );
+		} );
+	},
+
+
+	/**
+	 *
+	 * @private
 	 * @param {File} file
 	 */
 	_onFile( file ) {
@@ -69,6 +86,7 @@ Evy.UI = {
 		const area = document.querySelector( 'main .viewer' );
 		this._dropHandler = new this.DropHandler( area );
 		this._dropHandler.on( 'file', file => this._onFile( file ) );
+		this._dropHandler.on( 'directory', ( dir, topLevelEntries ) => this._onDirectory( dir, topLevelEntries ) );
 	},
 
 

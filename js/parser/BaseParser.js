@@ -9,12 +9,14 @@ class BaseParser {
 	/**
 	 *
 	 * @constructor
-	 * @param {File}   file
-	 * @param {string} mimeType
+	 * @param {(File|FileSystemEntry[])}  file
+	 * @param {string}                    mimeType
+	 * @param {boolean}                  [isDir = false]
 	 */
-	constructor( file, mimeType ) {
+	constructor( file, mimeType, isDir = false ) {
 		this.file = file;
 		this.mimeType = mimeType;
+		this.isDir = isDir;
 	}
 
 

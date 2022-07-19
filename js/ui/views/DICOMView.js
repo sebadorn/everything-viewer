@@ -70,7 +70,7 @@ class DICOMView extends Evy.UI.BaseView {
 				{ name: 'Occupation', value: dataSet.string( 'x00102180' ) },
 				{ name: 'Smoking Status', value: dataSet.string( 'x001021a0' ) },
 				{ name: 'Addit. Patient History', value: dataSet.string( 'x001021b0' ) },
-				{ name: 'Pregnancy Status', value: this.parser.getPregnancyStatus( dataSet.string( 'x001021c0' ) ) },
+				{ name: 'Pregnancy Status', value: Evy.DICOMParser.getPregnancyStatus( dataSet.string( 'x001021c0' ) ) },
 				{ name: 'Last Menstrual Date', value: dataSet.string( 'x001021d0' ) },
 				{ name: 'Patient\'s Sex Neutered', value: dataSet.string( 'x00102203' ) },
 				{ name: 'Reason for Visit', value: dataSet.string( 'x00321066' ) },
@@ -100,8 +100,20 @@ class DICOMView extends Evy.UI.BaseView {
 		this.mdAddGroup(
 			'General Series',
 			[
-				{ name: 'Modality', value: this.parser.getModalityName( dataSet.string( 'x00080060' ) ) },
-				{ name: 'Performing Physician\'s Name', value: dataSet.string( 'x00081050' ) }
+				{ name: 'Series Date', value: dataSet.string( 'x00080021' ) },
+				{ name: 'Series Time', value: dataSet.string( 'x00080031' ) },
+				{ name: 'Modality', value: Evy.DICOMParser.getModalityName( dataSet.string( 'x00080060' ) ) },
+				{ name: 'Series Desc.', value: dataSet.string( 'x0008103e' ) },
+				{ name: 'Performing Physician\'s Name', value: dataSet.string( 'x00081050' ) },
+				{ name: 'Operator\'s Name', value: dataSet.string( 'x00081070' ) },
+				{ name: 'Anatomical Orientation Type', value: dataSet.string( 'x00102210' ) },
+				{ name: 'Body Part Examined', value: dataSet.string( 'x00180015' ) },
+				{ name: 'Protocol Name', value: dataSet.string( 'x00181030' ) },
+				{ name: 'Patient Position', value: dataSet.string( 'x00185100' ) },
+				{ name: 'Series Number', value: dataSet.string( 'x00200011' ) },
+				{ name: 'Laterality', value: dataSet.string( 'x00200060' ) },
+				{ name: 'Performed Procedure Step Desc.', value: dataSet.string( 'x00400254' ) },
+				{ name: 'Comments on the Procedure Step', value: dataSet.string( 'x00400280' ) }
 			]
 		);
 
@@ -109,6 +121,9 @@ class DICOMView extends Evy.UI.BaseView {
 			'General Image',
 			[
 				{ name: 'Image Type', value: dataSet.string( 'x00080008' ) },
+				{ name: 'Patient Orientation', value: dataSet.string( 'x00200020' ) },
+				{ name: 'Image Laterality', value: dataSet.string( 'x00200062' ) },
+				{ name: 'Image Comments', value: dataSet.string( 'x00204000' ) }
 			]
 		);
 
@@ -275,24 +290,33 @@ class DICOMView extends Evy.UI.BaseView {
 	 * @param {function} cb
 	 */
 	load( cb ) {
-		this.parser.parse( ( _err, dataSet ) => {
-			this._numFrames = Number( dataSet.string( 'x00280008' ) || 1 );
-			this._frameDelay = Number( dataSet.string( 'x00181033' ) || this._frameDelay ); // [ms]
-			this._frameTime = Number( dataSet.string( 'x00181063' ) || this._frameTime ); // [ms]
+		this.parser.parse( ( err, dataSet ) => {
+			if( err ) {
+				return;
+			}
 
-			this._addMetaInfo( dataSet );
+			if( this.parser.isDir ) {
+				// TODO: Handle entries of DICOMDIR file
+			}
+			else {
+				this._numFrames = Number( dataSet.string( 'x00280008' ) || 1 );
+				this._frameDelay = Number( dataSet.string( 'x00181033' ) || this._frameDelay ); // [ms]
+				this._frameTime = Number( dataSet.string( 'x00181063' ) || this._frameTime ); // [ms]
 
-			this.buildMetaNode( { toggleForEmpty: true } );
-			this._buildControls();
+				this._addMetaInfo( dataSet );
 
-			cb();
+				this.buildMetaNode( { toggleForEmpty: true } );
+				this._buildControls();
 
-			const imageContainer = this.nodeView.querySelector( '.image-container' );
-			cornerstone.enable( imageContainer );
-			cornerstoneWADOImageLoader.external.cornerstone = cornerstone;
+				cb();
 
-			this._imageId = cornerstoneWADOImageLoader.wadouri.fileManager.add( this.parser.file );
-			this.showFrame( 0 );
+				const imageContainer = this.nodeView.querySelector( '.image-container' );
+				cornerstone.enable( imageContainer );
+				cornerstoneWADOImageLoader.external.cornerstone = cornerstone;
+
+				this._imageId = cornerstoneWADOImageLoader.wadouri.fileManager.add( this.parser.file );
+				this.showFrame( 0 );
+			}
 		} );
 	}
 

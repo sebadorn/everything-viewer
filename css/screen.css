@@ -221,32 +221,36 @@ table {
 		white-space: pre;
 	}
 
-	.meta-container tr:last-of-type td,
-	.meta-container tr:last-of-type th {
-		padding-bottom: 0;
-	}
-
-	.meta-container .hr td {
-		border-top: 1px solid rgba(255, 255, 255, 0.1);
-	}
-
-	.meta-container .group-table {
-		background-color: rgba(0, 0, 0, 0.3);
-		border-bottom-left-radius: var(--button-radius);
-		border-bottom-right-radius: var(--button-radius);
-		margin: 5px 0;
-		padding: 10px;
+	.meta-table {
 		width: 100%;
 	}
 
-		.meta-container .group-table caption {
-			background-color: var(--color-primary-dark);
-			border-top-left-radius: var(--button-radius);
-			border-top-right-radius: var(--button-radius);
-			caption-side: top;
-			padding: 2px 10px;
-			text-align: left;
+		.meta-table > tr:last-of-type > td,
+		.meta-table > tr:last-of-type > th {
+			padding-bottom: 0;
 		}
+
+		.meta-container .hr td {
+			border-top: 1px solid rgba(255, 255, 255, 0.1);
+		}
+
+		.meta-container .group-table {
+			background-color: rgba(0, 0, 0, 0.3);
+			border-bottom-left-radius: var(--button-radius);
+			border-bottom-right-radius: var(--button-radius);
+			margin: 5px 0;
+			padding: 10px 10px 5px;
+			width: 100%;
+		}
+
+			.meta-container .group-table caption {
+				background-color: var(--color-primary-dark);
+				border-top-left-radius: var(--button-radius);
+				border-top-right-radius: var(--button-radius);
+				caption-side: top;
+				padding: 2px 10px;
+				text-align: left;
+			}
 
 	.meta-container .option {
 		margin-top: 10px;

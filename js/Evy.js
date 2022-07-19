@@ -30,6 +30,7 @@ const Evy = {
 	 */
 	_loadScripts( cb ) {
 		const scripts = [
+			'DirectoryHandler.js',
 			'FileHandler.js',
 			'parser/BaseParser.js', // Include first of the parsers.
 			'parser/CSVParser.js',
