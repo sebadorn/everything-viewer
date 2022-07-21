@@ -296,7 +296,27 @@ class DICOMView extends Evy.UI.BaseView {
 			}
 
 			if( this.parser.isDir ) {
-				// TODO: Handle entries of DICOMDIR file
+				// TODO: remove
+				console.log( dataSet );
+
+				this.buildMetaNode( { toggleForEmpty: true } );
+				this._buildControls();
+
+				const imageContainer = this.nodeView.querySelector( '.image-container' );
+				cornerstone.enable( imageContainer );
+				cornerstoneWADOImageLoader.external.cornerstone = cornerstone;
+
+				this.parser.loadDICOMDIRFiles( dataSet, ( _err, files ) => {
+					this._imageId = [];
+
+					files.forEach( file => {
+						const id = cornerstoneWADOImageLoader.wadouri.fileManager.add( file );
+						this._imageId.push( id );
+					} );
+
+					// TODO:
+					cb();
+				} );
 			}
 			else {
 				this._numFrames = Number( dataSet.string( 'x00280008' ) || 1 );

@@ -125,6 +125,65 @@ class DICOMParser extends Evy.BaseParser {
 
 	/**
 	 *
+	 * @param {object}   record
+	 * @param {function} cb
+	 */
+	loadDICOMDIRFiles( record, cb ) {
+		const filePaths = [];
+		const files = [];
+		const entries = this.file;
+
+		record.items.forEach( item => {
+			let filePath = item.dataSet.string('x00041500');
+
+			if( filePath ) {
+				filePath = filePath.replace( /\\/g, '/' );
+				filePaths.push( filePath );
+			}
+		} );
+
+		// TODO: currently only works if all files – including the DICOMDIR file – are in the same directory.
+
+		const loadFile = i => {
+			if( i >= filePaths.length ) {
+				cb( null, files );
+				return;
+			}
+
+			const filePath = filePaths[i];
+			const entry = entries.find( entry => {
+				return (
+					entry.isFile &&
+					entry.name === filePath
+				);
+			} );
+
+			if( !entry ) {
+				console.error( '[Evy.DICOMParser.loadDICOMDIRFiles]' +
+					' File entry not found for: ' + filePath );
+				loadFile( i + 1 );
+
+				return;
+			}
+
+			entry.file(
+				file => {
+					files.push( file );
+					loadFile( i + 1 );
+				},
+				err => {
+					console.error( '[Evy.DICOMParser.loadDICOMDIRFiles] ' + err.message );
+					loadFile( i + 1 );
+				}
+			);
+		};
+
+		loadFile( 0 );
+	}
+
+
+	/**
+	 *
 	 * @param {function} cb
 	 */
 	parse( cb ) {
