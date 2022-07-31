@@ -296,9 +296,6 @@ class DICOMView extends Evy.UI.BaseView {
 			}
 
 			if( this.parser.isDir ) {
-				// TODO: remove
-				console.log( dataSet );
-
 				this.buildMetaNode( { toggleForEmpty: true } );
 				this._buildControls();
 
@@ -315,6 +312,7 @@ class DICOMView extends Evy.UI.BaseView {
 					} );
 
 					// TODO:
+
 					cb();
 				} );
 			}

@@ -89,7 +89,7 @@ Evy.FileHandler = {
 				parser = new Evy.CSVParser( file, mimeType );
 			}
 			else if( mimeType === 'application/dicom' ) {
-				parser = new Evy.DICOMParser( file, mimeType );
+				parser = new Evy.DICOMParser( { file, mimeType } );
 			}
 			else if( ext === 'eml' ) {
 				parser = new Evy.EMLParser( file, mimeType );

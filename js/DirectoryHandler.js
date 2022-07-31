@@ -36,7 +36,11 @@ Evy.DirectoryHandler = {
 		dirReader.readEntries(
 			entries => {
 				if( this._containsDICOMDIRFile( entries ) ) {
-					const parser = new Evy.DICOMParser( entries, 'application/dicom' );
+					const parser = new Evy.DICOMParser( {
+						dir: dir,
+						entries: entries,
+						mimeType: 'application/dicom'
+					} );
 					cb( null, parser );
 				}
 				else {

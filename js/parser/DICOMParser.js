@@ -9,12 +9,22 @@ class DICOMParser extends Evy.BaseParser {
 	/**
 	 *
 	 * @constructor
-	 * @param {(File|FileSystemEntry[])} file
-	 * @param {string}                   mimeType
+	 * @param {object}                    options
+	 * @param {?FileSystemDirectoryEntry} options.dir
+	 * @param {?FileSystemEntry[]}        options.entries
+	 * @param {?File}                     options.file
+	 * @param {string}                    options.mimeType
 	 */
-	constructor( file, mimeType ) {
-		const isDir = Array.isArray( file );
-		super( file, mimeType, isDir );
+	constructor( options ) {
+		super(
+			options.dir || options.file,
+			options.mimeType,
+			!!options.dir
+		);
+
+		if (options.entries) {
+			this.entries = options.entries;
+		}
 	}
 
 
@@ -24,7 +34,7 @@ class DICOMParser extends Evy.BaseParser {
 	 * @param {function} cb
 	 */
 	_parseHandlerDir( cb ) {
-		const entries = this.file;
+		const entries = this.entries;
 		const dicomdirEntry = entries.find( entry => {
 			return (
 				entry.isFile &&
@@ -131,7 +141,6 @@ class DICOMParser extends Evy.BaseParser {
 	loadDICOMDIRFiles( record, cb ) {
 		const filePaths = [];
 		const files = [];
-		const entries = this.file;
 
 		record.items.forEach( item => {
 			let filePath = item.dataSet.string('x00041500');
@@ -142,8 +151,6 @@ class DICOMParser extends Evy.BaseParser {
 			}
 		} );
 
-		// TODO: currently only works if all files – including the DICOMDIR file – are in the same directory.
-
 		const loadFile = i => {
 			if( i >= filePaths.length ) {
 				cb( null, files );
@@ -151,28 +158,15 @@ class DICOMParser extends Evy.BaseParser {
 			}
 
 			const filePath = filePaths[i];
-			const entry = entries.find( entry => {
-				return (
-					entry.isFile &&
-					entry.name === filePath
-				);
-			} );
 
-			if( !entry ) {
-				console.error( '[Evy.DICOMParser.loadDICOMDIRFiles]' +
-					' File entry not found for: ' + filePath );
-				loadFile( i + 1 );
-
-				return;
-			}
-
-			entry.file(
+			this.file.getFile(
+				filePath, {},
 				file => {
 					files.push( file );
 					loadFile( i + 1 );
 				},
 				err => {
-					console.error( '[Evy.DICOMParser.loadDICOMDIRFiles] ' + err.message );
+					console.error( `[Evy.DICOMParser.loadDICOMDIRFiles] getFile "${filePath}": ` + err.message );
 					loadFile( i + 1 );
 				}
 			);
