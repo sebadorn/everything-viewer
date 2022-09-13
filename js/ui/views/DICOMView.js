@@ -295,27 +295,29 @@ class DICOMView extends Evy.UI.BaseView {
 				return;
 			}
 
+			// DICOMDIR directory.
 			if( this.parser.isDir ) {
-				this.buildMetaNode( { toggleForEmpty: true } );
-				this._buildControls();
-
-				const imageContainer = this.nodeView.querySelector( '.image-container' );
-				cornerstone.enable( imageContainer );
-				cornerstoneWADOImageLoader.external.cornerstone = cornerstone;
-
 				this.parser.loadDICOMDIRFiles( dataSet, ( _err, files ) => {
 					this._imageId = [];
+
+					this.buildMetaNode( { toggleForEmpty: true } );
+					this._buildControls();
+
+					cb();
+
+					const imageContainer = this.nodeView.querySelector( '.image-container' );
+					cornerstone.enable( imageContainer );
+					cornerstoneWADOImageLoader.external.cornerstone = cornerstone;
 
 					files.forEach( file => {
 						const id = cornerstoneWADOImageLoader.wadouri.fileManager.add( file );
 						this._imageId.push( id );
 					} );
 
-					// TODO:
-
-					cb();
+					this.showFrame( 0, this._imageId[0] );
 				} );
 			}
+			// Single file.
 			else {
 				this._numFrames = Number( dataSet.string( 'x00280008' ) || 1 );
 				this._frameDelay = Number( dataSet.string( 'x00181033' ) || this._frameDelay ); // [ms]
@@ -333,7 +335,7 @@ class DICOMView extends Evy.UI.BaseView {
 				cornerstoneWADOImageLoader.external.cornerstone = cornerstone;
 
 				this._imageId = cornerstoneWADOImageLoader.wadouri.fileManager.add( this.parser.file );
-				this.showFrame( 0 );
+				this.showFrame( 0, this._imageId );
 			}
 		} );
 	}
@@ -342,8 +344,9 @@ class DICOMView extends Evy.UI.BaseView {
 	/**
 	 *
 	 * @param {number} index
+	 * @param {string} imageId
 	 */
-	showFrame( index ) {
+	showFrame( index, imageId ) {
 		if( index >= this._numFrames ) {
 			index = 0;
 		}
@@ -353,7 +356,7 @@ class DICOMView extends Evy.UI.BaseView {
 
 		this._frameIndex = index;
 
-		cornerstone.loadAndCacheImage( this._imageId + '?frame=' + index ).then( image => {
+		cornerstone.loadAndCacheImage( imageId + '?frame=' + index ).then( image => {
 			const imageContainer = this.nodeView.querySelector( '.image-container' );
 			const viewport = cornerstone.getDefaultViewportForImage( imageContainer, image );
 			cornerstone.displayImage( imageContainer, image, viewport );

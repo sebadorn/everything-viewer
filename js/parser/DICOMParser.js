@@ -161,9 +161,11 @@ class DICOMParser extends Evy.BaseParser {
 
 			this.file.getFile(
 				filePath, {},
-				file => {
-					files.push( file );
-					loadFile( i + 1 );
+				fileEntry => {
+					fileEntry.file( file => {
+						files.push( file );
+						loadFile( i + 1 );
+					} );
 				},
 				err => {
 					console.error( `[Evy.DICOMParser.loadDICOMDIRFiles] getFile "${filePath}": ` + err.message );

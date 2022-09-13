@@ -45,6 +45,10 @@ Evy.UI = {
 		}
 
 		Evy.DirectoryHandler.getParser( dir, ( _err, parser ) => {
+			if( Evy.currentView ) {
+				Evy.currentView.destroy();
+			}
+
 			const view = Evy.FileHandler.getView( parser );
 			view.load( () => this.update( view ) );
 		} );
@@ -62,6 +66,10 @@ Evy.UI = {
 		}
 
 		Evy.FileHandler.getParser( file, ( _err, parser ) => {
+			if( Evy.currentView ) {
+				Evy.currentView.destroy();
+			}
+
 			const view = Evy.FileHandler.getView( parser );
 			view.load( () => this.update( view ) );
 		} );
@@ -297,10 +305,6 @@ Evy.UI = {
 	 * @param {?Evy.UI.BaseView} view
 	 */
 	update( view ) {
-		if( Evy.currentView ) {
-			Evy.currentView.destroy();
-		}
-
 		Evy.currentView = view;
 
 		this._updateMetaInfo( view );
