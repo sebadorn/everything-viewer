@@ -95,6 +95,11 @@ class BaseView {
 			return;
 		}
 
+		if( this.nodeMeta ) {
+			this.nodeMeta.querySelector( '.meta-table' )?.remove();
+			this.nodeMeta.querySelector( '.option-toggle-empty' )?.remove();
+		}
+
 		const table = document.createElement( 'table' );
 		table.className = 'meta-table';
 

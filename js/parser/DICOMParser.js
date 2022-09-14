@@ -141,6 +141,7 @@ class DICOMParser extends Evy.BaseParser {
 	loadDICOMDIRFiles( record, cb ) {
 		const filePaths = [];
 		const files = [];
+		const dataSets = [];
 
 		record.items.forEach( item => {
 			let filePath = item.dataSet.string('x00041500');
@@ -151,9 +152,25 @@ class DICOMParser extends Evy.BaseParser {
 			}
 		} );
 
+		const getDataSet = ( file, cb ) => {
+			const promise = file.arrayBuffer();
+
+			promise
+				.then( arrayBuffer => {
+					const options = { TransferSyntaxUID: '1.2.840.10008.1.2' };
+					const dataSet = dicomParser.parseDicom( new Uint8Array( arrayBuffer ), options );
+
+					cb( null, dataSet );
+				} )
+				.catch( err => {
+					console.error( err );
+					cb( err, null );
+				} );
+		};
+
 		const loadFile = i => {
 			if( i >= filePaths.length ) {
-				cb( null, files );
+				cb( null, files, dataSets );
 				return;
 			}
 
@@ -163,8 +180,14 @@ class DICOMParser extends Evy.BaseParser {
 				filePath, {},
 				fileEntry => {
 					fileEntry.file( file => {
-						files.push( file );
-						loadFile( i + 1 );
+						getDataSet( file, ( err, dataSet ) => {
+							err && console.error( err );
+
+							files.push( file );
+							dataSets.push( dataSet );
+
+							loadFile( i + 1 );
+						} );
 					} );
 				},
 				err => {

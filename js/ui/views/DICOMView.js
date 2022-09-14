@@ -297,10 +297,9 @@ class DICOMView extends Evy.UI.BaseView {
 
 			// DICOMDIR directory.
 			if( this.parser.isDir ) {
-				this.parser.loadDICOMDIRFiles( dataSet, ( _err, files ) => {
+				this.parser.loadDICOMDIRFiles( dataSet, ( _err, files, dataSets ) => {
 					this._imageId = [];
-
-					this.buildMetaNode( { toggleForEmpty: true } );
+					this._dataSets = dataSets;
 					this._buildControls();
 
 					cb();
@@ -314,7 +313,7 @@ class DICOMView extends Evy.UI.BaseView {
 						this._imageId.push( id );
 					} );
 
-					this.showFrame( 0, this._imageId[0] );
+					this.showFile( 0 );
 				} );
 			}
 			// Single file.
@@ -338,6 +337,25 @@ class DICOMView extends Evy.UI.BaseView {
 				this.showFrame( 0, this._imageId );
 			}
 		} );
+	}
+
+
+	/**
+	 *
+	 * @param {number} index
+	 */
+	showFile( index ) {
+		const dataSet = this._dataSets[index];
+		const imageId = this._imageId[index];
+
+		this._numFrames = Number( dataSet.string( 'x00280008' ) || 1 );
+		this._frameDelay = Number( dataSet.string( 'x00181033' ) || this._frameDelay ); // [ms]
+		this._frameTime = Number( dataSet.string( 'x00181063' ) || this._frameTime ); // [ms]
+
+		this._addMetaInfo( dataSet );
+		this.buildMetaNode( { toggleForEmpty: true } );
+
+		this.showFrame( 0, imageId );
 	}
 
 
