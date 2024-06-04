@@ -1,9 +1,7 @@
 'use strict';
 
 
-{
-
-class Window {
+Evy.UI.Window = class {
 
 
 	/**
@@ -118,10 +116,5 @@ class Window {
 		this._node.className = clsName;
 	}
 
-
-}
-
-
-Evy.UI.Window = Window;
 
 }

@@ -1,9 +1,7 @@
 'use strict';
 
 
-{
-
-class DICOMView extends Evy.UI.BaseView {
+Evy.UI.DICOMView = class extends Evy.UI.BaseView {
 
 
 	/**
@@ -385,10 +383,5 @@ class DICOMView extends Evy.UI.BaseView {
 		}
 	}
 
-
-}
-
-
-Evy.UI.DICOMView = DICOMView;
 
 }

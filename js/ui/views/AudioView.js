@@ -1,9 +1,7 @@
 'use strict';
 
 
-{
-
-class AudioView extends Evy.UI.BaseView {
+Evy.UI.AudioView = class extends Evy.UI.BaseView {
 
 
 	/**
@@ -65,10 +63,5 @@ class AudioView extends Evy.UI.BaseView {
 		}
 	}
 
-
-}
-
-
-Evy.UI.AudioView = AudioView;
 
 }

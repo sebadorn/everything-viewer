@@ -1,9 +1,7 @@
 'use strict';
 
 
-{
-
-class ZIPParser extends Evy.BaseParser {
+Evy.ZIPParser = class extends Evy.BaseParser {
 
 
 	/**
@@ -127,10 +125,5 @@ class ZIPParser extends Evy.BaseParser {
 		} );
 	}
 
-
-}
-
-
-Evy.ZIPParser = ZIPParser;
 
 }

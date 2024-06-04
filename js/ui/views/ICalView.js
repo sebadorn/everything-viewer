@@ -1,9 +1,7 @@
 'use strict';
 
 
-{
-
-class ICalView extends Evy.UI.BaseView {
+Evy.UI.ICalView = class extends Evy.UI.BaseView {
 
 
 	/**
@@ -30,10 +28,5 @@ class ICalView extends Evy.UI.BaseView {
 		} );
 	}
 
-
-}
-
-
-Evy.UI.ICalView = ICalView;
 
 }

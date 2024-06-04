@@ -1,9 +1,7 @@
 'use strict';
 
 
-{
-
-class TextView extends Evy.UI.BaseView {
+Evy.UI.TextView = class extends Evy.UI.BaseView {
 
 
 	/**
@@ -45,10 +43,5 @@ class TextView extends Evy.UI.BaseView {
 		} );
 	}
 
-
-}
-
-
-Evy.UI.TextView = TextView;
 
 }

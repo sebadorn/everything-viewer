@@ -1,9 +1,7 @@
 'use strict';
 
 
-{
-
-class PDFView extends Evy.UI.BaseView {
+Evy.UI.PDFView = class extends Evy.UI.BaseView {
 
 
 	/**
@@ -47,10 +45,5 @@ class PDFView extends Evy.UI.BaseView {
 		cb();
 	}
 
-
-}
-
-
-Evy.UI.PDFView = PDFView;
 
 }

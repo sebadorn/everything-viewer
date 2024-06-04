@@ -1,9 +1,7 @@
 'use strict';
 
 
-{
-
-class VCFView extends Evy.UI.BaseView {
+Evy.UI.VCFView = class extends Evy.UI.BaseView {
 
 
 	/**
@@ -30,10 +28,5 @@ class VCFView extends Evy.UI.BaseView {
 		} );
 	}
 
-
-}
-
-
-Evy.UI.VCFView = VCFView;
 
 }

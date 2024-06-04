@@ -1,9 +1,7 @@
 'use strict';
 
 
-{
-
-class GIFParser extends Evy.BaseParser {
+Evy.GIFParser = class extends Evy.BaseParser {
 
 
 	/**
@@ -42,10 +40,5 @@ class GIFParser extends Evy.BaseParser {
 		} );
 	}
 
-
-}
-
-
-Evy.GIFParser = GIFParser;
 
 }

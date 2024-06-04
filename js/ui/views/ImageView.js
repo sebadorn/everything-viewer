@@ -1,9 +1,7 @@
 'use strict';
 
 
-{
-
-class ImageView extends Evy.UI.BaseView {
+Evy.UI.ImageView = class extends Evy.UI.BaseView {
 
 
 	/**
@@ -63,10 +61,5 @@ class ImageView extends Evy.UI.BaseView {
 		image.src = this._objectURL;
 	}
 
-
-}
-
-
-Evy.UI.ImageView = ImageView;
 
 }

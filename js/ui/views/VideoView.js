@@ -1,9 +1,7 @@
 'use strict';
 
 
-{
-
-class VideoView extends Evy.UI.BaseView {
+Evy.UI.VideoView = class extends Evy.UI.BaseView {
 
 
 	/**
@@ -72,10 +70,5 @@ class VideoView extends Evy.UI.BaseView {
 		}
 	}
 
-
-}
-
-
-Evy.UI.VideoView = VideoView;
 
 }

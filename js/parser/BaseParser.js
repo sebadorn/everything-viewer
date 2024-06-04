@@ -1,9 +1,7 @@
 'use strict';
 
 
-{
-
-class BaseParser {
+Evy.BaseParser = class {
 
 
 	/**
@@ -125,10 +123,5 @@ class BaseParser {
 			} );
 	}
 
-
-}
-
-
-Evy.BaseParser = BaseParser;
 
 }

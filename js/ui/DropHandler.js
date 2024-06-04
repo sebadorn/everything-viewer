@@ -1,9 +1,7 @@
 'use strict';
 
 
-{
-
-class DropHandler {
+Evy.UI.DropHandler = class {
 
 
 	/**
@@ -112,10 +110,5 @@ class DropHandler {
 		this._events[name].push( cb );
 	}
 
-
-}
-
-
-Evy.UI.DropHandler = DropHandler;
 
 }

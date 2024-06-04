@@ -1,9 +1,7 @@
 'use strict';
 
 
-{
-
-class DICOMParser extends Evy.BaseParser {
+Evy.DICOMParser = class extends Evy.BaseParser {
 
 
 	/**
@@ -220,7 +218,7 @@ class DICOMParser extends Evy.BaseParser {
 }
 
 // Source: https://dicomlibrary.com/dicom/modality/
-DICOMParser.MODALITY_MAP = {
+Evy.DICOMParser.MODALITY_MAP = {
 	AR: 'Autorefraction',
 	AS: 'Angioscopy',
 	ASMT: 'Content Assessment Results',
@@ -302,8 +300,3 @@ DICOMParser.MODALITY_MAP = {
 	XA: 'X-Ray Angiography',
 	XC: 'External-camera Photography'
 };
-
-
-Evy.DICOMParser = DICOMParser;
-
-}

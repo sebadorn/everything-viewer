@@ -1,9 +1,7 @@
 'use strict';
 
 
-{
-
-class CSVView extends Evy.UI.BaseView {
+Evy.UI.CSVView = class extends Evy.UI.BaseView {
 
 
 	/**
@@ -63,10 +61,5 @@ class CSVView extends Evy.UI.BaseView {
 		} );
 	}
 
-
-}
-
-
-Evy.UI.CSVView = CSVView;
 
 }

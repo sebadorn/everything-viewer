@@ -54,7 +54,7 @@ Evy.DirectoryHandler = {
 				cb( err );
 			}
 		);
-	}
+	},
 
 
 };

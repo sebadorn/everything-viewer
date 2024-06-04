@@ -27,7 +27,7 @@ Evy.FileHandler = {
 			ics: 'text/calendar',
 			ifb: 'text/calendar',
 			vcf: 'text/vcard',
-			vcs: 'text/calendar'
+			vcs: 'text/calendar',
 		};
 
 		return map[ext] || null;
@@ -289,7 +289,7 @@ Evy.FileHandler = {
 			'application/x-php',
 			'application/x-python',
 			'application/x-shellscript',
-			'application/x-yaml'
+			'application/x-yaml',
 		];
 
 		if( knownTypes.includes( type ) ) {
@@ -306,7 +306,7 @@ Evy.FileHandler = {
 			'license',
 			'makefile',
 			'readme',
-			'todo'
+			'todo',
 		];
 
 		if( knownNames.includes( name ) ) {
@@ -323,7 +323,7 @@ Evy.FileHandler = {
 			'ini',
 			'less',
 			'proto',
-			'vert'
+			'vert',
 		];
 
 		if( knownExts.includes( ext ) ) {
@@ -339,7 +339,7 @@ Evy.FileHandler = {
 		}
 
 		return false;
-	}
+	},
 
 
 };

@@ -1,9 +1,7 @@
 'use strict';
 
 
-{
-
-class EMLParser extends Evy.BaseParser {
+Evy.EMLParser = class extends Evy.BaseParser {
 
 
 	/**
@@ -251,10 +249,5 @@ class EMLParser extends Evy.BaseParser {
 		return data;
 	}
 
-
-}
-
-
-Evy.EMLParser = EMLParser;
 
 }

@@ -1,9 +1,7 @@
 'use strict';
 
 
-{
-
-class BaseView {
+Evy.UI.BaseView = class {
 
 
 	/**
@@ -248,10 +246,5 @@ class BaseView {
 		}
 	}
 
-
-}
-
-
-Evy.UI.BaseView = BaseView;
 
 }

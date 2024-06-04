@@ -1,9 +1,7 @@
 'use strict';
 
 
-{
-
-class ICalParser extends Evy.BaseParser {
+Evy.ICalParser = class extends Evy.BaseParser {
 
 
 	/**
@@ -477,10 +475,5 @@ class ICalParser extends Evy.BaseParser {
 		} );
 	}
 
-
-}
-
-
-Evy.ICalParser = ICalParser;
 
 }

@@ -1,9 +1,7 @@
 'use strict';
 
 
-{
-
-class EMLView extends Evy.UI.BaseView {
+Evy.UI.EMLView = class extends Evy.UI.BaseView {
 
 
 	/**
@@ -134,10 +132,5 @@ class EMLView extends Evy.UI.BaseView {
 		} );
 	}
 
-
-}
-
-
-Evy.UI.EMLView = EMLView;
 
 }

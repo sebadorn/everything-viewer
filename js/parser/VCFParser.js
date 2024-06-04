@@ -1,9 +1,7 @@
 'use strict';
 
 
-{
-
-class VCFParser extends Evy.BaseParser {
+Evy.VCFParser = class extends Evy.BaseParser {
 
 
 	/**
@@ -255,10 +253,5 @@ class VCFParser extends Evy.BaseParser {
 		} );
 	}
 
-
-}
-
-
-Evy.VCFParser = VCFParser;
 
 }

@@ -1,9 +1,7 @@
 'use strict';
 
 
-{
-
-class ZIPView extends Evy.UI.BaseView {
+Evy.UI.ZIPView = class extends Evy.UI.BaseView {
 
 
 	/**
@@ -40,10 +38,5 @@ class ZIPView extends Evy.UI.BaseView {
 		} );
 	}
 
-
-}
-
-
-Evy.UI.ZIPView = ZIPView;
 
 }

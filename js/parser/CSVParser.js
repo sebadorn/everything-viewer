@@ -1,9 +1,7 @@
 'use strict';
 
 
-{
-
-class CSVParser extends Evy.BaseParser {
+Evy.CSVParser = class extends Evy.BaseParser {
 
 
 	/**
@@ -30,10 +28,5 @@ class CSVParser extends Evy.BaseParser {
 		} );
 	}
 
-
-}
-
-
-Evy.CSVParser = CSVParser;
 
 }

@@ -1,9 +1,7 @@
 'use strict';
 
 
-{
-
-class GIFView extends Evy.UI.BaseView {
+Evy.UI.GIFView = class extends Evy.UI.BaseView {
 
 
 	/**
@@ -231,10 +229,5 @@ class GIFView extends Evy.UI.BaseView {
 		this._counter.textContent = ( index + 1 ) + '/' + numFrames;
 	}
 
-
-}
-
-
-Evy.UI.GIFView = GIFView;
 
 }

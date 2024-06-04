@@ -309,7 +309,7 @@ Evy.UI = {
 
 		this._updateMetaInfo( view );
 		this._updateViewer( view );
-	}
+	},
 
 
 };

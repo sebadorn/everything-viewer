@@ -55,7 +55,7 @@ const Evy = {
 			'ui/views/TextView.js',
 			'ui/views/VCFView.js',
 			'ui/views/VideoView.js',
-			'ui/views/ZIPView.js'
+			'ui/views/ZIPView.js',
 		];
 
 		const next = i => {
@@ -86,36 +86,36 @@ const Evy = {
 		const map = {
 			csv: {
 				path: 'lib/csv.min.js',
-				testLoaded: () => typeof CSV !== 'undefined'
+				testLoaded: () => typeof CSV !== 'undefined',
 			},
 			dicom: {
 				path: [
 					'lib/cornerstone.min.js',
 					'lib/dicomParser.min.js',
-					'lib/cornerstoneWADOImageLoader.bundle.min.js'
+					'lib/cornerstoneWADOImageLoader.bundle.min.js',
 				],
-				testLoaded: () => typeof cornerstone !== 'undefined'
+				testLoaded: () => typeof cornerstone !== 'undefined',
 			},
 			hljs: {
 				path: 'lib/highlight.min.js',
-				testLoaded: () => typeof hljs !== 'undefined'
+				testLoaded: () => typeof hljs !== 'undefined',
 			},
 			ical: {
 				path: 'lib/ical.min.js',
-				testLoaded: () => typeof ICAL !== 'undefined'
+				testLoaded: () => typeof ICAL !== 'undefined',
 			},
 			jszip: {
 				path: 'lib/jszip.min.js',
-				testLoaded: () => typeof JSZip !== 'undefined'
+				testLoaded: () => typeof JSZip !== 'undefined',
 			},
 			omggif: {
 				path: 'lib/omggif.js',
-				testLoaded: () => typeof GifReader !== 'undefined'
+				testLoaded: () => typeof GifReader !== 'undefined',
 			},
 			vcf: {
 				path: 'lib/vcardjs-0.3.min.js',
-				testLoaded: () => typeof VCF !== 'undefined'
-			}
+				testLoaded: () => typeof VCF !== 'undefined',
+			},
 		};
 
 		const item = map[key];
@@ -171,7 +171,7 @@ const Evy = {
 	 */
 	isObject( value ) {
 		return typeof value === 'object' && value !== null;
-	}
+	},
 
 
 };
