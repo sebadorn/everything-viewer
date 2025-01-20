@@ -98,7 +98,7 @@ Evy.DICOMParser = class extends Evy.BaseParser {
 
 		key = String( key ).toUpperCase();
 
-		let value = DICOMParser.MODALITY_MAP[key];
+		let value = Evy.DICOMParser.MODALITY_MAP[key];
 
 		if( value ) {
 			value += ` [${key}]`;

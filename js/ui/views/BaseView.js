@@ -98,16 +98,6 @@ Evy.UI.BaseView = class {
 			this.nodeMeta.querySelector( '.option-toggle-empty' )?.remove();
 		}
 
-		const table = document.createElement( 'table' );
-		table.className = 'meta-table';
-
-		this.metaData.forEach( md => {
-			const row = this._buildMetaDataRow( md );
-			table.append( row );
-		} );
-
-		this.nodeMeta.append( table );
-
 		if( options.toggleForEmpty ) {
 			const line = Evy.UI.buildHTML(
 				'<div class="option option-toggle-empty">' +
@@ -121,6 +111,16 @@ Evy.UI.BaseView = class {
 
 			this.nodeMeta.append( line );
 		}
+
+		const table = document.createElement( 'table' );
+		table.className = 'meta-table';
+
+		this.metaData.forEach( md => {
+			const row = this._buildMetaDataRow( md );
+			table.append( row );
+		} );
+
+		this.nodeMeta.append( table );
 	}
 
 
