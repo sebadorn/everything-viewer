@@ -1,10 +1,4 @@
-'use strict';
-
-
-/**
- * @namespace Evy
- */
-const Evy = {
+export const Evy = {
 
 
 	/**

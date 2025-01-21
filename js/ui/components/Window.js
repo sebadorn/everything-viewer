@@ -1,31 +1,62 @@
-'use strict';
+import { UI } from '../UI.js';
+import { Component } from './Component.js';
 
 
-Evy.UI.Window = class {
+export class Window extends Component {
 
 
 	/**
 	 *
-	 * @constructor
-	 * @param {HTMLElement} node
+	 * @param {object}   config
+	 * @param {object[]} config.content
+	 * @param {string?}  config.title
+	 * @param {number?}  config.x
+	 * @param {number?}  config.y
 	 */
-	constructor( node ) {
+	constructor( config ) {
+		super();
+
+		this._config = config;
+
 		this._isDragging = false;
 		this._lastPos = {
 			x: null,
 			y: null
 		};
-		this._node = node;
 
 		this._cbMouseUp = this._onEnd.bind( this );
 		this._cbMouseMove = this._onMove.bind( this );
+	}
 
-		const header = node.querySelector( ':scope > header' );
-		const arrow = header.querySelector( '.toggle' );
 
-		arrow.addEventListener( 'click', _ev => this._toggleContent() );
+	/**
+	 *
+	 */
+	_applyConfig() {
+		if( !this._config ) {
+			return;
+		}
 
-		header.addEventListener( 'mousedown', ev => this._onStart( ev ) );
+		if( Array.isArray( this._config.content ) ) {
+			const node = this._node.querySelector( '.content' );
+
+			for( let content of this._config.content ) {
+				if( content instanceof Component ) {
+					node.append( content.render() );
+				}
+				else {
+					node.append( content );
+				}
+			}
+		}
+
+		if( this._config.x ) {
+			this._node.style.left = this._config.x + 'px';
+		}
+
+		if( this._config.y ) {
+			this._node.style.top = this._config.y + 'px';
+		}
 	}
 
 
@@ -117,4 +148,34 @@ Evy.UI.Window = class {
 	}
 
 
-}
+	/**
+	 *
+	 * @returns {HTMLElement}
+	 */
+	render() {
+		super.render();
+
+		this._node = UI.build( `
+			<aside class="window window-open">
+				<header>
+					<span class="toggle"></span>
+					${ this._config.title || '' }
+				</header>
+				<div class="content"></div>
+			</aside>
+		` );
+
+		this._applyConfig();
+		delete this._config;
+
+		const header = this._node.querySelector( ':scope > header' );
+		const arrow = header.querySelector( '.toggle' );
+
+		arrow.addEventListener( 'click', _ev => this._toggleContent() );
+		header.addEventListener( 'mousedown', ev => this._onStart( ev ) );
+
+		return this._node;
+	}
+
+
+};

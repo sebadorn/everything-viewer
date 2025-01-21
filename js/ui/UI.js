@@ -1,37 +1,11 @@
-'use strict';
+import { DirectoryHandler } from '../DirectoryHandler.js';
+import { FileHandler } from '../FileHandler.js';
 
 
-/**
- * @namespace Evy.UI
- */
-Evy.UI = {
+export const UI = {
 
 
-	_dropHandler: null,
-
-
-	/**
-	 *
-	 */
-	init() {
-		this._registerButtons();
-		this._registerDrop();
-		this._registerWindows();
-	},
-
-
-	/**
-	 *
-	 * @private
-	 */
-	_handleButtonOpen() {
-		const input = document.createElement( 'input' );
-		input.type = 'file';
-		input.addEventListener( 'change', _ev => {
-			this._onFile( input.files[0] );
-		} );
-		input.click();
-	},
+	_domParser: null,
 
 
 	/**
@@ -39,17 +13,17 @@ Evy.UI = {
 	 * @private
 	 * @param {FileSystemDirectoryEntry} dir
 	 */
-	_onDirectory( dir ) {
+	openDirectory( dir ) {
 		if( !dir ) {
 			return;
 		}
 
-		Evy.DirectoryHandler.getParser( dir, ( _err, parser ) => {
+		DirectoryHandler.getParser( dir, ( _err, parser ) => {
 			if( Evy.currentView ) {
 				Evy.currentView.destroy();
 			}
 
-			const view = Evy.FileHandler.getView( parser );
+			const view = FileHandler.getView( parser );
 			view.load( () => this.update( view ) );
 		} );
 	},
@@ -60,51 +34,19 @@ Evy.UI = {
 	 * @private
 	 * @param {File} file
 	 */
-	_onFile( file ) {
+	openFile( file ) {
 		if( !file ) {
 			return;
 		}
 
-		Evy.FileHandler.getParser( file, ( _err, parser ) => {
+		FileHandler.getParser( file, ( _err, parser ) => {
 			if( Evy.currentView ) {
 				Evy.currentView.destroy();
 			}
 
-			const view = Evy.FileHandler.getView( parser );
+			const view = FileHandler.getView( parser );
 			view.load( () => this.update( view ) );
 		} );
-	},
-
-
-	/**
-	 *
-	 * @private
-	 */
-	_registerButtons() {
-		const btnOpen = document.querySelector( '#file-open' );
-		btnOpen.addEventListener( 'click', () => this._handleButtonOpen() );
-	},
-
-
-	/**
-	 *
-	 * @private
-	 */
-	_registerDrop() {
-		const area = document.querySelector( 'main .viewer' );
-		this._dropHandler = new this.DropHandler( area );
-		this._dropHandler.on( 'file', file => this._onFile( file ) );
-		this._dropHandler.on( 'directory', ( dir, topLevelEntries ) => this._onDirectory( dir, topLevelEntries ) );
-	},
-
-
-	/**
-	 *
-	 * @private
-	 */
-	_registerWindows() {
-		const nodes = document.querySelectorAll( 'aside.window' );
-		nodes.forEach( node => new Evy.UI.Window( node ) );
 	},
 
 
@@ -148,16 +90,27 @@ Evy.UI = {
 
 	/**
 	 *
-	 * @param  {string} str
-	 * @return {DocumentFragment}
+	 * @param {string} html
+	 * @returns {HTMLElement}
 	 */
-	buildHTML( str ) {
-		const parser = new DOMParser();
-		const doc = parser.parseFromString( str.trim(), 'text/html' );
-		const fragment = document.createDocumentFragment();
-		fragment.append( ...doc.body.children );
+	build( html ) {
+		this._domParser = this._domParser || new DOMParser();
 
-		return fragment;
+		const doc = this._domParser.parseFromString( html.trim(), 'text/html' );
+		let node = null;
+
+		if( doc.body.childElementCount > 1 ) {
+			node = document.createDocumentFragment();
+			node.append( ...doc.body.children );
+		}
+		else {
+			// Remove from DOM tree, otherwise the parentElement/parentNode
+			// would be "body", but we want a "free floating" element.
+			node = doc.body.firstChild;
+			node.remove();
+		}
+
+		return node;
 	},
 
 
@@ -178,6 +131,23 @@ Evy.UI = {
 		row.append( th, td );
 
 		return row;
+	},
+
+
+	/**
+	 *
+	 * @param {string} value
+	 * @returns {string}
+	 */
+	escapeHTML( value ) {
+		value = String( value );
+		value = value.replaceAll( '&', '&amp;' );
+		value = value.replaceAll( '<', '&lt;' );
+		value = value.replaceAll( '>', '&gt;' );
+		value = value.replaceAll( '"', '&quot;' );
+		value = value.replaceAll( "'", '&#039;' );
+
+		return value;
 	},
 
 

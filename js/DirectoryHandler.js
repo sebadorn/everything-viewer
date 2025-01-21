@@ -1,10 +1,4 @@
-'use strict';
-
-
-/**
- * @namespace Evy.DirectoryHandler
- */
-Evy.DirectoryHandler = {
+export const DirectoryHandler = {
 
 
 	/**

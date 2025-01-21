@@ -1,7 +1,4 @@
-'use strict';
-
-
-Evy.UI.DropHandler = class {
+export class DropHandler {
 
 
 	/**
@@ -29,7 +26,7 @@ Evy.UI.DropHandler = class {
 	 * @param {FileSystemDirectoryEntry} entry
 	 */
 	_handleDirectory( entry ) {
-		console.log( '[Evy.UI.DropHandler._handleDirectory]' +
+		console.log( '[DropHandler._handleDirectory]' +
 			' Directory dropped: ' + entry.name );
 
 		const listeners = this._events.directory;
@@ -61,7 +58,7 @@ Evy.UI.DropHandler = class {
 					}
 				}
 				else {
-					console.warn( '[Evy.UI.DropHandler._handleDropped]' +
+					console.warn( '[DropHandler._handleDropped]' +
 						' Method "webkitGetAsEntry" not supported by browser.' +
 						' Cannot support directories.' );
 					this._handleFile( first.getAsFile() );
@@ -69,7 +66,7 @@ Evy.UI.DropHandler = class {
 			}
 		}
 		else if( dataTransfer.files ) {
-			console.warn( '[Evy.UI.DropHandler._handleDropped]' +
+			console.warn( '[DropHandler._handleDropped]' +
 				' DataTransfer has no attribute "items", using fallback on "files".' );
 			const first = dataTransfer.files[0];
 
@@ -78,7 +75,7 @@ Evy.UI.DropHandler = class {
 			}
 		}
 		else {
-			console.error( '[Evy.UI.DropHandler._handleDropped]' +
+			console.error( '[DropHandler._handleDropped]' +
 				' DataTransfer has neither "items" nor "files" attribute.', dataTransfer );
 		}
 	}
@@ -90,7 +87,7 @@ Evy.UI.DropHandler = class {
 	 * @param {File} file
 	 */
 	_handleFile( file ) {
-		console.log( '[Evy.UI.DropHandler._handleFile] File dropped: ' + file.name );
+		console.log( '[DropHandler._handleFile] File dropped: ' + file.name );
 
 		const listeners = this._events.file;
 
@@ -111,4 +108,4 @@ Evy.UI.DropHandler = class {
 	}
 
 
-}
+};

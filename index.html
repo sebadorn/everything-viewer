@@ -7,40 +7,8 @@
 	<link rel="stylesheet" href="css/screen.css" />
 	<link rel="stylesheet" href="css/views.css" />
 	<link rel="stylesheet" href="css/stackoverflow-dark.min.css" />
-	<script src="js/Evy.js"></script>
-	<script>
-		window.addEventListener( 'load', () => Evy.init() );
-	</script>
 </head>
 <body>
-
-<aside id="main-header" class="window window-open" style="left: 20px; top: 20px;">
-	<header class="app-name">
-		<span class="toggle"></span>
-		Everything Viewer
-	</header>
-	<div class="content">
-		<button id="file-open">Open…</button>
-		<a href="https://github.com/sebadorn/everything-viewer" id="github">GitHub</a>
-	</div>
-</aside>
-
-<aside class="meta-container window window-open" style="left: 20px; top: 116px;">
-	<header>
-		<span class="toggle"></span>
-		Information
-	</header>
-	<div class="content"></div>
-</aside>
-
-<main>
-	<div class="viewer">
-		<div class="note-dragdrop">
-			<h1>Everything Viewer</h1>
-			<span>Just drag &amp; drop your file here</span>
-		</div>
-	</div>
-</main>
-
+<script type="module" src="js/main.js"></script>
 </body>
 </html>

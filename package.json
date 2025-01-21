@@ -1,0 +1,13 @@
+{
+  "name": "everything-viewer",
+  "version": "1.0.0",
+  "homepage": "https://github.com/sebadorn/everything-viewer",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sebadorn/everything-viewer.git"
+  },
+  "license": "MIT",
+  "author": "Sebastian Dorn",
+  "type": "commonjs",
+  "main": "index.html"
+}

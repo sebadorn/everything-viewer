@@ -1,10 +1,4 @@
-'use strict';
-
-
-/**
- * @namespace Evy.FileHandler
- */
-Evy.FileHandler = {
+export const FileHandler = {
 
 
 	/**
