@@ -1,13 +1,12 @@
-'use strict';
+import { BaseView } from './BaseView.js';
 
 
-Evy.UI.ZIPView = class extends Evy.UI.BaseView {
+export class ZIPView extends BaseView {
 
 
 	/**
 	 *
-	 * @constructor
-	 * @param {Evy.ZIPParser} parser
+	 * @param {ZIPParser} parser
 	 */
 	constructor( parser ) {
 		super( parser, 'zip' );
@@ -39,4 +38,4 @@ Evy.UI.ZIPView = class extends Evy.UI.BaseView {
 	}
 
 
-}
+};

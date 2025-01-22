@@ -1,12 +1,11 @@
-'use strict';
+import { BaseParser } from './BaseParser.js';
 
 
-Evy.DICOMParser = class extends Evy.BaseParser {
+export class DICOMParser extends BaseParser {
 
 
 	/**
 	 *
-	 * @constructor
 	 * @param {object}                    options
 	 * @param {?FileSystemDirectoryEntry} options.dir
 	 * @param {?FileSystemEntry[]}        options.entries
@@ -215,10 +214,10 @@ Evy.DICOMParser = class extends Evy.BaseParser {
 	}
 
 
-}
+};
 
 // Source: https://dicomlibrary.com/dicom/modality/
-Evy.DICOMParser.MODALITY_MAP = {
+DICOMParser.MODALITY_MAP = {
 	AR: 'Autorefraction',
 	AS: 'Angioscopy',
 	ASMT: 'Content Assessment Results',
@@ -298,5 +297,5 @@ Evy.DICOMParser.MODALITY_MAP = {
 	VA: 'Visual Acuity',
 	VF: 'Videofluorography',
 	XA: 'X-Ray Angiography',
-	XC: 'External-camera Photography'
+	XC: 'External-camera Photography',
 };

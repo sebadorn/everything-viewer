@@ -1,12 +1,11 @@
-'use strict';
+import { FileHandler } from '../FileHandler.js';
 
 
-Evy.BaseParser = class {
+export class BaseParser {
 
 
 	/**
 	 *
-	 * @constructor
 	 * @param {(File|FileSystemEntry[])}  file
 	 * @param {string}                    mimeType
 	 * @param {boolean}                  [isDir = false]
@@ -23,7 +22,7 @@ Evy.BaseParser = class {
 	 * @return {?string}
 	 */
 	detectLanguage() {
-		const ext = Evy.FileHandler.getFileExt( this.file );
+		const ext = FileHandler.getFileExt( this.file );
 
 		const extIsType = [
 			'c', 'cc', 'cpp',
@@ -124,4 +123,4 @@ Evy.BaseParser = class {
 	}
 
 
-}
+};

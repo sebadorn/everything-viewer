@@ -1,13 +1,12 @@
-'use strict';
+import { BaseView } from './BaseView.js';
 
 
-Evy.UI.DICOMView = class extends Evy.UI.BaseView {
+export class DICOMView extends BaseView {
 
 
 	/**
 	 *
-	 * @constructor
-	 * @param {Evy.DICOMParser} parser
+	 * @param {DICOMParser} parser
 	 */
 	constructor( parser ) {
 		super( parser, 'dicom' );
@@ -384,4 +383,4 @@ Evy.UI.DICOMView = class extends Evy.UI.BaseView {
 	}
 
 
-}
+};

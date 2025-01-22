@@ -1,3 +1,27 @@
+import { BaseParser } from './parser/BaseParser.js';
+import { CSVParser } from './parser/CSVParser.js';
+import { DICOMParser } from './parser/DICOMParser.js';
+import { EMLParser } from './parser/EMLParser.js';
+import { GIFParser } from './parser/GIFParser.js';
+import { ICalParser } from './parser/ICalParser.js';
+import { VCFParser } from './parser/VCFParser.js';
+import { ZIPParser } from './parser/ZIPParser.js';
+
+import { AudioView } from './ui/views/AudioView.js';
+import { BaseView } from './ui/views/BaseView.js';
+import { CSVView } from './ui/views/CSVView.js';
+import { DICOMView } from './ui/views/DICOMView.js';
+import { EMLView } from './ui/views/EMLView.js';
+import { GIFView } from './ui/views/GIFView.js';
+import { ICalView } from './ui/views/ICalView.js';
+import { ImageView } from './ui/views/ImageView.js';
+import { PDFView } from './ui/views/PDFView.js';
+import { TextView } from './ui/views/TextView.js';
+import { VCFView } from './ui/views/VCFView.js';
+import { VideoView } from './ui/views/VideoView.js';
+import { ZIPView } from './ui/views/ZIPView.js';
+
+
 export const FileHandler = {
 
 
@@ -80,31 +104,31 @@ export const FileHandler = {
 			let parser = null;
 
 			if( ext === 'csv' ) {
-				parser = new Evy.CSVParser( file, mimeType );
+				parser = new CSVParser( file, mimeType );
 			}
 			else if( mimeType === 'application/dicom' ) {
-				parser = new Evy.DICOMParser( { file, mimeType } );
+				parser = new DICOMParser( { file, mimeType } );
 			}
 			else if( ext === 'eml' ) {
-				parser = new Evy.EMLParser( file, mimeType );
+				parser = new EMLParser( file, mimeType );
 			}
 			else if(
 				mimeType === 'text/calendar' ||
 				['ical', 'ics', 'ifb', 'vcs'].includes( ext )
 			) {
-				parser = new Evy.ICalParser( file, mimeType );
+				parser = new ICalParser( file, mimeType );
 			}
 			else if( ext === 'vcf' || mimeType === 'text/vcard' ) {
-				parser = new Evy.VCFParser( file, mimeType );
+				parser = new VCFParser( file, mimeType );
 			}
 			else if( mimeType === 'application/zip' ) {
-				parser = new Evy.ZIPParser( file, mimeType );
+				parser = new ZIPParser( file, mimeType );
 			}
 			else if( mimeType === 'image/gif' ) {
-				parser = new Evy.GIFParser( file, mimeType );
+				parser = new GIFParser( file, mimeType );
 			}
 			else {
-				parser = new Evy.BaseParser( file, mimeType );
+				parser = new BaseParser( file, mimeType );
 			}
 
 			cb( null, parser );
@@ -114,13 +138,13 @@ export const FileHandler = {
 
 	/**
 	 *
-	 * @param  {Evy.BaseParser} parser
-	 * @return {Evy.UI.BaseView}
+	 * @param  {BaseParser} parser
+	 * @return {BaseView}
 	 */
 	getView( parser ) {
 		if( parser.isDir ) {
-			if( parser instanceof Evy.DICOMParser ) {
-				return new Evy.UI.DICOMView( parser );
+			if( parser instanceof DICOMParser ) {
+				return new DICOMView( parser );
 			}
 		}
 		else if( parser.mimeType || parser.file.size > 0 ) {
@@ -129,44 +153,44 @@ export const FileHandler = {
 			const name = parser.file.name.toLowerCase();
 
 			if( type === 'application/pdf' ) {
-				return new Evy.UI.PDFView( parser );
+				return new PDFView( parser );
 			}
 			else if( type.startsWith( 'audio/' ) ) {
-				return new Evy.UI.AudioView( parser );
+				return new AudioView( parser );
 			}
-			else if( parser instanceof Evy.CSVParser ) {
-				return new Evy.UI.CSVView( parser );
+			else if( parser instanceof CSVParser ) {
+				return new CSVView( parser );
 			}
-			else if( parser instanceof Evy.DICOMParser ) {
-				return new Evy.UI.DICOMView( parser );
+			else if( parser instanceof DICOMParser ) {
+				return new DICOMView( parser );
 			}
-			else if( parser instanceof Evy.EMLParser ) {
-				return new Evy.UI.EMLView( parser );
+			else if( parser instanceof EMLParser ) {
+				return new EMLView( parser );
 			}
-			else if( parser instanceof Evy.ICalParser ) {
-				return new Evy.UI.ICalView( parser );
+			else if( parser instanceof ICalParser ) {
+				return new ICalView( parser );
 			}
-			else if( parser instanceof Evy.ZIPParser ) {
-				return new Evy.UI.ZIPView( parser );
+			else if( parser instanceof ZIPParser ) {
+				return new ZIPView( parser );
 			}
-			else if( parser instanceof Evy.GIFParser ) {
-				return new Evy.UI.GIFView( parser );
+			else if( parser instanceof GIFParser ) {
+				return new GIFView( parser );
 			}
 			else if( type.startsWith( 'image/' ) ) {
-				return new Evy.UI.ImageView( parser );
+				return new ImageView( parser );
 			}
-			else if( parser instanceof Evy.VCFParser ) {
-				return new Evy.UI.VCFView( parser );
+			else if( parser instanceof VCFParser ) {
+				return new VCFView( parser );
 			}
 			else if( type.startsWith( 'video/' ) ) {
-				return new Evy.UI.VideoView( parser );
+				return new VideoView( parser );
 			}
 			else if( this.isTypeText( type, ext, name ) ) {
-				return new Evy.UI.TextView( parser );
+				return new TextView( parser );
 			}
 		}
 
-		return new Evy.UI.BaseView( parser );
+		return new BaseView( parser );
 	},
 
 
@@ -215,7 +239,7 @@ export const FileHandler = {
 		if( !type ) {
 			if( typeFromExt ) {
 				type = typeFromExt;
-				console.log( `[Evy.FileHandler.headerToMimeType] Using "${type}" based on extension.` );
+				console.log( `[FileHandler.headerToMimeType] Using "${type}" based on extension.` );
 			}
 			else {
 				// Starts with "#!"
@@ -244,16 +268,16 @@ export const FileHandler = {
 				}
 
 				if( type ) {
-					console.log( `[Evy.FileHandler.headerToMimeType] Guessing "${header8}" -> ${type}` );
+					console.log( `[FileHandler.headerToMimeType] Guessing "${header8}" -> ${type}` );
 				}
 			}
 		}
 		else {
-			console.log( `[Evy.FileHandler.headerToMimeType] "${header8}" -> ${type}` );
+			console.log( `[FileHandler.headerToMimeType] "${header8}" -> ${type}` );
 		}
 
 		if( !type ) {
-			console.log( `[Evy.FileHandler.headerToMimeType] Failed to find MIME type for header "${header8}".` );
+			console.log( `[FileHandler.headerToMimeType] Failed to find MIME type for header "${header8}".` );
 		}
 
 		return type;

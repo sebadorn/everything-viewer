@@ -1,13 +1,13 @@
-'use strict';
+import { UI } from '../UI.js';
+import { BaseView } from './BaseView.js';
 
 
-Evy.UI.EMLView = class extends Evy.UI.BaseView {
+export class EMLView extends BaseView {
 
 
 	/**
 	 *
-	 * @constructor
-	 * @param {Evy.EMLParser} parser
+	 * @param {EMLParser} parser
 	 */
 	constructor( parser ) {
 		super( parser, 'eml' );
@@ -20,7 +20,7 @@ Evy.UI.EMLView = class extends Evy.UI.BaseView {
 	 * @return {DocumentFragment}
 	 */
 	_buildActions() {
-		const node = Evy.UI.buildHTML( `
+		const node = UI.buildHTML( `
 			<div class="actions">
 				<button class="show-headers">Show Headers</button>
 				<button class="show-content-no-res active">Content (no external)</button>
@@ -133,4 +133,4 @@ Evy.UI.EMLView = class extends Evy.UI.BaseView {
 	}
 
 
-}
+};

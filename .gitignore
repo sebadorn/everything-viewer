@@ -4,6 +4,7 @@
 /resources/
 
 # Files
-*.sublime-*
 .DS_Store
+*.sublime-*
 /TODO.md
+package-lock.json

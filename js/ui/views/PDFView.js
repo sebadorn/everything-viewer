@@ -1,13 +1,12 @@
-'use strict';
+import { BaseView } from './BaseView.js';
 
 
-Evy.UI.PDFView = class extends Evy.UI.BaseView {
+export class PDFView extends BaseView {
 
 
 	/**
 	 *
-	 * @constructor
-	 * @param {Evy.BaseParser} parser
+	 * @param {BaseParser} parser
 	 */
 	constructor( parser ) {
 		super( parser, 'pdf' );
@@ -46,4 +45,4 @@ Evy.UI.PDFView = class extends Evy.UI.BaseView {
 	}
 
 
-}
+};

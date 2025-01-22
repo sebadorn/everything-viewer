@@ -1,12 +1,11 @@
-'use strict';
+import { BaseParser } from './BaseParser.js';
 
 
-Evy.CSVParser = class extends Evy.BaseParser {
+export class CSVParser extends BaseParser {
 
 
 	/**
 	 *
-	 * @constructor
 	 * @param {File}   file
 	 * @param {string} mimeType
 	 */
@@ -29,4 +28,4 @@ Evy.CSVParser = class extends Evy.BaseParser {
 	}
 
 
-}
+};

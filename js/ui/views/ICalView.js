@@ -1,13 +1,12 @@
-'use strict';
+import { BaseView } from './BaseView.js';
 
 
-Evy.UI.ICalView = class extends Evy.UI.BaseView {
+export class ICalView extends BaseView {
 
 
 	/**
 	 *
-	 * @constructor
-	 * @param {Evy.ICalParser} parser
+	 * @param {ICalParser} parser
 	 */
 	constructor( parser ) {
 		super( parser, 'ical' );
@@ -29,4 +28,4 @@ Evy.UI.ICalView = class extends Evy.UI.BaseView {
 	}
 
 
-}
+};

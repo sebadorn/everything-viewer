@@ -5,7 +5,9 @@ import { FileHandler } from '../FileHandler.js';
 export const UI = {
 
 
-	_domParser: null,
+	/** @type {BaseView?} */
+	_currentView: null,
+	_domParser: new DOMParser(),
 
 
 	/**
@@ -19,8 +21,8 @@ export const UI = {
 		}
 
 		DirectoryHandler.getParser( dir, ( _err, parser ) => {
-			if( Evy.currentView ) {
-				Evy.currentView.destroy();
+			if( this._currentView ) {
+				this._currentView.destroy();
 			}
 
 			const view = FileHandler.getView( parser );
@@ -40,8 +42,8 @@ export const UI = {
 		}
 
 		FileHandler.getParser( file, ( _err, parser ) => {
-			if( Evy.currentView ) {
-				Evy.currentView.destroy();
+			if( this._currentView ) {
+				this._currentView.destroy();
 			}
 
 			const view = FileHandler.getView( parser );
@@ -53,7 +55,7 @@ export const UI = {
 	/**
 	 *
 	 * @private
-	 * @param {?Evy.UI.BaseView} view
+	 * @param {BaseView?} view
 	 */
 	_updateMetaInfo( view ) {
 		const meta = document.querySelector( 'aside.meta-container' );
@@ -71,7 +73,7 @@ export const UI = {
 	/**
 	 *
 	 * @private
-	 * @param {?Evy.UI.BaseView} view
+	 * @param {BaseView?} view
 	 */
 	_updateViewer( view ) {
 		const viewer = document.querySelector( 'main .viewer' );
@@ -94,8 +96,6 @@ export const UI = {
 	 * @returns {HTMLElement}
 	 */
 	build( html ) {
-		this._domParser = this._domParser || new DOMParser();
-
 		const doc = this._domParser.parseFromString( html.trim(), 'text/html' );
 		let node = null;
 
@@ -272,10 +272,10 @@ export const UI = {
 
 	/**
 	 *
-	 * @param {?Evy.UI.BaseView} view
+	 * @param {BaseView?} view
 	 */
 	update( view ) {
-		Evy.currentView = view;
+		this._currentView = view;
 
 		this._updateMetaInfo( view );
 		this._updateViewer( view );

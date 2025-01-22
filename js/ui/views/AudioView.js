@@ -1,13 +1,12 @@
-'use strict';
+import { BaseView } from './BaseView.js';
 
 
-Evy.UI.AudioView = class extends Evy.UI.BaseView {
+export class AudioView extends BaseView {
 
 
 	/**
 	 *
-	 * @constructor
-	 * @param {Evy.BaseParser} parser
+	 * @param {BaseParser} parser
 	 */
 	constructor( parser ) {
 		super( parser, 'audio' );
@@ -64,4 +63,4 @@ Evy.UI.AudioView = class extends Evy.UI.BaseView {
 	}
 
 
-}
+};

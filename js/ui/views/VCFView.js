@@ -1,13 +1,12 @@
-'use strict';
+import { BaseView } from './BaseView.js';
 
 
-Evy.UI.VCFView = class extends Evy.UI.BaseView {
+export class VCFView extends BaseView {
 
 
 	/**
 	 *
-	 * @constructor
-	 * @param {Evy.BaseParser} parser
+	 * @param {BaseParser} parser
 	 */
 	constructor( parser ) {
 		super( parser, 'vcf' );
@@ -29,4 +28,4 @@ Evy.UI.VCFView = class extends Evy.UI.BaseView {
 	}
 
 
-}
+};

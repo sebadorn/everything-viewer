@@ -1,13 +1,13 @@
-'use strict';
+import { BaseView } from './BaseView.js';
+import hljs from 'highlight.js';
 
 
-Evy.UI.TextView = class extends Evy.UI.BaseView {
+export class TextView extends BaseView {
 
 
 	/**
 	 *
-	 * @constructor
-	 * @param {Evy.BaseParser} parser
+	 * @param {BaseParser} parser
 	 */
 	constructor( parser ) {
 		super( parser, 'text' );
@@ -27,21 +27,19 @@ Evy.UI.TextView = class extends Evy.UI.BaseView {
 		this.parser.getText( ( _err, text ) => {
 			block.textContent = text;
 
-			Evy.ensureScript( 'hljs', () => {
-				const lang = this.parser.detectLanguage();
+			const lang = this.parser.detectLanguage();
 
-				if( lang ) {
-					block.className += ' language-' + lang;
-					hljs.highlightElement( block );
-				}
+			if( lang ) {
+				block.className += ' language-' + lang;
+				hljs.highlightElement( block );
+			}
 
-				this.mdAdd( 'Lines', ( text.match( /\n/g ) || [] ).length );
-				this.buildMetaNode();
+			this.mdAdd( 'Lines', ( text.match( /\n/g ) || [] ).length );
+			this.buildMetaNode();
 
-				cb();
-			} );
+			cb();
 		} );
 	}
 
 
-}
+};

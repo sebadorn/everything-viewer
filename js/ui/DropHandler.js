@@ -3,7 +3,6 @@ export class DropHandler {
 
 	/**
 	 *
-	 * @constructor
 	 * @param {HTMLElement}
 	 */
 	constructor( area ) {

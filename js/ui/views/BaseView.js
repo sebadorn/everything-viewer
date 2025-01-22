@@ -1,13 +1,12 @@
-'use strict';
+import { UI } from '../UI.js';
 
 
-Evy.UI.BaseView = class {
+export class BaseView {
 
 
 	/**
 	 *
-	 * @constructor
-	 * @param {Evy.BaseParser}  parser
+	 * @param {BaseParser}  parser
 	 * @param {string}         [type="base"]
 	 */
 	constructor( parser, type = 'base' ) {
@@ -99,7 +98,7 @@ Evy.UI.BaseView = class {
 		}
 
 		if( options.toggleForEmpty ) {
-			const line = Evy.UI.buildHTML(
+			const line = UI.buildHTML(
 				'<div class="option option-toggle-empty">' +
 					'<input type="checkbox" id="metadata-toggle-empty" value="1" />' +
 					'<label for="metadata-toggle-empty">Omit empty entries</label>' +
@@ -247,4 +246,4 @@ Evy.UI.BaseView = class {
 	}
 
 
-}
+};

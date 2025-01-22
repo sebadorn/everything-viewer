@@ -1,12 +1,11 @@
-'use strict';
+import { BaseParser } from './BaseParser.js';
 
 
-Evy.ZIPParser = class extends Evy.BaseParser {
+export class ZIPParser extends BaseParser {
 
 
 	/**
 	 *
-	 * @constructor
 	 * @param {File}   file
 	 * @param {string} mimeType
 	 */
@@ -126,4 +125,4 @@ Evy.ZIPParser = class extends Evy.BaseParser {
 	}
 
 
-}
+};

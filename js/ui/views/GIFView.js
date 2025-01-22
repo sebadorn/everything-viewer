@@ -1,13 +1,13 @@
-'use strict';
+import { UI } from '../UI.js';
+import { BaseView } from './BaseView.js';
 
 
-Evy.UI.GIFView = class extends Evy.UI.BaseView {
+export class GIFView extends BaseView {
 
 
 	/**
 	 *
-	 * @constructor
-	 * @param {Evy.GIFParser} parser
+	 * @param {GIFParser} parser
 	 */
 	constructor( parser ) {
 		super( parser, 'gif' );
@@ -28,7 +28,7 @@ Evy.UI.GIFView = class extends Evy.UI.BaseView {
 	_buildSlideshow( cb ) {
 		const numFrames = this._gifReader.numFrames();
 
-		const node = Evy.UI.buildHTML( `
+		const node = UI.buildHTML( `
 			<div class="frame-container"></div>
 			<div class="actions">
 				<input type="range" min="1" max="${numFrames}" value="1" />
@@ -230,4 +230,4 @@ Evy.UI.GIFView = class extends Evy.UI.BaseView {
 	}
 
 
-}
+};

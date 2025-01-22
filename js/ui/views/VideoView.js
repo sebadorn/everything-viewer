@@ -1,13 +1,12 @@
-'use strict';
+import { BaseView } from './BaseView.js';
 
 
-Evy.UI.VideoView = class extends Evy.UI.BaseView {
+export class VideoView extends BaseView {
 
 
 	/**
 	 *
-	 * @constructor
-	 * @param {Evy.BaseParser} parser
+	 * @param {BaseParser} parser
 	 */
 	constructor( parser ) {
 		super( parser, 'video' );
@@ -71,4 +70,4 @@ Evy.UI.VideoView = class extends Evy.UI.BaseView {
 	}
 
 
-}
+};

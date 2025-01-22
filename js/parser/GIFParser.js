@@ -1,12 +1,12 @@
-'use strict';
+import { Evy } from '../Evy.js';
+import { BaseParser } from './BaseParser.js';
 
 
-Evy.GIFParser = class extends Evy.BaseParser {
+export class GIFParser extends BaseParser {
 
 
 	/**
 	 *
-	 * @constructor
 	 * @param {File}   file
 	 * @param {string} mimeType
 	 */
@@ -41,4 +41,4 @@ Evy.GIFParser = class extends Evy.BaseParser {
 	}
 
 
-}
+};

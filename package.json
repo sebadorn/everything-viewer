@@ -1,6 +1,7 @@
 {
   "name": "everything-viewer",
   "version": "1.0.0",
+  "private": true,
   "homepage": "https://github.com/sebadorn/everything-viewer",
   "repository": {
     "type": "git",
@@ -9,5 +10,19 @@
   "license": "MIT",
   "author": "Sebastian Dorn",
   "type": "commonjs",
-  "main": "index.html"
+  "dependencies": {
+    "@cornerstonejs/core": "^2.17.2",
+    "@cornerstonejs/dicom-image-loader": "^2.17.2",
+    "@cornerstonejs/nifti-volume-loader": "^2.17.2",
+    "@cornerstonejs/tools": "^2.17.2",
+    "@vanillaes/csv": "^3.0.4",
+    "highlight.js": "^11.11.1",
+    "ical.js": "^2.1.0",
+    "jszip": "^3.10.1",
+    "vcardjs": "^0.3.0"
+  },
+  "devDependencies": {
+    "webpack": "^5.97.1",
+    "webpack-cli": "^6.0.1"
+  }
 }

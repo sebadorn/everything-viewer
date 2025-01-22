@@ -1,13 +1,12 @@
-'use strict';
+import { BaseView } from './BaseView.js';
 
 
-Evy.UI.CSVView = class extends Evy.UI.BaseView {
+export class CSVView extends BaseView {
 
 
 	/**
 	 *
-	 * @constructor
-	 * @param {Evy.CSVParser} parser
+	 * @param {CSVParser} parser
 	 */
 	constructor( parser ) {
 		super( parser, 'csv' );
@@ -62,4 +61,4 @@ Evy.UI.CSVView = class extends Evy.UI.BaseView {
 	}
 
 
-}
+};
