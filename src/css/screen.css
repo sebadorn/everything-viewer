@@ -193,21 +193,21 @@ table {
 	}
 
 
-.meta-container {
+#meta-container {
 	display: none;
 	max-width: 460px;
 	z-index: 2;
 }
 
-	.meta-container .content {
+	#meta-container .content {
 		font-family: var(--font-ms);
 		font-size: 14px;
 		max-height: 600px;
 		overflow: auto;
 	}
 
-	.meta-container td,
-	.meta-container th {
+	#meta-container td,
+	#meta-container th {
 		font-weight: normal;
 		line-height: 20px;
 		padding-bottom: 5px;
@@ -216,7 +216,7 @@ table {
 		word-break: break-all;
 	}
 
-	.meta-container th.name {
+	#meta-container th.name {
 		color: #c0c0c0;
 		white-space: pre;
 	}
@@ -230,11 +230,11 @@ table {
 			padding-bottom: 0;
 		}
 
-		.meta-container .hr td {
+		#meta-container .hr td {
 			border-top: 1px solid rgba(255, 255, 255, 0.1);
 		}
 
-		.meta-container .group-table {
+		#meta-container .group-table {
 			background-color: rgba(0, 0, 0, 0.3);
 			border-bottom-left-radius: var(--button-radius);
 			border-bottom-right-radius: var(--button-radius);
@@ -243,7 +243,7 @@ table {
 			width: 100%;
 		}
 
-			.meta-container .group-table caption {
+			#meta-container .group-table caption {
 				background-color: var(--color-primary-dark);
 				border-top-left-radius: var(--button-radius);
 				border-top-right-radius: var(--button-radius);
@@ -252,11 +252,11 @@ table {
 				text-align: left;
 			}
 
-	.meta-container .option {
+	#meta-container .option {
 		margin-bottom: 10px;
 	}
 
-		.meta-container .option-toggle-empty label {
+		#meta-container .option-toggle-empty label {
 			padding-left: 7px;
 		}
 

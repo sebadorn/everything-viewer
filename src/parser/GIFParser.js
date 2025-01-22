@@ -1,5 +1,5 @@
-import { Evy } from '../Evy.js';
 import { BaseParser } from './BaseParser.js';
+import { GifReader } from 'omggif';
 
 
 export class GIFParser extends BaseParser {
@@ -21,22 +21,20 @@ export class GIFParser extends BaseParser {
 	 */
 	parse( cb ) {
 		this.getArrayBuffer( ( _err, arrayBuffer ) => {
-			Evy.ensureScript( 'omggif', () => {
-				let gifReader = null;
+			let gifReader = null;
 
-				try {
-					const uint8Buffer = new Uint8Array( arrayBuffer );
-					gifReader = new GifReader( uint8Buffer );
-				}
-				catch( err ) {
-					console.error( err );
-					cb( err, null );
+			try {
+				const uint8Buffer = new Uint8Array( arrayBuffer );
+				gifReader = new GifReader( uint8Buffer );
+			}
+			catch( err ) {
+				console.error( err );
+				cb( err, null );
 
-					return;
-				}
+				return;
+			}
 
-				cb( null, gifReader );
-			} );
+			cb( null, gifReader );
 		} );
 	}
 

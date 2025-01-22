@@ -1,6 +1,8 @@
 import { BaseView } from './BaseView.js';
 import hljs from 'highlight.js';
 
+import '../../css/stackoverflow-dark.min.css';
+
 
 export class TextView extends BaseView {
 

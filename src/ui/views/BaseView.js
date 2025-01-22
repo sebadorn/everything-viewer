@@ -16,7 +16,7 @@ export class BaseView {
 		this.metaData = [
 			{ name: 'Filename', value: this.parser.file.name },
 			{ name: 'Type', value: this.parser.mimeType },
-			{ name: 'Filesize', value: Evy.UI.formatSize( this.parser.file.size ) }
+			{ name: 'Filesize', value: UI.formatSize( this.parser.file.size ) }
 		];
 
 		this.nodeView = document.createElement( 'div' );
@@ -98,7 +98,7 @@ export class BaseView {
 		}
 
 		if( options.toggleForEmpty ) {
-			const line = UI.buildHTML(
+			const line = UI.build(
 				'<div class="option option-toggle-empty">' +
 					'<input type="checkbox" id="metadata-toggle-empty" value="1" />' +
 					'<label for="metadata-toggle-empty">Omit empty entries</label>' +

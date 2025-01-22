@@ -1,4 +1,5 @@
 import { BaseView } from './BaseView.js';
+import { DICOMParser } from '../../parser/DICOMParser.js';
 
 
 export class DICOMView extends BaseView {
@@ -67,7 +68,7 @@ export class DICOMView extends BaseView {
 				{ name: 'Occupation', value: dataSet.string( 'x00102180' ) },
 				{ name: 'Smoking Status', value: dataSet.string( 'x001021a0' ) },
 				{ name: 'Addit. Patient History', value: dataSet.string( 'x001021b0' ) },
-				{ name: 'Pregnancy Status', value: Evy.DICOMParser.getPregnancyStatus( dataSet.string( 'x001021c0' ) ) },
+				{ name: 'Pregnancy Status', value: DICOMParser.getPregnancyStatus( dataSet.string( 'x001021c0' ) ) },
 				{ name: 'Last Menstrual Date', value: dataSet.string( 'x001021d0' ) },
 				{ name: 'Patient\'s Sex Neutered', value: dataSet.string( 'x00102203' ) },
 				{ name: 'Reason for Visit', value: dataSet.string( 'x00321066' ) },
@@ -99,7 +100,7 @@ export class DICOMView extends BaseView {
 			[
 				{ name: 'Series Date', value: dataSet.string( 'x00080021' ) },
 				{ name: 'Series Time', value: dataSet.string( 'x00080031' ) },
-				{ name: 'Modality', value: Evy.DICOMParser.getModalityName( dataSet.string( 'x00080060' ) ) },
+				{ name: 'Modality', value: DICOMParser.getModalityName( dataSet.string( 'x00080060' ) ) },
 				{ name: 'Series Desc.', value: dataSet.string( 'x0008103e' ) },
 				{ name: 'Performing Physician\'s Name', value: dataSet.string( 'x00081050' ) },
 				{ name: 'Operator\'s Name', value: dataSet.string( 'x00081070' ) },
@@ -150,7 +151,7 @@ export class DICOMView extends BaseView {
 	 * @private
 	 */
 	_buildControls() {
-		const node = Evy.UI.buildHTML( `
+		const node = UI.build( `
 			<div class="image-container"></div>
 			<div class="actions">
 				<input type="range" min="1" max="${this._numFrames}" value="1" />

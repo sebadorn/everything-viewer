@@ -20,7 +20,7 @@ export class EMLView extends BaseView {
 	 * @return {DocumentFragment}
 	 */
 	_buildActions() {
-		const node = UI.buildHTML( `
+		const node = UI.build( `
 			<div class="actions">
 				<button class="show-headers">Show Headers</button>
 				<button class="show-content-no-res active">Content (no external)</button>

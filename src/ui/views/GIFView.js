@@ -28,7 +28,7 @@ export class GIFView extends BaseView {
 	_buildSlideshow( cb ) {
 		const numFrames = this._gifReader.numFrames();
 
-		const node = UI.buildHTML( `
+		const node = UI.build( `
 			<div class="frame-container"></div>
 			<div class="actions">
 				<input type="range" min="1" max="${numFrames}" value="1" />

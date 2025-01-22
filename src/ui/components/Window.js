@@ -9,6 +9,7 @@ export class Window extends Component {
 	 *
 	 * @param {object}   config
 	 * @param {object[]} config.content
+	 * @param {string?}  config.id
 	 * @param {string?}  config.title
 	 * @param {number?}  config.x
 	 * @param {number?}  config.y
@@ -35,6 +36,10 @@ export class Window extends Component {
 	_applyConfig() {
 		if( !this._config ) {
 			return;
+		}
+
+		if( this._config.id ) {
+			this._node.setAttribute( 'id', this._config.id );
 		}
 
 		if( Array.isArray( this._config.content ) ) {

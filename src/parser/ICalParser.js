@@ -423,7 +423,7 @@ export class ICalParser extends BaseParser {
 	 * @param  {array} data
 	 * @return {HTMLElement}
 	 */
-	buildHTML( data ) {
+	build( data ) {
 		const node = document.createElement( 'div' );
 		node.className = 'ical';
 
@@ -455,7 +455,7 @@ export class ICalParser extends BaseParser {
 	getHTML( cb ) {
 		this.getText( ( _err, text ) => {
 			this.parse( text, data => {
-				const html = this.buildHTML( data );
+				const html = this.build( data );
 				cb( null, html );
 			} );
 		} );

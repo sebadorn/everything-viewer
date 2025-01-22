@@ -44,7 +44,7 @@ export class VCFParser extends BaseParser {
 	 * @param  {string} text
 	 * @return {?HTMLDocument}
 	 */
-	buildHTML( data, text ) {
+	build( data, text ) {
 		console.log( data ); // TODO: remove
 
 		const card = document.createElement( 'div' );
@@ -228,7 +228,7 @@ export class VCFParser extends BaseParser {
 			this.parse( text, data => {
 				i++;
 
-				const card = this.buildHTML( data, text );
+				const card = this.build( data, text );
 				container.append( card );
 
 				if( i === numCards ) {

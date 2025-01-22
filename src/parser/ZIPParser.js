@@ -19,7 +19,7 @@ export class ZIPParser extends BaseParser {
 	 * @param  {JSZip} zip
 	 * @return {HTMLElement}
 	 */
-	buildHTML( zip ) {
+	build( zip ) {
 		const table = document.createElement( 'table' );
 		table.className = 'zip';
 
@@ -100,7 +100,7 @@ export class ZIPParser extends BaseParser {
 					return;
 				}
 
-				const html = this.buildHTML( zip );
+				const html = this.build( zip );
 				cb( null, html );
 			} );
 		} );

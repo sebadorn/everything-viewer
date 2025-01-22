@@ -58,7 +58,7 @@ export const UI = {
 	 * @param {BaseView?} view
 	 */
 	_updateMetaInfo( view ) {
-		const meta = document.querySelector( 'aside.meta-container' );
+		const meta = document.querySelector( '#meta-container' );
 
 		if( view ) {
 			meta.style.display = 'block';

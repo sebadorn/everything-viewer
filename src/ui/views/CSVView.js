@@ -18,7 +18,7 @@ export class CSVView extends BaseView {
 	 * @param  {array} data
 	 * @return {?HTMLDocument}
 	 */
-	_buildHTML( data ) {
+	_build( data ) {
 		const table = document.createElement( 'table' );
 
 		for( let i = 0; i < data.length; i++ ) {
@@ -53,7 +53,7 @@ export class CSVView extends BaseView {
 			this.mdAdd( 'Rows', tableData.length );
 			this.buildMetaNode();
 
-			const html = this._buildHTML( tableData );
+			const html = this._build( tableData );
 			this.nodeView.append( html );
 
 			cb();

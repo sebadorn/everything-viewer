@@ -9,7 +9,6 @@
   },
   "license": "MIT",
   "author": "Sebastian Dorn",
-  "type": "commonjs",
   "dependencies": {
     "@cornerstonejs/core": "^2.17.2",
     "@cornerstonejs/dicom-image-loader": "^2.17.2",
@@ -19,9 +18,12 @@
     "highlight.js": "^11.11.1",
     "ical.js": "^2.1.0",
     "jszip": "^3.10.1",
+    "omggif": "^1.0.10",
     "vcardjs": "^0.3.0"
   },
   "devDependencies": {
+    "css-loader": "^7.1.2",
+    "style-loader": "^4.0.0",
     "webpack": "^5.97.1",
     "webpack-cli": "^6.0.1"
   }
