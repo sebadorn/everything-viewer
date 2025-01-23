@@ -41,7 +41,8 @@ export class BaseParser {
 			'tex',
 			'vb',
 			'xml',
-			'yaml', 'yml'
+			'yaml', 'yml',
+			'zone',
 		];
 
 		if( extIsType.includes( ext ) ) {

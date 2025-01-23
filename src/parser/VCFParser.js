@@ -1,4 +1,5 @@
 import { BaseParser } from './BaseParser.js';
+import { VCF } from 'vcardjs/dist/vcardjs-0.3.min.js';
 
 
 export class VCFParser extends BaseParser {
@@ -66,24 +67,24 @@ export class VCFParser extends BaseParser {
 
 		if( data.n['honorific-prefix'] ) {
 			const value = data.n['honorific-prefix'].join( ' ' );
-			const row = Evy.UI.buildTableRow( 'Name prefix', value );
+			const row = UI.buildTableRow( 'Name prefix', value );
 			table.append( row );
 		}
 
 		if( data.n['given-name'] ) {
 			const value = data.n['given-name'].join( ' ' );
-			const row = Evy.UI.buildTableRow( 'Given name', value );
+			const row = UI.buildTableRow( 'Given name', value );
 			table.append( row );
 		}
 
 		if( data.n['family-name'] ) {
 			const value = data.n['family-name'].join( ' ' );
-			const row = Evy.UI.buildTableRow( 'Family name', value );
+			const row = UI.buildTableRow( 'Family name', value );
 			table.append( row );
 		}
 
 		if( data.photo ) {
-			const row = Evy.UI.buildTableRow( 'Photo', data.photo );
+			const row = UI.buildTableRow( 'Photo', data.photo );
 
 			// Check for embedded base64 image data.
 			const match = text.match(/\nPHOTO.+[\r]?\n/);
@@ -146,7 +147,7 @@ export class VCFParser extends BaseParser {
 					name += ` (${types.join( ', ' )})`;
 				}
 
-				const row = Evy.UI.buildTableRow( name, adr.value );
+				const row = UI.buildTableRow( name, adr.value );
 				table.append( row );
 			} );
 		}
@@ -159,7 +160,7 @@ export class VCFParser extends BaseParser {
 					value += ', ' + org['organization-unit'];
 				}
 
-				const row = Evy.UI.buildTableRow( 'Organization', value );
+				const row = UI.buildTableRow( 'Organization', value );
 				table.append( row );
 			} );
 		}
@@ -173,7 +174,7 @@ export class VCFParser extends BaseParser {
 					name += ` (${types.join( ', ' )})`;
 				}
 
-				const row = Evy.UI.buildTableRow( name, email.value );
+				const row = UI.buildTableRow( name, email.value );
 
 				if( email.value.includes( '@' ) ) {
 					const td = row.querySelector( 'td' );
@@ -193,7 +194,7 @@ export class VCFParser extends BaseParser {
 					name += ` (${types.join( ', ' )})`;
 				}
 
-				const row = Evy.UI.buildTableRow( name, tel.value );
+				const row = UI.buildTableRow( name, tel.value );
 
 				if( tel.value.startsWith( 'tel:' ) ) {
 					const noPrefix = tel.value.substring( 4 );
@@ -245,11 +246,9 @@ export class VCFParser extends BaseParser {
 	 * @param {function} cb
 	 */
 	parse( text, cb ) {
-		Evy.ensureScript( 'vcf', () => {
-			// The callback is called for every
-			// vcard inside the file.
-			VCF.parse( text, cb );
-		} );
+		// The callback is called for every
+		// vcard inside the file.
+		VCF.parse( text, cb );
 	}
 
 
