@@ -26,10 +26,8 @@ Okay, not *everything*. The idea is to support different formats and maybe provi
 
 ## Libraries
 
-* cornerstone – https://github.com/cornerstonejs/cornerstone
-* cornerstoneWADOImageLoader – https://github.com/cornerstonejs/cornerstoneWADOImageLoader
+* Cornerstone.js – https://www.cornerstonejs.org/
 * CSV – https://github.com/vanillaes/csv
-* dicomParser – https://github.com/cornerstonejs/dicomParser
 * highlight.js – https://highlightjs.org/
 * ical.js – https://github.com/mozilla-comm/ical.js
 * JSZip – https://github.com/Stuk/jszip
