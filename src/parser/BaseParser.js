@@ -50,6 +50,7 @@ export class BaseParser {
 		}
 
 		const extMap = {
+			'arb': 'json',
 			'frag': 'glsl',
 			'gitignore': 'ini',
 			'h': 'cpp',

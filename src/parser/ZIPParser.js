@@ -1,4 +1,7 @@
+import { UI } from '../ui/UI.js';
 import { BaseParser } from './BaseParser.js';
+
+import JSZip from 'jszip';
 
 
 export class ZIPParser extends BaseParser {
@@ -41,6 +44,8 @@ export class ZIPParser extends BaseParser {
 
 		table.append( headRow );
 
+		this.uncompressedSize = 0;
+
 		for( const key in zip.files ) {
 			const file = zip.files[key];
 
@@ -71,11 +76,15 @@ export class ZIPParser extends BaseParser {
 
 			const size = document.createElement( 'td' );
 			size.className = 'size';
-			size.textContent = file.dir ? '' : Evy.UI.formatSize( file._data.uncompressedSize );
+			size.textContent = file.dir ? '' : UI.formatSize( file._data.uncompressedSize );
+
+			if( !file.dir ) {
+				this.uncompressedSize += file._data.uncompressedSize;
+			}
 
 			const date = document.createElement( 'td' );
 			date.className = 'date';
-			date.textContent = Evy.UI.formatDate( file.date );
+			date.textContent = UI.formatDate( file.date );
 
 			const row = document.createElement( 'tr' );
 			row.className = file.dir ? 'zip-dir' : 'zip-file';
@@ -113,15 +122,13 @@ export class ZIPParser extends BaseParser {
 	 * @param {function}    cb
 	 */
 	parse( arrayBuffer, cb ) {
-		Evy.ensureScript( 'JSZip', () => {
-			const zip = new JSZip();
-			const promise = zip.loadAsync( arrayBuffer );
+		const zip = new JSZip();
+		const promise = zip.loadAsync( arrayBuffer );
 
-			promise.then(
-				zip => cb( null, zip ),
-				err => cb( err, null )
-			);
-		} );
+		promise.then(
+			zip => cb( null, zip ),
+			err => cb( err, null )
+		);
 	}
 
 

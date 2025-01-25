@@ -116,16 +116,24 @@ export const UI = {
 
 	/**
 	 *
-	 * @param  {string} name
-	 * @param  {string} value
+	 * @param  {string}  name
+	 * @param  {string}  value
+	 * @param  {object?} options
+	 * @param  {bool}    [options.valueAsHTML = false]
 	 * @return {HTMLElement}
 	 */
-	buildTableRow( name, value ) {
+	buildTableRow( name, value, options = {} ) {
 		const th = document.createElement( 'th' );
 		th.textContent = name;
 
 		const td = document.createElement( 'td' );
-		td.textContent = value;
+
+		if( options.valueAsHTML === true ) {
+			td.innerHTML = value;
+		}
+		else {
+			td.textContent = value;
+		}
 
 		const row = document.createElement( 'tr' );
 		row.append( th, td );

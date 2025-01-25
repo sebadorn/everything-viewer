@@ -1,3 +1,4 @@
+import { UI } from '../ui/UI.js';
 import { BaseParser } from './BaseParser.js';
 import { VCF } from 'vcardjs/dist/vcardjs-0.3.min.js';
 
@@ -46,8 +47,6 @@ export class VCFParser extends BaseParser {
 	 * @return {?HTMLDocument}
 	 */
 	build( data, text ) {
-		console.log( data ); // TODO: remove
-
 		const card = document.createElement( 'div' );
 		card.className = 'vcard';
 
@@ -139,7 +138,7 @@ export class VCFParser extends BaseParser {
 		}
 
 		if( data.adr ) {
-			data.adr.forEach( adr => {
+			const buildAdr = adr => {
 				let name = 'Adr.';
 				const types = this._getTypes( adr );
 
@@ -147,9 +146,21 @@ export class VCFParser extends BaseParser {
 					name += ` (${types.join( ', ' )})`;
 				}
 
-				const row = UI.buildTableRow( name, adr.value );
+				let value = adr.value.split( ';' )
+					.filter( line => line.length > 0 )
+					.map( line => line + '<br>' )
+					.join( '' );
+
+				const row = UI.buildTableRow( name, value, { valueAsHTML: true } );
 				table.append( row );
-			} );
+			};
+
+			if( Array.isArray( data.adr ) ) {
+				data.adr.forEach( adr => buildAdr( adr ) );
+			}
+			else {
+				buildAdr( data.adr );
+			}
 		}
 
 		if( data.org ) {

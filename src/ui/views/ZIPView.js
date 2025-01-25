@@ -1,3 +1,4 @@
+import { UI } from '../UI.js';
 import { BaseView } from './BaseView.js';
 
 
@@ -25,6 +26,10 @@ export class ZIPView extends BaseView {
 				html.textContent = err.message;
 			}
 
+			this.metaData.push( {
+				name: 'Uncompressed',
+				value: UI.formatSize( this.parser.uncompressedSize ),
+			} );
 			this.buildMetaNode();
 
 			const wrap = document.createElement( 'div' );
