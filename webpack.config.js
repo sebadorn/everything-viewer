@@ -20,19 +20,27 @@ module.exports = {
 				],
 			},
 			{
-				test: /\.(gif|jpg|png)$/i,
+				test: /\.(gif|jpeg|jpg|png)$/i,
+				type: 'asset/resource',
+			},
+			{
+				test: /\.wasm/,
 				type: 'asset/resource',
 			},
 		],
 	},
-	plugins: [
-		new MiniCssExtractPlugin(),
-	],
 	optimization: {
 		minimize: true,
 		minimizer: [
 			'...',
 			new CssMinimizerPlugin(),
+			new MiniCssExtractPlugin(),
 		],
+	},
+	resolve: {
+		fallback: {
+			'fs': false,
+			'path': false,
+		},
 	},
 };

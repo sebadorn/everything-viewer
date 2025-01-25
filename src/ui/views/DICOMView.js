@@ -1,5 +1,9 @@
+import { UI } from '../UI.js';
 import { BaseView } from './BaseView.js';
 import { DICOMParser } from '../../parser/DICOMParser.js';
+
+import { RenderingEngine } from '@cornerstonejs/core';
+import { OrientationAxis, ViewportType } from '@cornerstonejs/core/enums';
 
 
 export class DICOMView extends BaseView {
@@ -274,10 +278,7 @@ export class DICOMView extends BaseView {
 		super.destroy();
 
 		clearTimeout( this._timer );
-
-		cornerstone.imageCache.purgeCache();
-		cornerstoneWADOImageLoader.wadouri.dataSetCacheManager.purge();
-		cornerstoneWADOImageLoader.wadouri.fileManager.purge();
+		this.parser.destroy();
 
 		document.body.removeEventListener( 'keyup', this._listenerKeyNav );
 	}
@@ -288,10 +289,12 @@ export class DICOMView extends BaseView {
 	 * @param {function} cb
 	 */
 	load( cb ) {
-		this.parser.parse( ( err, dataSet ) => {
+		this.parser.parse( async ( err, image ) => {
 			if( err ) {
 				return;
 			}
+
+			const dataSet = image.data;
 
 			// DICOMDIR directory.
 			if( this.parser.isDir ) {
@@ -328,11 +331,20 @@ export class DICOMView extends BaseView {
 				cb();
 
 				const imageContainer = this.nodeView.querySelector( '.image-container' );
-				cornerstone.enable( imageContainer );
-				cornerstoneWADOImageLoader.external.cornerstone = cornerstone;
+				this._imageId = image.imageId;
 
-				this._imageId = cornerstoneWADOImageLoader.wadouri.fileManager.add( this.parser.file );
-				this.showFrame( 0, this._imageId );
+				this._renderingEnginge = new RenderingEngine();
+				this._renderingEnginge.enableElement( {
+					viewportId: 'ctStack',
+					type: ViewportType.STACK,
+					element: imageContainer,
+					defaultOptions: {
+						orientation: OrientationAxis.AXIAL,
+					},
+				} );
+
+				this._viewport = this._renderingEnginge.getViewport( 'ctStack' );
+				this.showFrame( 0 );
 			}
 		} );
 	}
@@ -359,10 +371,12 @@ export class DICOMView extends BaseView {
 
 	/**
 	 *
-	 * @param {number} index
-	 * @param {string} imageId
+	 * @param {number}  index
+	 * @param {string?} imageId
 	 */
 	showFrame( index, imageId ) {
+		imageId = imageId || this._imageId;
+
 		if( index >= this._numFrames ) {
 			index = 0;
 		}
@@ -372,11 +386,11 @@ export class DICOMView extends BaseView {
 
 		this._frameIndex = index;
 
-		cornerstone.loadAndCacheImage( imageId + '?frame=' + index ).then( image => {
-			const imageContainer = this.nodeView.querySelector( '.image-container' );
-			const viewport = cornerstone.getDefaultViewportForImage( imageContainer, image );
-			cornerstone.displayImage( imageContainer, image, viewport );
-		} );
+		// Cornerstone reports an error that "frameIndex has to be >= 0" if
+		// the frame index is set to 0. Which does not make sense, but omitting
+		// the frame index for 0 gets rid of that message.
+		let frameId = index > 0 ? imageId + '?frame=' + index : imageId;
+		this._viewport.setStack( [frameId] );
 
 		if( this._counter ) {
 			this._counter.textContent = ( index + 1 ) + '/' + this._numFrames;

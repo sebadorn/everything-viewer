@@ -1,5 +1,8 @@
 import { BaseParser } from './BaseParser.js';
 
+import { init as csCoreInit, cache as csCache } from '@cornerstonejs/core';
+import { init as csDicomImageLoaderInit, wadouri } from '@cornerstonejs/dicom-image-loader';
+
 
 export class DICOMParser extends BaseParser {
 
@@ -19,7 +22,7 @@ export class DICOMParser extends BaseParser {
 			!!options.dir
 		);
 
-		if (options.entries) {
+		if( options.entries ) {
 			this.entries = options.entries;
 		}
 	}
@@ -50,7 +53,7 @@ export class DICOMParser extends BaseParser {
 						const record = dataSet.elements.x00041220;
 
 						if( !record || !Array.isArray( record.items ) ) {
-							console.error( '[Evy.DICOMParser._parseHandlerDir]' +
+							console.error( '[DICOMParser._parseHandlerDir]' +
 								' Record is either not set or has no entries.', record );
 						}
 						else {
@@ -62,7 +65,7 @@ export class DICOMParser extends BaseParser {
 					} );
 			},
 			err => {
-				console.error( '[Evy.DICOMParser._parseHandlerDir] ' + err.message );
+				console.error( '[DICOMParser._parseHandlerDir] ' + err.message );
 				cb( err );
 			}
 		);
@@ -75,13 +78,26 @@ export class DICOMParser extends BaseParser {
 	 * @param {function} cb
 	 */
 	_parseHandlerFile( cb ) {
-		this.getArrayBuffer( ( _err, arrayBuffer ) => {
-			// Allow raw files
-			const options = { TransferSyntaxUID: '1.2.840.10008.1.2' };
-			const dataSet = dicomParser.parseDicom( new Uint8Array( arrayBuffer ), options );
+		const imageId = wadouri.fileManager.add( this.file );
 
-			cb( null, dataSet );
+		wadouri.loadImage( imageId ).promise.then( image => {
+			cb( null, image );
 		} );
+	}
+
+
+	/**
+	 *
+	 */
+	destroy() {
+		try {
+			csCache.purgeCache();
+			wadouri.dataSetCacheManager.purge();
+			wadouri.fileManager.purge();
+		}
+		catch( err ) {
+			console.error( '[DICOMParser.destroy]', err );
+		}
 	}
 
 
@@ -97,7 +113,7 @@ export class DICOMParser extends BaseParser {
 
 		key = String( key ).toUpperCase();
 
-		let value = Evy.DICOMParser.MODALITY_MAP[key];
+		let value = DICOMParser.MODALITY_MAP[key];
 
 		if( value ) {
 			value += ` [${key}]`;
@@ -141,7 +157,7 @@ export class DICOMParser extends BaseParser {
 		const dataSets = [];
 
 		record.items.forEach( item => {
-			let filePath = item.dataSet.string('x00041500');
+			let filePath = item.dataSet.string( 'x00041500' );
 
 			if( filePath ) {
 				filePath = filePath.replace( /\\/g, '/' );
@@ -188,7 +204,7 @@ export class DICOMParser extends BaseParser {
 					} );
 				},
 				err => {
-					console.error( `[Evy.DICOMParser.loadDICOMDIRFiles] getFile "${filePath}": ` + err.message );
+					console.error( `[DICOMParser.loadDICOMDIRFiles] getFile "${filePath}": ` + err.message );
 					loadFile( i + 1 );
 				}
 			);
@@ -203,14 +219,15 @@ export class DICOMParser extends BaseParser {
 	 * @param {function} cb
 	 */
 	parse( cb ) {
-		Evy.ensureScript( 'dicom', () => {
-			if( this.isDir ) {
-				this._parseHandlerDir( cb );
-			}
-			else {
-				this._parseHandlerFile( cb );
-			}
-		} );
+		csCoreInit();
+		csDicomImageLoaderInit();
+
+		if( this.isDir ) {
+			this._parseHandlerDir( cb );
+		}
+		else {
+			this._parseHandlerFile( cb );
+		}
 	}
 
 
