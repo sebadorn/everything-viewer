@@ -1,6 +1,5 @@
 import { UI } from '../ui/UI.js';
 import { BaseParser } from './BaseParser.js';
-import { VCF } from 'vcardjs/dist/vcardjs-0.3.min.js';
 
 
 export class VCFParser extends BaseParser {
@@ -257,9 +256,13 @@ export class VCFParser extends BaseParser {
 	 * @param {function} cb
 	 */
 	parse( text, cb ) {
-		// The callback is called for every
-		// vcard inside the file.
-		VCF.parse( text, cb );
+		import( /* webpackChunkName: "vcardjs" */ 'vcardjs/dist/vcardjs-0.3.min.js' ).then( module => {
+			const VCF = module.VCF;
+
+			// The callback is called for every
+			// vcard inside the file.
+			VCF.parse( text, cb );
+		} );
 	}
 
 

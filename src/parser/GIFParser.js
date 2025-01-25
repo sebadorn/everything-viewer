@@ -1,5 +1,4 @@
 import { BaseParser } from './BaseParser.js';
-import { GifReader } from 'omggif';
 
 
 export class GIFParser extends BaseParser {
@@ -20,7 +19,8 @@ export class GIFParser extends BaseParser {
 	 * @param {function} cb
 	 */
 	parse( cb ) {
-		this.getArrayBuffer( ( _err, arrayBuffer ) => {
+		this.getArrayBuffer( async ( _err, arrayBuffer ) => {
+			const { GifReader } = await import( /* webpackChunkName: "omggif" */ 'omggif' );
 			let gifReader = null;
 
 			try {

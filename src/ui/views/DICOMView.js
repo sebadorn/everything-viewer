@@ -2,9 +2,6 @@ import { UI } from '../UI.js';
 import { BaseView } from './BaseView.js';
 import { DICOMParser } from '../../parser/DICOMParser.js';
 
-import { RenderingEngine } from '@cornerstonejs/core';
-import { OrientationAxis, ViewportType } from '@cornerstonejs/core/enums';
-
 
 export class DICOMView extends BaseView {
 
@@ -295,6 +292,15 @@ export class DICOMView extends BaseView {
 			}
 
 			const dataSet = image.data;
+
+			const { RenderingEngine } = await import(
+				/* webpackChunkName: "cornerstone_core" */
+				'@cornerstonejs/core'
+			);
+			const { OrientationAxis, ViewportType } = await import(
+				/* webpackChunkName: "cornerstone_core_enums" */
+				'@cornerstonejs/core/enums'
+			);
 
 			// DICOMDIR directory.
 			if( this.parser.isDir ) {

@@ -1,8 +1,5 @@
 import { BaseParser } from './BaseParser.js';
 
-import { init as csCoreInit, cache as csCache } from '@cornerstonejs/core';
-import { init as csDicomImageLoaderInit, wadouri } from '@cornerstonejs/dicom-image-loader';
-
 
 export class DICOMParser extends BaseParser {
 
@@ -78,9 +75,9 @@ export class DICOMParser extends BaseParser {
 	 * @param {function} cb
 	 */
 	_parseHandlerFile( cb ) {
-		const imageId = wadouri.fileManager.add( this.file );
+		const imageId = this.wadouri.fileManager.add( this.file );
 
-		wadouri.loadImage( imageId ).promise.then( image => {
+		this.wadouri.loadImage( imageId ).promise.then( image => {
 			cb( null, image );
 		} );
 	}
@@ -91,9 +88,9 @@ export class DICOMParser extends BaseParser {
 	 */
 	destroy() {
 		try {
-			csCache.purgeCache();
-			wadouri.dataSetCacheManager.purge();
-			wadouri.fileManager.purge();
+			this.cache.purgeCache();
+			this.wadouri.dataSetCacheManager.purge();
+			this.wadouri.fileManager.purge();
 		}
 		catch( err ) {
 			console.error( '[DICOMParser.destroy]', err );
@@ -218,9 +215,21 @@ export class DICOMParser extends BaseParser {
 	 *
 	 * @param {function} cb
 	 */
-	parse( cb ) {
-		csCoreInit();
-		csDicomImageLoaderInit();
+	async parse( cb ) {
+		const core = await import(
+			/* webpackChunkName: "cornerstone_core" */
+			'@cornerstonejs/core'
+		);
+		const dicomLoader = await import(
+			/* webpackChunkName: "cornerstone_dicom-image-loader" */
+			'@cornerstonejs/dicom-image-loader'
+		);
+
+		core.init();
+		dicomLoader.init();
+
+		this.cache = core.cache;
+		this.wadouri = dicomLoader.wadouri;
 
 		if( this.isDir ) {
 			this._parseHandlerDir( cb );

@@ -1,6 +1,5 @@
 import { UI } from '../ui/UI.js';
 import { BaseParser } from './BaseParser.js';
-import ICAL from 'ical.js';
 
 
 export class ICalParser extends BaseParser {
@@ -425,7 +424,7 @@ export class ICalParser extends BaseParser {
 		const node = document.createElement( 'div' );
 		node.className = 'ical';
 
-		const comp = new ICAL.Component( data );
+		const comp = new this.ICAL.Component( data );
 
 		const events = comp.getAllSubcomponents( 'vevent' );
 		const todos = comp.getAllSubcomponents( 'vtodo' );
@@ -435,7 +434,7 @@ export class ICalParser extends BaseParser {
 		const all = events.concat( todos ).concat( journals ).concat( freebusy );
 
 		all.forEach( data => {
-			const vevent = new ICAL.Event( data );
+			const vevent = new this.ICAL.Event( data );
 			const item = this._buildHTMLComponent( vevent );
 			item.className += ' ' + data.jCal[0];
 
@@ -466,8 +465,12 @@ export class ICalParser extends BaseParser {
 	 * @param {function} cb
 	 */
 	parse( text, cb ) {
-		const data = ICAL.parse( text );
-		cb( data );
+		import( /* webpackChunkName: "ical.js" */ 'ical.js' ).then( module => {
+			this.ICAL = module.default;
+
+			const data = this.ICAL.parse( text );
+			cb( data );
+		} );
 	}
 
 

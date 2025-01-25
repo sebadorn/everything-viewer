@@ -1,8 +1,6 @@
 import { UI } from '../ui/UI.js';
 import { BaseParser } from './BaseParser.js';
 
-import JSZip from 'jszip';
-
 
 export class ZIPParser extends BaseParser {
 
@@ -122,13 +120,17 @@ export class ZIPParser extends BaseParser {
 	 * @param {function}    cb
 	 */
 	parse( arrayBuffer, cb ) {
-		const zip = new JSZip();
-		const promise = zip.loadAsync( arrayBuffer );
+		import( /* webpackChunkName: "jszip" */ 'jszip' ).then( module => {
+			const JSZip = module.default;
 
-		promise.then(
-			zip => cb( null, zip ),
-			err => cb( err, null )
-		);
+			const zip = new JSZip();
+			const promise = zip.loadAsync( arrayBuffer );
+	
+			promise.then(
+				zip => cb( null, zip ),
+				err => cb( err, null )
+			);
+		} );
 	}
 
 

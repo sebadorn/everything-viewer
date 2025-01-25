@@ -1,5 +1,4 @@
 import { BaseParser } from './BaseParser.js';
-import { parse as csvParse } from '@vanillaes/csv';
 
 
 export class CSVParser extends BaseParser {
@@ -20,8 +19,9 @@ export class CSVParser extends BaseParser {
 	 * @param {function} cb
 	 */
 	parse( cb ) {
-		this.getText( ( _err, text ) => {
-			const tableData = csvParse( text );
+		this.getText( async ( _err, text ) => {
+			const { parse } = await import( /* webpackChunkName: "csv" */ '@vanillaes/csv' );
+			const tableData = parse( text );
 			cb( null, tableData );
 		} );
 	}
