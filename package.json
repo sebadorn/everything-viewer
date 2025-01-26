@@ -15,6 +15,7 @@
     "@cornerstonejs/nifti-volume-loader": "^2.17.2",
     "@cornerstonejs/tools": "^2.17.2",
     "@vanillaes/csv": "^3.0.4",
+    "dicom-parser": "^1.8.21",
     "highlight.js": "^11.11.1",
     "ical.js": "^2.1.0",
     "jszip": "^3.10.1",

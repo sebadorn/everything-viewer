@@ -185,18 +185,18 @@ export class DICOMView extends BaseView {
 			const slider = node.querySelector( 'input[type="range"]' );
 			slider.addEventListener( 'change', ev => {
 				this._frameIndex = ev.target.valueAsNumber - 1;
-				this.showFrame( this._frameIndex );
+				this._controlGoto( this._frameIndex );
 			} );
 
 			const btnPrev = node.querySelector( 'button.frame-prev' );
 			btnPrev.addEventListener( 'click', _ev => {
-				this.showFrame( --this._frameIndex );
+				this._controlGoto( --this._frameIndex );
 				slider.value = this._frameIndex + 1;
 			} );
 
 			const btnNext = node.querySelector( 'button.frame-next' );
 			btnNext.addEventListener( 'click', _ev => {
-				this.showFrame( ++this._frameIndex );
+				this._controlGoto( ++this._frameIndex );
 				slider.value = this._frameIndex + 1;
 			} );
 
@@ -228,11 +228,11 @@ export class DICOMView extends BaseView {
 				}
 
 				if( ev.key === 'ArrowLeft' ) {
-					this.showFrame( --this._frameIndex );
+					this._controlGoto( --this._frameIndex );
 					slider.value = this._frameIndex + 1;
 				}
 				else if( ev.key === 'ArrowRight' ) {
-					this.showFrame( ++this._frameIndex );
+					this._controlGoto( ++this._frameIndex );
 					slider.value = this._frameIndex + 1;
 				}
 			};
@@ -249,6 +249,74 @@ export class DICOMView extends BaseView {
 	/**
 	 *
 	 * @private
+	 * @param {string[]} record
+	 */
+	_buildDICOMDIRFileList( record ) {
+		const list = document.createElement( 'ol' );
+
+		record.forEach( entry => {
+			const item = document.createElement( 'li' );
+			item.textContent = entry;
+
+			list.append( item );
+		} );
+
+		const wrap = document.createElement( 'wrap' );
+		wrap.className = 'dicomdir-list';
+		wrap.append( list );
+
+		this.nodeView.append( wrap );
+	}
+
+
+	/**
+	 *
+	 * @private
+	 * @param {number} index
+	 */
+	_controlGoto( index ) {
+		this._frameIndex = this.showImage( index );
+
+		if( this._counter ) {
+			this._counter.textContent = ( this._frameIndex + 1 ) + '/' + this._numFrames;
+		}
+	}
+
+
+	/**
+	 *
+	 * @private
+	 */
+	async _initViewport() {
+		const { RenderingEngine } = await import(
+			/* webpackChunkName: "cornerstone_core" */
+			'@cornerstonejs/core'
+		);
+		const { OrientationAxis, ViewportType } = await import(
+			/* webpackChunkName: "cornerstone_core_enums" */
+			'@cornerstonejs/core/enums'
+		);
+
+		const imageContainer = this.nodeView.querySelector( '.image-container' );
+
+		this._renderingEnginge = new RenderingEngine();
+
+		this._renderingEnginge.enableElement( {
+			viewportId: 'ctStack',
+			type: ViewportType.STACK,
+			element: imageContainer,
+			defaultOptions: {
+				orientation: OrientationAxis.AXIAL,
+			},
+		} );
+
+		this._viewport = this._renderingEnginge.getViewport( 'ctStack' );
+	}
+
+
+	/**
+	 *
+	 * @private
 	 * @param {HTMLInputElement} slider
 	 */
 	_playback( slider ) {
@@ -259,7 +327,7 @@ export class DICOMView extends BaseView {
 		const delay = this._frameIndex === 0 ? this._frameDelay : 0;
 
 		this._timer = setTimeout( () => {
-			this.showFrame( ++this._frameIndex );
+			this._controlGoto( ++this._frameIndex );
 			slider.value = this._frameIndex + 1;
 
 			this._timer = 0;
@@ -277,6 +345,9 @@ export class DICOMView extends BaseView {
 		clearTimeout( this._timer );
 		this.parser.destroy();
 
+		this._images = null;
+		this._imageId = null;
+
 		document.body.removeEventListener( 'keyup', this._listenerKeyNav );
 	}
 
@@ -286,45 +357,39 @@ export class DICOMView extends BaseView {
 	 * @param {function} cb
 	 */
 	load( cb ) {
-		this.parser.parse( async ( err, image ) => {
+		this.parser.parse( async ( err, imageOrRecord ) => {
 			if( err ) {
 				return;
 			}
 
-			const dataSet = image.data;
-
-			const { RenderingEngine } = await import(
-				/* webpackChunkName: "cornerstone_core" */
-				'@cornerstonejs/core'
-			);
-			const { OrientationAxis, ViewportType } = await import(
-				/* webpackChunkName: "cornerstone_core_enums" */
-				'@cornerstonejs/core/enums'
-			);
-
 			// DICOMDIR directory.
 			if( this.parser.isDir ) {
-				this.parser.loadDICOMDIRFiles( dataSet, ( _err, files, dataSets ) => {
-					this._imageId = [];
-					this._dataSets = dataSets;
+				this.parser.loadDICOMDIRFiles( imageOrRecord, async ( _err, images ) => {
+					this._images = images;
+					this._numFrames = this._images.length;
+
 					this._buildControls();
 
 					cb();
 
-					const imageContainer = this.nodeView.querySelector( '.image-container' );
-					cornerstone.enable( imageContainer );
-					cornerstoneWADOImageLoader.external.cornerstone = cornerstone;
-
-					files.forEach( file => {
-						const id = cornerstoneWADOImageLoader.wadouri.fileManager.add( file );
-						this._imageId.push( id );
-					} );
+					await this._initViewport();
+					this._viewport.setStack( this._images.map( image => image.imageId ) );
 
 					this.showFile( 0 );
+					this._controlGoto( 0 );
 				} );
+			}
+			// Only list of DICOMDIR entries.
+			else if( Array.isArray( imageOrRecord ) ) {
+				this._buildDICOMDIRFileList( imageOrRecord );
+				this.buildMetaNode();
+
+				cb();
 			}
 			// Single file.
 			else {
+				const dataSet = imageOrRecord.data;
+
 				this._numFrames = Number( dataSet.string( 'x00280008' ) || 1 );
 				this._frameDelay = Number( dataSet.string( 'x00181033' ) || this._frameDelay ); // [ms]
 				this._frameTime = Number( dataSet.string( 'x00181063' ) || this._frameTime ); // [ms]
@@ -336,21 +401,22 @@ export class DICOMView extends BaseView {
 
 				cb();
 
-				const imageContainer = this.nodeView.querySelector( '.image-container' );
-				this._imageId = image.imageId;
+				this._imageId = imageOrRecord.imageId;
+				await this._initViewport();
 
-				this._renderingEnginge = new RenderingEngine();
-				this._renderingEnginge.enableElement( {
-					viewportId: 'ctStack',
-					type: ViewportType.STACK,
-					element: imageContainer,
-					defaultOptions: {
-						orientation: OrientationAxis.AXIAL,
-					},
-				} );
+				let stack = [];
 
-				this._viewport = this._renderingEnginge.getViewport( 'ctStack' );
-				this.showFrame( 0 );
+				for( let i = 0; i < this._numFrames; i++ ) {
+					// Cornerstone reports an error that "frameIndex has to be >= 0" if
+					// the frame index is set to 0. Which does not make sense, but omitting
+					// the frame index for 0 gets rid of that message.
+					let frame = i > 0 ? this._imageId + '?frame=' + i : this._imageId;
+					stack.push( frame );
+				}
+
+				this._viewport.setStack( stack );
+
+				this._controlGoto( 0 );
 			}
 		} );
 	}
@@ -359,30 +425,37 @@ export class DICOMView extends BaseView {
 	/**
 	 *
 	 * @param {number} index
+	 * @returns {number}
 	 */
 	showFile( index ) {
-		const dataSet = this._dataSets[index];
-		const imageId = this._imageId[index];
+		if( index >= this._images.length ) {
+			index = 0;
+		}
+		else if( index < 0 ) {
+			index = this._images.length - 1;
+		}
 
-		this._numFrames = Number( dataSet.string( 'x00280008' ) || 1 );
+		const image = this._images[index];
+		const dataSet = image.data;
+
 		this._frameDelay = Number( dataSet.string( 'x00181033' ) || this._frameDelay ); // [ms]
 		this._frameTime = Number( dataSet.string( 'x00181063' ) || this._frameTime ); // [ms]
 
 		this._addMetaInfo( dataSet );
 		this.buildMetaNode( { toggleForEmpty: true } );
 
-		this.showFrame( 0, imageId );
+		this._imageId = image.imageId;
+
+		return index;
 	}
 
 
 	/**
 	 *
-	 * @param {number}  index
-	 * @param {string?} imageId
+	 * @param {number} index
+	 * @returns {number}
 	 */
-	showFrame( index, imageId ) {
-		imageId = imageId || this._imageId;
-
+	showImage( index ) {
 		if( index >= this._numFrames ) {
 			index = 0;
 		}
@@ -390,17 +463,9 @@ export class DICOMView extends BaseView {
 			index = this._numFrames - 1;
 		}
 
-		this._frameIndex = index;
+		this._viewport.setImageIdIndex( index );
 
-		// Cornerstone reports an error that "frameIndex has to be >= 0" if
-		// the frame index is set to 0. Which does not make sense, but omitting
-		// the frame index for 0 gets rid of that message.
-		let frameId = index > 0 ? imageId + '?frame=' + index : imageId;
-		this._viewport.setStack( [frameId] );
-
-		if( this._counter ) {
-			this._counter.textContent = ( index + 1 ) + '/' + this._numFrames;
-		}
+		return index;
 	}
 
 

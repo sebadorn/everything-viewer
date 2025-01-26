@@ -7,9 +7,9 @@ export class DICOMParser extends BaseParser {
 	/**
 	 *
 	 * @param {object}                    options
-	 * @param {?FileSystemDirectoryEntry} options.dir
-	 * @param {?FileSystemEntry[]}        options.entries
-	 * @param {?File}                     options.file
+	 * @param {FileSystemDirectoryEntry?} options.dir
+	 * @param {FileSystemEntry[]?}        options.entries
+	 * @param {File?}                     options.file
 	 * @param {string}                    options.mimeType
 	 */
 	constructor( options ) {
@@ -28,6 +28,36 @@ export class DICOMParser extends BaseParser {
 	/**
 	 *
 	 * @private
+	 * @param {File}     file
+	 * @param {function} cb
+	 */
+	_loadFromDicomdirFile( file, cb ) {
+		file.arrayBuffer()
+			.then( async arrayBuffer => {
+				const dicomParser = await import(
+					/* webpackChunkName: "dicom-parser" */
+					'dicom-parser'
+				);
+
+				const options = { TransferSyntaxUID: '1.2.840.10008.1.2' };
+				const dataSet = dicomParser.parseDicom( new Uint8Array( arrayBuffer ), options );
+				const record = dataSet.elements.x00041220;
+
+				if( !record || !Array.isArray( record.items ) ) {
+					console.error( '[DICOMParser._parseHandlerDir]' +
+						' Record is either not set or has no entries.', record );
+				}
+				else {
+					cb( null, record );
+				}
+			} )
+			.catch( err => console.error( err ) );
+	}
+
+
+	/**
+	 *
+	 * @private
 	 * @param {function} cb
 	 */
 	_parseHandlerDir( cb ) {
@@ -39,47 +69,30 @@ export class DICOMParser extends BaseParser {
 			);
 		} );
 
-		dicomdirEntry.file(
-			file => {
-				const promise = file.arrayBuffer();
-
-				promise
-					.then( arrayBuffer => {
-						const options = { TransferSyntaxUID: '1.2.840.10008.1.2' };
-						const dataSet = dicomParser.parseDicom( new Uint8Array( arrayBuffer ), options );
-						const record = dataSet.elements.x00041220;
-
-						if( !record || !Array.isArray( record.items ) ) {
-							console.error( '[DICOMParser._parseHandlerDir]' +
-								' Record is either not set or has no entries.', record );
-						}
-						else {
-							cb( null, record );
-						}
-					} )
-					.catch( err => {
-						console.error( err );
-					} );
-			},
-			err => {
-				console.error( '[DICOMParser._parseHandlerDir] ' + err.message );
-				cb( err );
-			}
-		);
+		if( dicomdirEntry ) {
+			dicomdirEntry.file(
+				file => this._loadFromDicomdirFile( file, cb ),
+				err => {
+					console.error( '[DICOMParser._parseHandlerDir]', err );
+					cb( err );
+				}
+			);
+		}
+		else {
+			cb( null, entries );
+		}
 	}
 
 
 	/**
 	 *
 	 * @private
-	 * @param {function} cb
+	 * @param {File} file
 	 */
-	_parseHandlerFile( cb ) {
-		const imageId = this.wadouri.fileManager.add( this.file );
+	async addAndLoadFile( file ) {
+		const imageId = this.wadouri.fileManager.add( file );
 
-		this.wadouri.loadImage( imageId ).promise.then( image => {
-			cb( null, image );
-		} );
+		return await this.wadouri.loadImage( imageId ).promise;
 	}
 
 
@@ -145,69 +158,68 @@ export class DICOMParser extends BaseParser {
 
 	/**
 	 *
-	 * @param {object}   record
+	 * @param {object|FileSystemEntry[]} record
 	 * @param {function} cb
 	 */
 	loadDICOMDIRFiles( record, cb ) {
-		const filePaths = [];
-		const files = [];
-		const dataSets = [];
+		const images = [];
 
-		record.items.forEach( item => {
-			let filePath = item.dataSet.string( 'x00041500' );
+		if( Array.isArray( record ) ) {
+			const loadFile = i => {
+				if( i >= record.length ) {
+					cb( null, images );
+					return;
+				}
 
-			if( filePath ) {
-				filePath = filePath.replace( /\\/g, '/' );
-				filePaths.push( filePath );
-			}
-		} );
+				const fileEntry = record[i];
 
-		const getDataSet = ( file, cb ) => {
-			const promise = file.arrayBuffer();
-
-			promise
-				.then( arrayBuffer => {
-					const options = { TransferSyntaxUID: '1.2.840.10008.1.2' };
-					const dataSet = dicomParser.parseDicom( new Uint8Array( arrayBuffer ), options );
-
-					cb( null, dataSet );
-				} )
-				.catch( err => {
-					console.error( err );
-					cb( err, null );
+				fileEntry.file( async file => {
+					const image = await this.addAndLoadFile( file );
+					images.push( image );
+					loadFile( i + 1 );
 				} );
-		};
+			};
 
-		const loadFile = i => {
-			if( i >= filePaths.length ) {
-				cb( null, files, dataSets );
-				return;
-			}
+			loadFile( 0 );
+		}
+		else {
+			const filePaths = [];
 
-			const filePath = filePaths[i];
+			record.items.forEach( item => {
+				let filePath = item.dataSet.string( 'x00041500' );
 
-			this.file.getFile(
-				filePath, {},
-				fileEntry => {
-					fileEntry.file( file => {
-						getDataSet( file, ( err, dataSet ) => {
-							err && console.error( err );
+				if( filePath ) {
+					filePath = filePath.replace( /\\/g, '/' );
+					filePaths.push( filePath );
+				}
+			} );
 
-							files.push( file );
-							dataSets.push( dataSet );
+			const loadFile = i => {
+				if( i >= filePaths.length ) {
+					cb( null, images );
+					return;
+				}
 
+				const filePath = filePaths[i];
+
+				this.file.getFile(
+					filePath, {},
+					fileEntry => {
+						fileEntry.file( async file => {
+							const image = await this.addAndLoadFile( file );
+							images.push( image );
 							loadFile( i + 1 );
 						} );
-					} );
-				},
-				err => {
-					console.error( `[DICOMParser.loadDICOMDIRFiles] getFile "${filePath}": ` + err.message );
-					loadFile( i + 1 );
-				}
-			);
-		};
+					},
+					err => {
+						console.error( `[DICOMParser.loadDICOMDIRFiles] getFile "${filePath}": ` + err.message );
+						loadFile( i + 1 );
+					}
+				);
+			};
 
-		loadFile( 0 );
+			loadFile( 0 );
+		}
 	}
 
 
@@ -234,8 +246,25 @@ export class DICOMParser extends BaseParser {
 		if( this.isDir ) {
 			this._parseHandlerDir( cb );
 		}
+		else if( this.file.name.toLowerCase() === 'dicomdir' ) {
+			this._loadFromDicomdirFile( this.file, ( err, record ) => {
+				const filePaths = [];
+
+				record.items.forEach( item => {
+					let filePath = item.dataSet.string( 'x00041500' );
+		
+					if( filePath ) {
+						filePath = filePath.replace( /\\/g, '/' );
+						filePaths.push( filePath );
+					}
+				} );
+
+				cb( null, filePaths );
+			} );
+		}
 		else {
-			this._parseHandlerFile( cb );
+			const image = await this.addAndLoadFile( this.file );
+			cb( null, image );
 		}
 	}
 

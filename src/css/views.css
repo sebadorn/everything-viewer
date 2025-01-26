@@ -128,6 +128,24 @@
 					text-align: center;
 				}
 
+	.view-dicom .dicomdir-list {
+		background-color: rgba(0, 0, 0, 0.3);
+		box-sizing: border-box;
+		color: #f0f0f0;
+		font-family: var(--font-ms);
+		height: 100vh;
+		max-width: var(--max-width);
+		overflow: auto;
+		padding: 20px 10px;
+		width: 100%;
+	}
+
+		.view-dicom .dicomdir-list ol {
+			line-height: 22px;
+			list-style-position: inside;
+			list-style-type: decimal-leading-zero;
+		}
+
 
 .view-eml {
 	align-items: center;
