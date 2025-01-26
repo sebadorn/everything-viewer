@@ -1,50 +1,5 @@
 import { BaseView } from './BaseView.js';
 
-import hljs from 'highlight.js/lib/core';
-
-import bash from 'highlight.js/lib/languages/bash';
-import cmake from 'highlight.js/lib/languages/cmake';
-import diff from 'highlight.js/lib/languages/diff';
-import dns from 'highlight.js/lib/languages/dns';
-import ini from 'highlight.js/lib/languages/ini';
-import javascript from 'highlight.js/lib/languages/javascript';
-import json from 'highlight.js/lib/languages/json';
-import makefile from 'highlight.js/lib/languages/makefile';
-import markdown from 'highlight.js/lib/languages/markdown';
-import powershell from 'highlight.js/lib/languages/powershell';
-import typescript from 'highlight.js/lib/languages/typescript';
-import xml from 'highlight.js/lib/languages/xml';
-import yaml from 'highlight.js/lib/languages/yaml';
-
-const languages = [
-	{ name: 'bash', lang: bash },
-	{ name: 'cmake', lang: cmake },
-	{ name: 'diff', lang: diff },
-	{ name: 'dns', lang: dns },
-	{ name: 'ini', lang: ini }, // also TOML
-	{ name: 'javascript', lang: javascript },
-	{ name: 'json', lang: json },
-	{ name: 'makefile', lang: makefile },
-	{ name: 'markdown', lang: markdown },
-	{ name: 'powershell', lang: powershell },
-	{ name: 'typescript', lang: typescript },
-	{ name: 'xml', lang: xml },
-	{ name: 'yaml', lang: yaml },
-];
-
-languages.forEach( entry => {
-	hljs.registerLanguage( entry.name, entry.lang );
-
-	if( entry.lang.aliases ) {
-		hljs.registerAliases( entry.lang.aliases, { languageName: entry.name } );
-	}
-
-	if( entry.aliases ) {
-		hljs.registerAliases( entry.aliases, { languageName: entry.name } );
-	}
-} );
-
-
 
 export class TextView extends BaseView {
 
@@ -60,6 +15,84 @@ export class TextView extends BaseView {
 
 	/**
 	 *
+	 * @returns {HLJSApi}
+	 */
+	static async initHljs() {
+		if( TextView.hljs ) {
+			return TextView.hljs;
+		}
+
+		TextView.hljs = ( await import(
+			/* webpackChunkName: "hljs_core" */
+			'highlight.js/lib/core'
+		) ).default;
+
+		const imports = {
+			'bash': await import(
+				/* webpackChunkName: "hljs_l_bash" */
+				'highlight.js/lib/languages/bash'
+			),
+			'cmake': await import(
+				/* webpackChunkName: "hljs_l_cmake" */
+				'highlight.js/lib/languages/cmake'
+			),
+			'diff': await import(
+				/* webpackChunkName: "hljs_l_diff" */
+				'highlight.js/lib/languages/diff'
+			),
+			'dns': await import(
+				/* webpackChunkName: "hljs_l_dns" */
+				'highlight.js/lib/languages/dns'
+			),
+			'ini': await import(
+				/* webpackChunkName: "hljs_l_ini" */
+				'highlight.js/lib/languages/ini'
+			), // also includes TOML
+			'javascript': await import(
+				/* webpackChunkName: "hljs_l_javascript" */
+				'highlight.js/lib/languages/javascript'
+			),
+			'json': await import(
+				/* webpackChunkName: "hljs_l_json" */
+				'highlight.js/lib/languages/json'
+			),
+			'makefile': await import(
+				/* webpackChunkName: "hljs_l_makefile" */
+				'highlight.js/lib/languages/makefile'
+			),
+			'markdown': await import(
+				/* webpackChunkName: "hljs_l_markdown" */
+				'highlight.js/lib/languages/markdown'
+			),
+			'powershell': await import(
+				/* webpackChunkName: "hljs_l_powershell" */
+				'highlight.js/lib/languages/powershell'
+			),
+			'typescript': await import(
+				/* webpackChunkName: "hljs_l_typescript" */
+				'highlight.js/lib/languages/typescript'
+			),
+			'xml': await import(
+				/* webpackChunkName: "hljs_l_xml" */
+				'highlight.js/lib/languages/xml'
+			),
+			'yaml': await import(
+				/* webpackChunkName: "hljs_l_yaml" */
+				'highlight.js/lib/languages/yaml'
+			),
+		};
+
+		for( const key in imports ) {
+			const lang = imports[key].default;
+			TextView.hljs.registerLanguage( key, lang );
+		}
+
+		return TextView.hljs;
+	}
+
+
+	/**
+	 *
 	 * @param {function} cb
 	 */
 	load( cb ) {
@@ -68,12 +101,14 @@ export class TextView extends BaseView {
 
 		this.nodeView.appendChild( block );
 
-		this.parser.getText( ( _err, text ) => {
+		this.parser.getText( async ( _err, text ) => {
 			block.textContent = text;
 
 			const lang = this.parser.detectLanguage();
 
 			if( lang ) {
+				const hljs = await TextView.initHljs();
+
 				block.className += ' language-' + lang;
 				hljs.highlightElement( block );
 			}
