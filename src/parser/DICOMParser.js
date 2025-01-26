@@ -62,6 +62,8 @@ export class DICOMParser extends BaseParser {
 	 */
 	_parseHandlerDir( cb ) {
 		const entries = this.entries;
+
+		/** @type {FileSystemFileEntry?} */
 		const dicomdirEntry = entries.find( entry => {
 			return (
 				entry.isFile &&
@@ -158,6 +160,28 @@ export class DICOMParser extends BaseParser {
 
 	/**
 	 *
+	 * @param {object}   record
+	 * @param {object[]} record.items
+	 * @returns {string[]}
+	 */
+	getFilepathsFromRecord( record ) {
+		const filePaths = [];
+
+		record.items.forEach( item => {
+			let filePath = item.dataSet.string( 'x00041500' );
+
+			if( filePath ) {
+				filePath = filePath.replace( /\\/g, '/' );
+				filePaths.push( filePath );
+			}
+		} );
+
+		return filePaths;
+	}
+
+
+	/**
+	 *
 	 * @param {object|FileSystemEntry[]} record
 	 * @param {function} cb
 	 */
@@ -183,16 +207,7 @@ export class DICOMParser extends BaseParser {
 			loadFile( 0 );
 		}
 		else {
-			const filePaths = [];
-
-			record.items.forEach( item => {
-				let filePath = item.dataSet.string( 'x00041500' );
-
-				if( filePath ) {
-					filePath = filePath.replace( /\\/g, '/' );
-					filePaths.push( filePath );
-				}
-			} );
+			const filePaths = this.getFilepathsFromRecord( record );
 
 			const loadFile = i => {
 				if( i >= filePaths.length ) {
@@ -248,17 +263,7 @@ export class DICOMParser extends BaseParser {
 		}
 		else if( this.file.name.toLowerCase() === 'dicomdir' ) {
 			this._loadFromDicomdirFile( this.file, ( err, record ) => {
-				const filePaths = [];
-
-				record.items.forEach( item => {
-					let filePath = item.dataSet.string( 'x00041500' );
-		
-					if( filePath ) {
-						filePath = filePath.replace( /\\/g, '/' );
-						filePaths.push( filePath );
-					}
-				} );
-
+				const filePaths = this.getFilepathsFromRecord( record );
 				cb( null, filePaths );
 			} );
 		}

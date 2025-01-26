@@ -64,31 +64,24 @@ export const FileHandler = {
 
 	/**
 	 *
-	 * @param {File}     file
-	 * @param {function} cb
+	 * @param   {File} file
+	 * @returns {string}
 	 */
-	getMimeType( file, cb ) {
+	async getMimeType( file ) {
 		// Normally it is only the first 4 bytes. But:
 		// - DICOM files have 128 bytes before that.
 		// - NIFTI files have 344 bytes before that.
-		const promise = file.slice( 0, 344 + 4 ).arrayBuffer();
+		const arrayBuffer = await file.slice( 0, 344 + 4 ).arrayBuffer();
 
-		promise
-			.then( arrayBuffer => {
-				const arr = new Uint8Array( arrayBuffer );
-				const header = arr.reduce(
-					( prev, current ) => prev + current.toString( 16 ).padStart( 2, '0' ),
-					''
-				);
-				const fallbackType = file.type || this.extToMimeType( this.getFileExt( file ) );
-				const type = this.headerToMimeType( header, fallbackType );
+		const arr = new Uint8Array( arrayBuffer );
+		const header = arr.reduce(
+			( prev, current ) => prev + current.toString( 16 ).padStart( 2, '0' ),
+			''
+		);
+		const fallbackType = file.type || this.extToMimeType( this.getFileExt( file ) );
+		const type = this.headerToMimeType( header, fallbackType );
 
-				cb( null, type );
-			} )
-			.catch( err => {
-				console.error( err );
-				cb( err, file.type );
-			} );
+		return type;
 	},
 
 
@@ -97,42 +90,41 @@ export const FileHandler = {
 	 * @param {File}     file
 	 * @param {function} cb
 	 */
-	getParser( file, cb ) {
+	async getParser( file, cb ) {
 		const ext = this.getFileExt( file );
+		const mimeType = this.getMimeType( file );
 
-		this.getMimeType( file, ( _err, mimeType ) => {
-			let parser = null;
+		let parser = null;
 
-			if( ext === 'csv' ) {
-				parser = new CSVParser( file, mimeType );
-			}
-			else if( mimeType === 'application/dicom' ) {
-				parser = new DICOMParser( { file, mimeType } );
-			}
-			else if( ext === 'eml' ) {
-				parser = new EMLParser( file, mimeType );
-			}
-			else if(
-				mimeType === 'text/calendar' ||
-				['ical', 'ics', 'ifb', 'vcs'].includes( ext )
-			) {
-				parser = new ICalParser( file, mimeType );
-			}
-			else if( ext === 'vcf' || mimeType === 'text/vcard' ) {
-				parser = new VCFParser( file, mimeType );
-			}
-			else if( mimeType === 'application/zip' ) {
-				parser = new ZIPParser( file, mimeType );
-			}
-			else if( mimeType === 'image/gif' ) {
-				parser = new GIFParser( file, mimeType );
-			}
-			else {
-				parser = new BaseParser( file, mimeType );
-			}
+		if( ext === 'csv' ) {
+			parser = new CSVParser( file, mimeType );
+		}
+		else if( mimeType === 'application/dicom' ) {
+			parser = new DICOMParser( { file, mimeType } );
+		}
+		else if( ext === 'eml' ) {
+			parser = new EMLParser( file, mimeType );
+		}
+		else if(
+			mimeType === 'text/calendar' ||
+			['ical', 'ics', 'ifb', 'vcs'].includes( ext )
+		) {
+			parser = new ICalParser( file, mimeType );
+		}
+		else if( ext === 'vcf' || mimeType === 'text/vcard' ) {
+			parser = new VCFParser( file, mimeType );
+		}
+		else if( mimeType === 'application/zip' ) {
+			parser = new ZIPParser( file, mimeType );
+		}
+		else if( mimeType === 'image/gif' ) {
+			parser = new GIFParser( file, mimeType );
+		}
+		else {
+			parser = new BaseParser( file, mimeType );
+		}
 
-			cb( null, parser );
-		} );
+		cb( null, parser );
 	},
 
 
@@ -281,6 +273,35 @@ export const FileHandler = {
 		}
 
 		return type;
+	},
+
+
+	/**
+	 *
+	 * @param {FileSystemFileEntry} entry
+	 * @returns {Promise}
+	 */
+	isDICOMFile( entry ) {
+		if( !entry?.isFile ) {
+			return new Promise( ( resolve, _reject ) => resolve( false ) );
+		}
+
+		if( entry.name.toLocaleLowerCase().endsWith( '.dcm' ) ) {
+			return new Promise( ( resolve, _reject ) => resolve( true ) );
+		}
+
+		return new Promise( ( resolve, _reject ) => {
+			entry.file(
+				file => {
+					const mimeType = FileHandler.getMimeType( file );
+					resolve( mimeType === 'application/dicom' );
+				},
+				err => {
+					console.error( '[FileHandler.isDICOMFile]', err );
+					resolve( false );
+				}
+			);
+		} );
 	},
 
 

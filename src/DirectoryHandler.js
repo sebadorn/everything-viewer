@@ -1,3 +1,6 @@
+import { FileHandler } from './FileHandler.js';
+
+
 export const DirectoryHandler = {
 
 
@@ -25,13 +28,13 @@ export const DirectoryHandler = {
 	 * @param {FileSystemEntry[]} entries
 	 * @returns {boolean}
 	 */
-	_containsDICOMFiles( entries ) {
+	async _containsDICOMFiles( entries ) {
 		let num = 0;
 
 		for( let i = 0; i < entries.length; i++ ) {
 			const entry = entries[i];
 
-			if( this._isDICOMFile( entry ) ) {
+			if( await FileHandler.isDICOMFile( entry ) ) {
 				num++;
 
 				if( num > 1 ) {
@@ -41,17 +44,6 @@ export const DirectoryHandler = {
 		}
 
 		return false;
-	},
-
-
-	/**
-	 *
-	 * @private
-	 * @param {FileSystemEntry} entry
-	 * @returns {boolean}
-	 */
-	_isDICOMFile( entry ) {
-		return entry.isFile && entry.name.toLowerCase().endsWith( '.dcm' );
 	},
 
 
@@ -79,11 +71,13 @@ export const DirectoryHandler = {
 				else if( this._containsDICOMFiles( entries ) ) {
 					const { DICOMParser } = await import( './parser/DICOMParser.js' );
 
+					const list = entries
+						.filter( async entry => await FileHandler.isDICOMFile( entry ) )
+						.sort( ( a, b ) => a.name.localeCompare( b.name, { numeric: true } ) );
+
 					const parser = new DICOMParser( {
 						dir: dir,
-						entries: entries
-							.filter( entry => this._isDICOMFile( entry ) )
-							.sort( ( a, b ) => a.name.localeCompare( b.name ) ),
+						entries: list,
 						mimeType: 'application/dicom',
 					} );
 
