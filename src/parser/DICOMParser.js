@@ -88,8 +88,8 @@ export class DICOMParser extends BaseParser {
 
 	/**
 	 *
-	 * @private
-	 * @param {File} file
+	 * @param   {File} file
+	 * @returns {Promise<IImage>}
 	 */
 	async addAndLoadFile( file ) {
 		const imageId = this.wadouri.fileManager.add( file );
@@ -240,7 +240,8 @@ export class DICOMParser extends BaseParser {
 
 	/**
 	 *
-	 * @param {function} cb
+	 * @param   {function} cb
+	 * @returns {Promise<void>}
 	 */
 	async parse( cb ) {
 		const core = await import(

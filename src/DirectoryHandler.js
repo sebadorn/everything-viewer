@@ -25,8 +25,8 @@ export const DirectoryHandler = {
 	/**
 	 *
 	 * @private
-	 * @param {FileSystemEntry[]} entries
-	 * @returns {boolean}
+	 * @param   {FileSystemEntry[]} entries
+	 * @returns {Promise<boolean>}
 	 */
 	async _containsDICOMFiles( entries ) {
 		let num = 0;
@@ -68,7 +68,7 @@ export const DirectoryHandler = {
 
 					cb( null, parser );
 				}
-				else if( this._containsDICOMFiles( entries ) ) {
+				else if( await this._containsDICOMFiles( entries ) ) {
 					const { DICOMParser } = await import( './parser/DICOMParser.js' );
 
 					const list = entries

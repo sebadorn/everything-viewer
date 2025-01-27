@@ -65,7 +65,7 @@ export const FileHandler = {
 	/**
 	 *
 	 * @param   {File} file
-	 * @returns {string}
+	 * @returns {Promise<string?>}
 	 */
 	async getMimeType( file ) {
 		// Normally it is only the first 4 bytes. But:
@@ -87,12 +87,13 @@ export const FileHandler = {
 
 	/**
 	 *
-	 * @param {File}     file
-	 * @param {function} cb
+	 * @param   {File}     file
+	 * @param   {function} cb
+	 * @returns {Promise<void>}
 	 */
 	async getParser( file, cb ) {
 		const ext = this.getFileExt( file );
-		const mimeType = this.getMimeType( file );
+		const mimeType = await this.getMimeType( file );
 
 		let parser = null;
 
@@ -141,7 +142,7 @@ export const FileHandler = {
 		}
 		else if( parser.mimeType || parser.file.size > 0 ) {
 			const ext = this.getFileExt( parser.file );
-			const type = String(parser.mimeType).toLowerCase();
+			const type = String( parser.mimeType ).toLowerCase();
 			const name = parser.file.name.toLowerCase();
 
 			if( type === 'application/pdf' ) {
@@ -278,8 +279,8 @@ export const FileHandler = {
 
 	/**
 	 *
-	 * @param {FileSystemFileEntry} entry
-	 * @returns {Promise}
+	 * @param   {FileSystemFileEntry} entry
+	 * @returns {Promise<boolean>}
 	 */
 	isDICOMFile( entry ) {
 		if( !entry?.isFile ) {
@@ -292,8 +293,8 @@ export const FileHandler = {
 
 		return new Promise( ( resolve, _reject ) => {
 			entry.file(
-				file => {
-					const mimeType = FileHandler.getMimeType( file );
+				async file => {
+					const mimeType = await FileHandler.getMimeType( file );
 					resolve( mimeType === 'application/dicom' );
 				},
 				err => {

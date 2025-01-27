@@ -15,7 +15,7 @@ export class TextView extends BaseView {
 
 	/**
 	 *
-	 * @returns {HLJSApi}
+	 * @returns {Promise<HLJSApi>}
 	 */
 	static async initHljs() {
 		if( TextView.hljs ) {

@@ -286,6 +286,7 @@ export class DICOMView extends BaseView {
 	/**
 	 *
 	 * @private
+	 * @returns {Promise<void>}
 	 */
 	async _initViewport() {
 		const { RenderingEngine } = await import(
