@@ -17,7 +17,15 @@ export class EventClass {
 	 */
 	fire( eventType, data ) {
 		const fns = this._events[eventType] || [];
-		fns.forEach( cb => cb( data ) );
+
+		for( let i = 0; i < fns.length; i++ ) {
+			const cb = fns[i];
+
+			// Callbacks can return `false` to stop later added callbacks.
+			if( cb( data ) === false ) {
+				break;
+			}
+		}
 	}
 
 

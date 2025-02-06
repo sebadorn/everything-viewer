@@ -93,6 +93,10 @@ button {
 	text-align: center;
 }
 
+button {
+	background-image: linear-gradient(#ffffff10, transparent);
+}
+
 a#github:hover,
 button:hover {
 	background-color: var(--color-primary-dark);
@@ -130,6 +134,35 @@ table {
 	th {
 		text-align: left;
 		vertical-align: top;
+	}
+
+
+.button-group {
+	align-items: center;
+	display: flex;
+	justify-content: center;
+}
+
+	.button-group .btn {
+		border-left: 1px solid #00000030;
+		border-right: 1px solid #00000030;
+		border-radius: 0;
+	}
+
+	.button-group .btn:first-child {
+		border-left: 0;
+		border-bottom-left-radius: var(--button-radius);
+		border-top-left-radius: var(--button-radius);
+	}
+
+	.button-group .btn:last-child {
+		border-right: 0;
+		border-bottom-right-radius: var(--button-radius);
+		border-top-right-radius: var(--button-radius);
+	}
+
+	.button-group .btn.selected {
+		background-image: linear-gradient(#00000020, transparent);
 	}
 
 

@@ -12,33 +12,20 @@ export class EMLParser extends BaseParser {
 	constructor( file, mimeType ) {
 		super( file, mimeType );
 
+		this._domParser = new DOMParser();
 		this._lastParsed = null;
 	}
 
 
 	/**
 	 *
-	 * @param  {string}   body
-	 * @param  {object}   options
-	 * @param  {boolean} [options.remove_external = true]
-	 * @return {?HTMLDocument}
+	 * @private
+	 * @param {string} content
+	 * @returns {string}
 	 */
-	buildBodyDOM( body, options ) {
-		if( !body ) {
-			return null;
-		}
-
-		if( !options ) {
-			options = {};
-		}
-
-		if( typeof options.remove_external !== 'boolean' ) {
-			options.remove_external = true;
-		}
-
-		let html = body;
-		html = html.replaceAll( /=[\r]?\n/g, '' );
-		html = html.replaceAll( /(=[0-9A-Z]{2})+/g, match => {
+	_decodeContent( content ) {
+		content = content.replaceAll( /=[\r]?\n/g, '' );
+		content = content.replaceAll( /(=[0-9A-Z]{2})+/g, match => {
 			try {
 				return decodeURIComponent( match.replaceAll( '=', '%' ) );
 			}
@@ -48,60 +35,71 @@ export class EMLParser extends BaseParser {
 			}
 		} );
 
-		const domParser = new DOMParser();
-		const doc = domParser.parseFromString( html, 'text/html' );
+		return content;
+	}
 
-		// Try to remove or disable everything that loads external resources.
-		if( options.remove_external ) {
-			// Remove src of images, except if the data is inlined.
-			const images = doc.querySelectorAll( 'img' );
-			images.forEach( img => {
-				const src = img.getAttribute( 'src' ) || '';
 
-				if( !src.startsWith( 'data:' ) ) {
-					img.removeAttribute( 'src' );
-				}
-			} );
+	/**
+	 * Try to remove or disable everything that loads external resources.
+	 * @param {Document} doc 
+	 */
+	_removeExternal( doc ) {
+		// Remove src of images, except if the data is inlined.
+		const images = doc.querySelectorAll( 'img' );
+		images.forEach( img => {
+			const src = img.getAttribute( 'src' ) || '';
 
-			// Remove certain elements completely.
-			const toRemove = doc.querySelectorAll( [
-				'audio[src]',
-				'embed',
-				'iframe',
-				'link[rel="stylesheet"]',
-				'object',
-				'script',
-				'source',
-				'video[src]'
-			].join( ',' ) );
-			toRemove.forEach( node => node.remove() );
+			if( !src.startsWith( 'data:' ) ) {
+				img.removeAttribute( 'src' );
+			}
+		} );
 
-			// Remove certain attributes.
-			const attr = doc.querySelectorAll( '[background]' );
-			attr.forEach( node => {
-				const value = node.getAttribute( 'background' ) || '';
+		// Remove certain elements completely.
+		const toRemove = doc.querySelectorAll( [
+			'audio[src]',
+			'embed',
+			'iframe',
+			'link[rel="stylesheet"]',
+			'object',
+			'script',
+			'source',
+			'video[src]',
+		].join( ',' ) );
+		toRemove.forEach( node => node.remove() );
 
-				if( value.includes( '//' ) ) {
-					node.removeAttribute( 'background' );
-				}
-			} );
+		// Remove certain attributes.
+		const attr = doc.querySelectorAll( '[background]' );
+		attr.forEach( node => {
+			const value = node.getAttribute( 'background' ) || '';
 
-			// Styles
-			const styles = doc.querySelectorAll( 'style' );
-			styles.forEach( node => {
-				let style = node.textContent;
-				style = style.replaceAll( /url[ \t]*\([ \t]*.+[ \t]*\)/gi, 'url()' );
-				node.textContent = style;
-			} );
-		}
+			if( value.includes( '//' ) ) {
+				node.removeAttribute( 'background' );
+			}
+		} );
 
-		return doc;
+		// Styles
+		const styles = doc.querySelectorAll( 'style' );
+		styles.forEach( node => {
+			let style = node.textContent;
+			style = style.replaceAll( /url[ \t]*\([ \t]*.+[ \t]*\)/gi, 'url()' );
+			node.textContent = style;
+		} );
 	}
 
 
 	/**
 	 *
-	 * @param  {object[]} headers
+	 * @param {string} html
+	 * @return {Document?}
+	 */
+	buildBodyDOM( html ) {
+		return this._domParser.parseFromString( html, 'text/html' );
+	}
+
+
+	/**
+	 *
+	 * @param {object[]} headers
 	 * @return {HTMLElement}
 	 */
 	buildHeadersHTML( headers ) {
@@ -132,24 +130,86 @@ export class EMLParser extends BaseParser {
 
 	/**
 	 *
+	 * @param {string} body
+	 * @return {Document?}
+	 */
+	buildPlainTextDOM( text ) {
+		return this._domParser.parseFromString(
+			`<pre>${text}</pre>`,
+			'text/html'
+		);
+	}
+
+
+	/**
+	 *
 	 * @param {object}   options
 	 * @param {boolean} [options.remove_external = true]
 	 * @param {function} cb
 	 */
 	getBodyDOM( options, cb ) {
-		if( this._lastParsed ) {
-			const dom = this.buildBodyDOM( this._lastParsed.body, options );
+		if( !options ) {
+			options = {};
+		}
 
-			cb( null, dom );
+		if( typeof options.remove_external !== 'boolean' ) {
+			options.remove_external = true;
+		}
+
+		if( this._lastParsed ) {
+			let body = this._decodeContent( this._lastParsed.body );
+			let doc = null;
+
+			let contentType = this.getHeader( this._lastParsed.headers, 'content-type' ) || '';
+			contentType = contentType.toLowerCase();
+
+			let type = 'plaintext';
+
+			if( contentType.startsWith( 'text/html' ) ) {
+				doc = this.buildBodyDOM( body, options );
+				type = 'html';
+			}
+			else {
+				doc = this.buildPlainTextDOM( body );
+			}
+
+			if( doc && options.remove_external ) {
+				this._removeExternal( doc );
+			}
+
+			cb( null, doc, type );
 		}
 		else {
 			this.getText( ( _err, text ) => {
-				const data = this.parse( text );
-				const dom = this.buildBodyDOM( data.body, options );
+				this.parse( text );
 
-				cb( null, dom );
+				if( this._lastParsed ) {
+					this.getBodyDOM( options, cb );
+				}
+				else {
+					cb( new Error( 'Failed to parse' ), null, null );
+				}
 			} );
 		}
+	}
+
+
+	/**
+	 * 
+	 * @param {object[]} headers 
+	 * @param {string}   key 
+	 * @returns {string?}
+	 */
+	getHeader( headers, key ) {
+		headers = headers || {};
+
+		for( const header of headers ) {
+			if( header.name.toLowerCase() === key ) {
+				return header.value;
+			}
+		}
+
+		return null;
 	}
 
 
@@ -177,9 +237,11 @@ export class EMLParser extends BaseParser {
 	/**
 	 *
 	 * @param  {string} text
-	 * @return {?object}
+	 * @return {object?}
 	 */
 	parse( text ) {
+		this._lastParsed = null;
+
 		text = text.trimStart();
 		let textParts = text.split( '\r\n\r\n' );
 
@@ -187,12 +249,12 @@ export class EMLParser extends BaseParser {
 			textParts = text.split( '\n\n' );
 		}
 
-		if( textParts.length !== 2 ) {
+		if( textParts.length < 2 ) {
 			return null;
 		}
 
-		const textHeaders = textParts[0].trim();
-		const textBody = textParts[1];
+		const textHeaders = textParts.splice( 0, 1 )[0].trim();
+		const textBody = textParts.join( '\n\n' );
 
 		const data = {
 			headers: [],

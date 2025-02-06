@@ -152,26 +152,26 @@
 	flex-direction: column;
 }
 
-	.view-eml .actions {
-		align-items: center;
+	.view-eml .button-group {
 		background-color: rgba(0, 0, 0, 0.3);
 		box-sizing: border-box;
-		display: flex;
-		justify-content: center;
 		height: 10vh;
 		max-width: var(--max-width);
 		padding: 20px;
 		width: 100%;
 	}
 
-		.view-eml .actions button {
-			margin: 0 10px;
-		}
-
 	.view-eml iframe {
 		height: 90vh;
 		max-width: var(--max-width);
 		width: 100%;
+	}
+
+	.view-eml .eml-type-plaintext {
+		background-color: #d0d0d0;
+		max-width: calc( var(--max-width) - 40px );
+		padding: 20px;
+		width: calc( 100% - 40px );
 	}
 
 	.view-eml .headers {
