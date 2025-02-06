@@ -169,6 +169,7 @@
 
 	.view-eml .eml-type-plaintext {
 		background-color: #d0d0d0;
+		height: calc( 90vh - 40px );
 		max-width: calc( var(--max-width) - 40px );
 		padding: 20px;
 		width: calc( 100% - 40px );
