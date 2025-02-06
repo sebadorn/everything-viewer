@@ -1,4 +1,5 @@
-import { UI } from '../UI.js';
+import { Button } from '../components/Button.js';
+import { ButtonGroup } from '../components/ButtonGroup.js';
 import { BaseView } from './BaseView.js';
 
 
@@ -20,91 +21,66 @@ export class EMLView extends BaseView {
 	 * @return {DocumentFragment}
 	 */
 	_buildActions() {
-		const node = UI.build( `
-			<div class="actions">
-				<button class="show-headers">Show Headers</button>
-				<button class="show-content-no-res active">Content (no external)</button>
-				<button class="show-content">Content (with external)</button>
-			</div>
-		` );
+		const header = new ButtonGroup( [
+			new Button( {
+				text: 'Show Headers',
+				onClick: () => {
+					this.nodeView.querySelector( 'iframe.content-res ')?.remove();
 
-		const btnHeaders = node.querySelector( 'button.show-headers' );
-		btnHeaders.addEventListener( 'click', _ev => {
-			btnHeaders.className = 'show-headers active';
-			btnContentNoRes.className = 'show-content-no-res';
-			btnContentRes.className = 'show-content';
+					const iframe = this.nodeView.querySelector( 'iframe.content-no-res' );
+					iframe.style.display = 'none';
 
-			const iframeRes = this.nodeView.querySelector( 'iframe.content-res ');
+					const headers = this.nodeView.querySelector( '.headers' );
+					headers.style.display = '';
+				},
+			} ),
+			new Button( {
+				text: 'Content (no external)',
+				classes: 'selected',
+				onClick: () => {
+					this.nodeView.querySelector( 'iframe.content-res ')?.remove();
 
-			if( iframeRes ) {
-				iframeRes.remove();
-			}
+					const iframe = this.nodeView.querySelector( 'iframe.content-no-res' );
+					iframe.style.display = '';
 
-			const iframe = this.nodeView.querySelector( 'iframe.content-no-res' );
-			iframe.style.display = 'none';
+					const headers = this.nodeView.querySelector( '.headers' );
+					headers.style.display = 'none';
+				},
+			} ),
+			new Button( {
+				text: 'Content (with external)',
+				onClick: () => {
+					const didConfirm = window.confirm(
+						'Show the content and load its external resources?\n' +
+						'This could pose a security risk.\n\n' +
+						'Only agree if you trust the EML file.'
+					);
 
-			const headers = this.nodeView.querySelector( '.headers' );
-			headers.style.display = '';
-		} );
+					if( !didConfirm ) {
+						return false;
+					}
 
-		const btnContentNoRes = node.querySelector( 'button.show-content-no-res' );
-		btnContentNoRes.addEventListener( 'click', _ev => {
-			btnHeaders.className = 'show-headers';
-			btnContentNoRes.className = 'show-content-no-res active';
-			btnContentRes.className = 'show-content';
+					this.nodeView.querySelector( 'iframe.content-res ')?.remove();
 
-			const iframeRes = this.nodeView.querySelector( 'iframe.content-res ');
+					const iframe = this.nodeView.querySelector( 'iframe.content-no-res' );
+					iframe.style.display = 'none';
 
-			if( iframeRes ) {
-				iframeRes.remove();
-			}
+					const headers = this.nodeView.querySelector( '.headers' );
+					headers.style.display = 'none';
 
-			const iframe = this.nodeView.querySelector( 'iframe.content-no-res' );
-			iframe.style.display = '';
+					this.parser.getBodyDOM( { remove_external: false }, ( _err, dom, type ) => {
+						const iframe = document.createElement( 'iframe' );
+						iframe.className = `content-res eml-type-${type}`;
+						iframe.setAttribute( 'sandbox', '' );
+						iframe.setAttribute( 'srcdoc', dom.documentElement.outerHTML );
 
-			const headers = this.nodeView.querySelector( '.headers' );
-			headers.style.display = 'none';
-		} );
+						this.nodeView.append( iframe );
+					} );
+				},
+			} ),
+		] );
 
-		const btnContentRes = node.querySelector( 'button.show-content' );
-		btnContentRes.addEventListener( 'click', _ev => {
-			const didConfirm = window.confirm(
-				'Show the content and load its external resources?\n' +
-				'This could pose a security risk.\n\n' +
-				'Only agree if you trust the EML file.'
-			);
-
-			if( !didConfirm ) {
-				return;
-			}
-
-			btnHeaders.className = 'show-headers';
-			btnContentNoRes.className = 'show-content-no-res';
-			btnContentRes.className = 'show-content active';
-
-			const iframeRes = this.nodeView.querySelector( 'iframe.content-res ');
-
-			if( iframeRes ) {
-				iframeRes.remove();
-			}
-
-			const iframe = this.nodeView.querySelector( 'iframe.content-no-res' );
-			iframe.style.display = 'none';
-
-			const headers = this.nodeView.querySelector( '.headers' );
-			headers.style.display = 'none';
-
-			this.parser.getBodyDOM( { remove_external: false }, ( _err, dom ) => {
-				const iframe = document.createElement( 'iframe' );
-				iframe.className = 'content-res';
-				iframe.setAttribute( 'sandbox', '' );
-				iframe.setAttribute( 'srcdoc', dom.documentElement.outerHTML );
-
-				this.nodeView.append( iframe );
-			} );
-		} );
-
-		return node;
+		return header.render();
 	}
 
 
@@ -117,12 +93,14 @@ export class EMLView extends BaseView {
 		iframe.className = 'content-no-res';
 		iframe.setAttribute( 'sandbox', '' );
 
-		this.parser.getBodyDOM( { remove_external: true }, ( _err, dom ) => {
+		this.parser.getBodyDOM( { remove_external: true }, ( _err, dom, type ) => {
 			this.parser.getHeadersHTML( ( _err, headers ) => {
 				this.buildMetaNode();
 
 				const actions = this._buildActions();
 				headers.style.display = 'none';
+
+				iframe.classList.add( `eml-type-${type}` );
 				iframe.setAttribute( 'srcdoc', dom.documentElement.outerHTML );
 
 				this.nodeView.append( actions, headers, iframe );

@@ -7,16 +7,21 @@ export class Button extends Component {
 
 	/**
 	 *
-	 * @param {object}  config
-	 * @param {string?} config.classes
-	 * @param {string?} config.icon
-	 * @param {string?} config.text
-	 * @param {string?} config.title
+	 * @param {object}    config
+	 * @param {string?}   config.classes
+	 * @param {string?}   config.icon
+	 * @param {function?} config.onClick
+	 * @param {string?}   config.text
+	 * @param {string?}   config.title
 	 */
 	constructor( config ) {
 		super();
 
 		this._config = config;
+
+		if( typeof this._config.onClick === 'function' ) {
+			this.on( 'click', this._config.onClick );
+		}
 	}
 
 
