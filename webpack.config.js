@@ -11,11 +11,12 @@ module.exports = {
 	module: {
 		rules: [
 			{
-				test: /\.css$/,
-				include: path.resolve( __dirname, 'src/css' ),
+				test: /\.s?css$/,
+				include: path.resolve( __dirname, 'src/style' ),
 				use: [
 					MiniCssExtractPlugin.loader,
 					'css-loader',
+					'sass-loader',
 				],
 			},
 			{
