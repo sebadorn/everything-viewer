@@ -26,42 +26,21 @@ export class Button extends Component {
 
 
 	/**
-	 * Disable the button.
-	 */
-	disable() {
-		if( !this._node ) {
-			window.Logger.warn( '[Button.disable] Button has not been rendered yet.' );
-			return;
-		}
-
-		this._node.disabled = true;
-	}
-
-
-	/**
-	 * Enable the button.
-	 */
-	enable() {
-		if( !this._node ) {
-			window.Logger.warn( '[Button.enable] Button has not been rendered yet.' );
-			return;
-		}
-
-		this._node.disabled = false;
-	}
-
-
-	/**
 	 *
-	 * @returns {HTMLElement}
+	 * @private
 	 */
-	render() {
-		super.render();
+	_updateNode() {
+		if( !this._node ) {
+			return;
+		}
 
 		const hasIcon = typeof this._config.icon === 'string';
 		const hasText = typeof this._config.text === 'string';
 
-		this._node = document.createElement( 'button' );
+		// Reset button except for listeners
+		this._node.innerHTML = '';
+		this._node.className = '';
+
 		this._node.classList.add( 'btn' );
 
 		if( typeof this._config.classes === 'string' ) {
@@ -94,6 +73,47 @@ export class Button extends Component {
 		if( typeof this._config.title === 'string' ) {
 			this._node.setAttribute( 'title', this._config.title );
 		}
+		else {
+			this._node.removeAttribute( 'title' );
+		}
+	}
+
+
+	/**
+	 * Disable the button.
+	 */
+	disable() {
+		if( !this._node ) {
+			window.Logger.warn( '[Button.disable] Button has not been rendered yet.' );
+			return;
+		}
+
+		this._node.disabled = true;
+	}
+
+
+	/**
+	 * Enable the button.
+	 */
+	enable() {
+		if( !this._node ) {
+			window.Logger.warn( '[Button.enable] Button has not been rendered yet.' );
+			return;
+		}
+
+		this._node.disabled = false;
+	}
+
+
+	/**
+	 *
+	 * @returns {HTMLElement}
+	 */
+	render() {
+		super.render();
+
+		this._node = document.createElement( 'button' );
+		this._updateNode();
 
 		this._node.addEventListener( 'click', ev => {
 			if( this._node.disabled ) {
@@ -107,4 +127,17 @@ export class Button extends Component {
 	}
 
 
-}
+	/**
+	 *
+	 * @param {object} changes
+	 */
+	update( changes ) {
+		for( const key in changes ) {
+			this._config[key] = changes[key];
+		}
+
+		this._updateNode();
+	}
+
+
+};

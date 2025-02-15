@@ -1,3 +1,4 @@
+import { Button } from '../../ui/components/Button.js';
 import { UI } from '../../ui/UI.js';
 import { BaseView } from '../BaseView.js';
 import { DICOMParser } from './DICOMParser.js';
@@ -157,13 +158,8 @@ export class DICOMView extends BaseView {
 			<div class="actions">
 				<input type="range" min="1" max="${this._numFrames}" value="1" />
 				<div class="line">
-					<div class="wrap wrap-frame-controls">
-						<button class="frame-prev">&larr;</button>
-						<span class="counter"></span>
-						<button class="frame-next">&rarr;</button>
-					</div>
+					<div class="wrap wrap-frame-controls"></div>
 					<div class="wrap wrap-playback">
-						<button class="play-pause">▶</button>
 						<select class="speed">
 							<option value="${this._frameTime}">Default: ${this._frameTime} ms</option>
 							<option value="16.7">16.7 ms</option>
@@ -175,6 +171,29 @@ export class DICOMView extends BaseView {
 				</div>
 			</div>
 		` );
+
+		const btnPrev = new Button( {
+			classes: 'frame-prev',
+			text: '←',
+		} );
+
+		const btnNext = new Button( {
+			classes: 'frame-next',
+			text: '→',
+		} );
+
+		const btnPlayPause = new Button( {
+			classes: 'play-pause',
+			text: '▶',
+		} );
+
+		node.querySelector( '.wrap-frame-controls' ).append(
+			btnPrev.render(),
+			UI.build( '<span class="counter"></span>' ),
+			btnNext.render(),
+		);
+
+		node.querySelector( '.wrap-playback' ).append( btnPlayPause.render() );
 
 		this._frameIndex = 0;
 
@@ -188,14 +207,12 @@ export class DICOMView extends BaseView {
 				this._controlGoto( this._frameIndex );
 			} );
 
-			const btnPrev = node.querySelector( 'button.frame-prev' );
-			btnPrev.addEventListener( 'click', _ev => {
+			btnPrev.on( 'click', _ev => {
 				this._controlGoto( --this._frameIndex );
 				slider.value = this._frameIndex + 1;
 			} );
 
-			const btnNext = node.querySelector( 'button.frame-next' );
-			btnNext.addEventListener( 'click', _ev => {
+			btnNext.on( 'click', _ev => {
 				this._controlGoto( ++this._frameIndex );
 				slider.value = this._frameIndex + 1;
 			} );
@@ -205,16 +222,15 @@ export class DICOMView extends BaseView {
 				this._frameTime = Number( selectSpeed.value );
 			} );
 
-			const btnPlayPause = node.querySelector( 'button.play-pause' );
-			btnPlayPause.addEventListener( 'click', _ev => {
+			btnPlayPause.on( 'click', _ev => {
 				// Start playback
 				if( !this._timer ) {
-					btnPlayPause.textContent = '⏸';
+					btnPlayPause.update( { text: '⏸' } );
 					this._playback( slider );
 				}
 				// Pause playback
 				else {
-					btnPlayPause.textContent = '▶';
+					btnPlayPause.update( { text: '▶' } );
 					clearTimeout( this._timer );
 					this._timer = 0;
 				}

@@ -13,25 +13,6 @@ export const UI = {
 	/**
 	 *
 	 * @private
-	 * @param {File|FileSystemDirectoryEntry} fileOrDir
-	 */
-	async open( fileOrDir ) {
-		if( !fileOrDir ) {
-			return;
-		}
-
-		this._prevPlugin?.reset();
-		const plugin = await Registry.getPluginForImport( fileOrDir );
-		this._prevPlugin = plugin;
-
-		const view = plugin.getView();
-		view.load( () => this.update( view ) );
-	},
-
-
-	/**
-	 *
-	 * @private
 	 * @param {BaseView?} view
 	 */
 	_updateMetaInfo( view ) {
@@ -252,6 +233,24 @@ export const UI = {
 		}
 
 		return size.toFixed( 1 ) + ' ' + unit;
+	},
+
+
+	/**
+	 *
+	 * @param {File|FileSystemDirectoryEntry} fileOrDir
+	 */
+	async open( fileOrDir ) {
+		if( !fileOrDir ) {
+			return;
+		}
+
+		this._prevPlugin?.reset();
+		const plugin = await Registry.getPluginForImport( fileOrDir );
+		this._prevPlugin = plugin;
+
+		const view = plugin.getView();
+		view.load( () => this.update( view ) );
 	},
 
 
