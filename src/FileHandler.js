@@ -1,25 +1,25 @@
-import { BaseParser } from './parser/BaseParser.js';
-import { CSVParser } from './parser/CSVParser.js';
-import { DICOMParser } from './parser/DICOMParser.js';
-import { EMLParser } from './parser/EMLParser.js';
-import { GIFParser } from './parser/GIFParser.js';
-import { ICalParser } from './parser/ICalParser.js';
-import { VCFParser } from './parser/VCFParser.js';
-import { ZIPParser } from './parser/ZIPParser.js';
+// import { BaseParser } from './plugins/BaseParser.js';
+// import { CSVParser } from './plugins/csv/CSVParser.js';
+// import { DICOMParser } from './plugins/dicom/DICOMParser.js';
+// import { EMLParser } from './plugins/eml/EMLParser.js';
+// import { GIFParser } from './plugins/gif/GIFParser.js';
+// import { ICalParser } from './plugins/ical/ICalParser.js';
+// import { VCFParser } from './plugins/vcf/VCFParser.js';
+// import { ZIPParser } from './plugins/zip/ZIPParser.js';
 
-import { AudioView } from './ui/views/AudioView.js';
-import { BaseView } from './ui/views/BaseView.js';
-import { CSVView } from './ui/views/CSVView.js';
-import { DICOMView } from './ui/views/DICOMView.js';
-import { EMLView } from './ui/views/EMLView.js';
-import { GIFView } from './ui/views/GIFView.js';
-import { ICalView } from './ui/views/ICalView.js';
-import { ImageView } from './ui/views/ImageView.js';
-import { PDFView } from './ui/views/PDFView.js';
-import { TextView } from './ui/views/TextView.js';
-import { VCFView } from './ui/views/VCFView.js';
-import { VideoView } from './ui/views/VideoView.js';
-import { ZIPView } from './ui/views/ZIPView.js';
+// import { AudioView } from './plugins/audio/AudioView.js';
+// import { BaseView } from './plugins/BaseView.js';
+// import { CSVView } from './plugins/csv/CSVView.js';
+// import { DICOMView } from './plugins/dicom/DICOMView.js';
+// import { EMLView } from './plugins/eml/EMLView.js';
+// import { GIFView } from './plugins/gif/GIFView.js';
+// import { ICalView } from './plugins/ical/ICalView.js';
+// import { ImageView } from './plugins/image/ImageView.js';
+// import { PDFView } from './plugins/pdf/PDFView.js';
+// import { TextView } from './plugins/text/TextView.js';
+// import { VCFView } from './plugins/vcf/VCFView.js';
+// import { VideoView } from './plugins/video/VideoView.js';
+// import { ZIPView } from './plugins/zip/ZIPView.js';
 
 
 export const FileHandler = {
@@ -30,7 +30,7 @@ export const FileHandler = {
 	 * But only for a few ones, that some browsers may not report when
 	 * importing the file.
 	 * @param  {string} ext
-	 * @return {?string}
+	 * @return {string?}
 	 */
 	extToMimeType( ext ) {
 		if( !ext ) {
@@ -79,112 +79,116 @@ export const FileHandler = {
 			''
 		);
 		const fallbackType = file.type || this.extToMimeType( this.getFileExt( file ) );
-		const type = this.headerToMimeType( header, fallbackType );
+		let type = this.headerToMimeType( header, fallbackType );
+
+		if( typeof type === 'string' ) {
+			type = type.toLowerCase();
+		}
 
 		return type;
 	},
 
 
-	/**
-	 *
-	 * @param   {File}     file
-	 * @param   {function} cb
-	 * @returns {Promise<void>}
-	 */
-	async getParser( file, cb ) {
-		const ext = this.getFileExt( file );
-		const mimeType = await this.getMimeType( file );
+	// /**
+	//  *
+	//  * @param   {File}     file
+	//  * @param   {function} cb
+	//  * @returns {Promise<void>}
+	//  */
+	// async getParser( file, cb ) {
+	// 	const ext = this.getFileExt( file );
+	// 	const mimeType = await this.getMimeType( file );
 
-		let parser = null;
+	// 	let parser = null;
 
-		if( ext === 'csv' ) {
-			parser = new CSVParser( file, mimeType );
-		}
-		else if( mimeType === 'application/dicom' ) {
-			parser = new DICOMParser( { file, mimeType } );
-		}
-		else if( ext === 'eml' ) {
-			parser = new EMLParser( file, mimeType );
-		}
-		else if(
-			mimeType === 'text/calendar' ||
-			['ical', 'ics', 'ifb', 'vcs'].includes( ext )
-		) {
-			parser = new ICalParser( file, mimeType );
-		}
-		else if( ext === 'vcf' || mimeType === 'text/vcard' ) {
-			parser = new VCFParser( file, mimeType );
-		}
-		else if( mimeType === 'application/zip' ) {
-			parser = new ZIPParser( file, mimeType );
-		}
-		else if( mimeType === 'image/gif' ) {
-			parser = new GIFParser( file, mimeType );
-		}
-		else {
-			parser = new BaseParser( file, mimeType );
-		}
+	// 	if( ext === 'csv' ) {
+	// 		parser = new CSVParser( file, mimeType );
+	// 	}
+	// 	else if( mimeType === 'application/dicom' ) {
+	// 		parser = new DICOMParser( { file, mimeType } );
+	// 	}
+	// 	else if( ext === 'eml' ) {
+	// 		parser = new EMLParser( file, mimeType );
+	// 	}
+	// 	else if(
+	// 		mimeType === 'text/calendar' ||
+	// 		['ical', 'ics', 'ifb', 'vcs'].includes( ext )
+	// 	) {
+	// 		parser = new ICalParser( file, mimeType );
+	// 	}
+	// 	else if( ext === 'vcf' || mimeType === 'text/vcard' ) {
+	// 		parser = new VCFParser( file, mimeType );
+	// 	}
+	// 	else if( mimeType === 'application/zip' ) {
+	// 		parser = new ZIPParser( file, mimeType );
+	// 	}
+	// 	else if( mimeType === 'image/gif' ) {
+	// 		parser = new GIFParser( file, mimeType );
+	// 	}
+	// 	else {
+	// 		parser = new BaseParser( file, mimeType );
+	// 	}
 
-		cb( null, parser );
-	},
+	// 	cb( null, parser );
+	// },
 
 
-	/**
-	 *
-	 * @param  {BaseParser} parser
-	 * @return {BaseView}
-	 */
-	getView( parser ) {
-		if( parser.isDir ) {
-			if( parser instanceof DICOMParser ) {
-				return new DICOMView( parser );
-			}
-		}
-		else if( parser.mimeType || parser.file.size > 0 ) {
-			const ext = this.getFileExt( parser.file );
-			const type = String( parser.mimeType ).toLowerCase();
-			const name = parser.file.name.toLowerCase();
+	// /**
+	//  *
+	//  * @param {BaseParser} parser
+	//  * @return {BaseView}
+	//  */
+	// getView( parser ) {
+	// 	if( parser.isDir ) {
+	// 		if( parser instanceof DICOMParser ) {
+	// 			return new DICOMView( parser );
+	// 		}
+	// 	}
+	// 	else if( parser.mimeType || parser.file.size > 0 ) {
+	// 		const ext = this.getFileExt( parser.file );
+	// 		const type = String( parser.mimeType ).toLowerCase();
+	// 		const name = parser.file.name.toLowerCase();
 
-			if( type === 'application/pdf' ) {
-				return new PDFView( parser );
-			}
-			else if( type.startsWith( 'audio/' ) ) {
-				return new AudioView( parser );
-			}
-			else if( parser instanceof CSVParser ) {
-				return new CSVView( parser );
-			}
-			else if( parser instanceof DICOMParser ) {
-				return new DICOMView( parser );
-			}
-			else if( parser instanceof EMLParser ) {
-				return new EMLView( parser );
-			}
-			else if( parser instanceof ICalParser ) {
-				return new ICalView( parser );
-			}
-			else if( parser instanceof ZIPParser ) {
-				return new ZIPView( parser );
-			}
-			else if( parser instanceof GIFParser ) {
-				return new GIFView( parser );
-			}
-			else if( type.startsWith( 'image/' ) ) {
-				return new ImageView( parser );
-			}
-			else if( parser instanceof VCFParser ) {
-				return new VCFView( parser );
-			}
-			else if( type.startsWith( 'video/' ) ) {
-				return new VideoView( parser );
-			}
-			else if( this.isTypeText( type, ext, name ) ) {
-				return new TextView( parser );
-			}
-		}
+	// 		if( type === 'application/pdf' ) {
+	// 			return new PDFView( parser );
+	// 		}
+	// 		else if( type.startsWith( 'audio/' ) ) {
+	// 			return new AudioView( parser );
+	// 		}
+	// 		else if( parser instanceof CSVParser ) {
+	// 			return new CSVView( parser );
+	// 		}
+	// 		else if( parser instanceof DICOMParser ) {
+	// 			return new DICOMView( parser );
+	// 		}
+	// 		else if( parser instanceof EMLParser ) {
+	// 			return new EMLView( parser );
+	// 		}
+	// 		else if( parser instanceof ICalParser ) {
+	// 			return new ICalView( parser );
+	// 		}
+	// 		else if( parser instanceof ZIPParser ) {
+	// 			return new ZIPView( parser );
+	// 		}
+	// 		else if( parser instanceof GIFParser ) {
+	// 			return new GIFView( parser );
+	// 		}
+	// 		else if( type.startsWith( 'image/' ) ) {
+	// 			return new ImageView( parser );
+	// 		}
+	// 		else if( parser instanceof VCFParser ) {
+	// 			return new VCFView( parser );
+	// 		}
+	// 		else if( type.startsWith( 'video/' ) ) {
+	// 			return new VideoView( parser );
+	// 		}
+	// 		else if( this.isTypeText( type, ext, name ) ) {
+	// 			return new TextView( parser );
+	// 		}
+	// 	}
 
-		return new BaseView( parser );
-	},
+	// 	return new BaseView( parser );
+	// },
 
 
 	/**
@@ -279,41 +283,16 @@ export const FileHandler = {
 
 	/**
 	 *
-	 * @param   {FileSystemFileEntry} entry
-	 * @returns {Promise<boolean>}
-	 */
-	isDICOMFile( entry ) {
-		if( !entry?.isFile ) {
-			return new Promise( ( resolve, _reject ) => resolve( false ) );
-		}
-
-		if( entry.name.toLocaleLowerCase().endsWith( '.dcm' ) ) {
-			return new Promise( ( resolve, _reject ) => resolve( true ) );
-		}
-
-		return new Promise( ( resolve, _reject ) => {
-			entry.file(
-				async file => {
-					const mimeType = await FileHandler.getMimeType( file );
-					resolve( mimeType === 'application/dicom' );
-				},
-				err => {
-					console.error( '[FileHandler.isDICOMFile]', err );
-					resolve( false );
-				}
-			);
-		} );
-	},
-
-
-	/**
-	 *
 	 * @param  {string} type - File type in lowercase.
 	 * @param  {string} ext  - File extension in lowercase.
 	 * @param  {string} name - Filename in lowercase including extension.
 	 * @return {boolean}
 	 */
 	isTypeText( type, ext, name ) {
+		type = String( type || '' );
+		ext = String( ext || '' );
+		name = String( name || '' );
+
 		// Generic types
 		if(
 			type.startsWith( 'text/' ) ||

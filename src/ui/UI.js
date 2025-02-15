@@ -1,54 +1,31 @@
-import { DirectoryHandler } from '../DirectoryHandler.js';
-import { FileHandler } from '../FileHandler.js';
+import { Registry } from '../plugins/Registry.js';
 
 
 export const UI = {
 
 
-	/** @type {BaseView?} */
-	_currentView: null,
 	_domParser: new DOMParser(),
 
-
-	/**
-	 *
-	 * @private
-	 * @param {FileSystemDirectoryEntry} dir
-	 */
-	openDirectory( dir ) {
-		if( !dir ) {
-			return;
-		}
-
-		DirectoryHandler.getParser( dir, ( _err, parser ) => {
-			if( this._currentView ) {
-				this._currentView.destroy();
-			}
-
-			const view = FileHandler.getView( parser );
-			view.load( () => this.update( view ) );
-		} );
-	},
+	/** @type {Plugin?} */
+	_prevPlugin: null,
 
 
 	/**
 	 *
 	 * @private
-	 * @param {File} file
+	 * @param {File|FileSystemDirectoryEntry} fileOrDir
 	 */
-	openFile( file ) {
-		if( !file ) {
+	async open( fileOrDir ) {
+		if( !fileOrDir ) {
 			return;
 		}
 
-		FileHandler.getParser( file, ( _err, parser ) => {
-			if( this._currentView ) {
-				this._currentView.destroy();
-			}
+		this._prevPlugin?.reset();
+		const plugin = await Registry.getPluginForImport( fileOrDir );
+		this._prevPlugin = plugin;
 
-			const view = FileHandler.getView( parser );
-			view.load( () => this.update( view ) );
-		} );
+		const view = plugin.getView();
+		view.load( () => this.update( view ) );
 	},
 
 
@@ -283,8 +260,6 @@ export const UI = {
 	 * @param {BaseView?} view
 	 */
 	update( view ) {
-		this._currentView = view;
-
 		this._updateMetaInfo( view );
 		this._updateViewer( view );
 	},

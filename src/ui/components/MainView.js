@@ -23,7 +23,7 @@ export class MainView extends Component {
 			const input = document.createElement( 'input' );
 			input.type = 'file';
 			input.addEventListener( 'change', _ev => {
-				UI.openFile( input.files[0] );
+				UI.open( input.files[0] );
 			} );
 			input.click();
 		} );
@@ -58,8 +58,8 @@ export class MainView extends Component {
 
 		const dropArea = viewerArea.querySelector( '.viewer' );
 		const dropHandler = new DropHandler( dropArea );
-		dropHandler.on( 'file', file => UI.openFile( file ) );
-		dropHandler.on( 'directory', ( dir, topLevelEntries ) => UI.openDirectory( dir, topLevelEntries ) );
+		dropHandler.on( 'file', file => UI.open( file ) );
+		dropHandler.on( 'directory', ( dir, topLevelEntries ) => UI.open( dir ) );
 
 		this._node = document.createDocumentFragment();
 		this._node.append(
