@@ -29,7 +29,7 @@ export class PDFView extends BaseView {
 
 	/**
 	 *
-	 * @param {function} cb
+	 * @param {function?} cb
 	 */
 	load( cb ) {
 		this._objectURL = URL.createObjectURL( this.parser.file );
@@ -40,8 +40,9 @@ export class PDFView extends BaseView {
 		this.buildMetaNode();
 
 		this.nodeView.appendChild( iframe );
+		this._openWindow();
 
-		cb();
+		cb?.();
 	}
 
 

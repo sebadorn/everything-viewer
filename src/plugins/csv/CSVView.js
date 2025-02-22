@@ -45,7 +45,7 @@ export class CSVView extends BaseView {
 
 	/**
 	 *
-	 * @param {function} cb
+	 * @param {function?} cb
 	 */
 	load( cb ) {
 		this.parser.parse( ( _err, tableData ) => {
@@ -55,8 +55,9 @@ export class CSVView extends BaseView {
 
 			const html = this._build( tableData );
 			this.nodeView.append( html );
+			this._openWindow();
 
-			cb();
+			cb?.();
 		} );
 	}
 

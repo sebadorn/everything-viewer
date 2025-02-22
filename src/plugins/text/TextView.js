@@ -93,7 +93,7 @@ export class TextView extends BaseView {
 
 	/**
 	 *
-	 * @param {function} cb
+	 * @param {function?} cb
 	 */
 	load( cb ) {
 		const block = document.createElement( 'div' );
@@ -115,8 +115,9 @@ export class TextView extends BaseView {
 
 			this.mdAdd( 'Lines', ( text.match( /\n/g ) || [] ).length );
 			this.buildMetaNode();
+			this._openWindow();
 
-			cb();
+			cb?.();
 		} );
 	}
 

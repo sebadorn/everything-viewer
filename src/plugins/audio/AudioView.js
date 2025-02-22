@@ -30,7 +30,7 @@ export class AudioView extends BaseView {
 
 	/**
 	 *
-	 * @param {function} cb
+	 * @param {function?} cb
 	 */
 	load( cb ) {
 		this._objectURL = URL.createObjectURL( this.parser.file );
@@ -48,7 +48,9 @@ export class AudioView extends BaseView {
 			this.buildMetaNode();
 
 			this.nodeView.append( note );
-			cb();
+			this._openWindow();
+
+			cb?.();
 		}
 		else {
 			audio.addEventListener( 'loadedmetadata', () => {
@@ -56,7 +58,9 @@ export class AudioView extends BaseView {
 				this.buildMetaNode();
 
 				this.nodeView.appendChild( audio );
-				cb();
+				this._openWindow();
+
+				cb?.();
 			} );
 
 			audio.src = this._objectURL;

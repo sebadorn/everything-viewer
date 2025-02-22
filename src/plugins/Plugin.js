@@ -52,22 +52,12 @@ export class Plugin {
 
 	/**
 	 *
-	 */
-	reset() {
-		this._parser?.destroy();
-		this._view?.destroy();
-
-		this._importData = null;
-		this._parser = null;
-		this._view = null;
-	}
-
-
-	/**
-	 *
 	 * @param {import('./Registry.js').ImportData} data
 	 */
 	setImportData( data ) {
+		this._parser = null;
+		this._view = null;
+
 		this._importData = data;
 	}
 

@@ -1,4 +1,5 @@
 @use 'vars';
+@use 'sass:color';
 
 
 .btn {
@@ -62,7 +63,7 @@
 
 
 .window {
-	background-color: rgba(0, 0, 0, 0.3);
+	background-color: color.scale( vars.$color-body, $lightness: -40% );
 	border-radius: 9px;
 	box-sizing: border-box;
 	color: #ffffff;
@@ -78,18 +79,22 @@
 		display: flex;
 		font-size: 14px;
 		font-weight: 600;
+		max-width: calc( 100% - 20px );
 		padding: 5px 10px;
 		user-select: none;
 
-		.toggle {
+		.icon {
 			border-radius: 50%;
 			cursor: default;
 			display: inline-block;
 			flex-grow: 0;
 			flex-shrink: 0;
-			margin-right: 5px;
 			min-width: 20px;
 			text-align: center;
+		}
+
+		.toggle {
+			margin-right: 5px;
 
 			&:hover  {
 				background-color: vars.$color-primary;
@@ -99,13 +104,39 @@
 				content: "▾";
 			}
 		}
+
+		.title {
+			color: #d0d0d0;
+			flex-grow: 1;
+			overflow: hidden;
+			text-overflow: ellipsis;
+			white-space: nowrap;
+		}
+
+		.close {
+			display: none;
+
+			&:hover  {
+				background-color: vars.$color-primary;
+			}
+
+			&:before {
+				content: "×";
+			}
+		}
+	}
+
+	&.closable {
+		header .close {
+			display: inline-block;
+		}
 	}
 
 	.content {
 		padding: 10px;
 	}
 
-	&.window-closed {
+	&.window-collapsed {
 		header .toggle:before {
 			content: "▸";
 		}

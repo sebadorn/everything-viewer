@@ -1,5 +1,7 @@
 import { Button } from '../../ui/components/Button.js';
 import { ButtonGroup } from '../../ui/components/ButtonGroup.js';
+import { Window } from '../../ui/components/Window.js';
+import { UI } from '../../ui/UI.js';
 import { BaseView } from '../BaseView.js';
 
 
@@ -12,6 +14,7 @@ export class EMLView extends BaseView {
 	 */
 	constructor( parser ) {
 		super( parser, 'eml' );
+		this._window = null;
 	}
 
 
@@ -86,7 +89,7 @@ export class EMLView extends BaseView {
 
 	/**
 	 *
-	 * @param {function} cb
+	 * @param {function?} cb
 	 */
 	load( cb ) {
 		const iframe = document.createElement( 'iframe' );
@@ -104,8 +107,9 @@ export class EMLView extends BaseView {
 				iframe.setAttribute( 'srcdoc', dom.documentElement.outerHTML );
 
 				this.nodeView.append( actions, headers, iframe );
+				this._openWindow();
 
-				cb();
+				cb?.();
 			} );
 		} );
 	}

@@ -1,3 +1,4 @@
+import { Window } from '../ui/components/Window.js';
 import { UI } from '../ui/UI.js';
 
 
@@ -84,8 +85,27 @@ export class BaseView {
 
 	/**
 	 *
-	 * @param {?object}  options
-	 * @param {?boolean} options.toggleForEmpty
+	 */
+	_openWindow() {
+		const win = new Window( {
+			title: UI.escapeHTML( this.parser.file.name ),
+		} );
+
+		win.on( 'close', () => {
+			this.parser?.destroy();
+			this.destroy();
+		} );
+
+		document.body.append( win.render() );
+		win.update( { content: [this.nodeView] } );
+		setTimeout( () => win?.center(), 0 );
+	}
+
+
+	/**
+	 *
+	 * @param {object?}  options
+	 * @param {boolean?} options.toggleForEmpty
 	 */
 	buildMetaNode( options = {} ) {
 		if( Object.keys( this.metaData ).length === 0 ) {
@@ -134,7 +154,7 @@ export class BaseView {
 
 	/**
 	 * Load and build the view's contents.
-	 * @param {function} cb
+	 * @param {function?} cb
 	 */
 	load( cb ) {
 		const note = document.createElement( 'p' );
@@ -144,8 +164,9 @@ export class BaseView {
 		this.buildMetaNode();
 
 		this.nodeView.append( note );
+		this._openWindow();
 
-		cb();
+		cb?.();
 	}
 
 

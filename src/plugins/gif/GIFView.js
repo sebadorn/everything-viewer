@@ -183,7 +183,7 @@ export class GIFView extends BaseView {
 
 	/**
 	 *
-	 * @param {function} cb
+	 * @param {function?} cb
 	 */
 	load( cb ) {
 		this.parser.parse( ( _err, gifReader ) => {
@@ -196,7 +196,9 @@ export class GIFView extends BaseView {
 			this._buildSlideshow( node => {
 				this.nodeView.append( node );
 				this.showFrame( this._frameIndex );
-				cb();
+				this._openWindow();
+
+				cb?.();
 			} );
 		} );
 	}

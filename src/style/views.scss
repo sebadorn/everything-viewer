@@ -2,6 +2,7 @@
 
 
 .view {
+	max-height: 1000px;
 	width: 100%;
 
 	.note {
@@ -151,19 +152,21 @@
 
 
 .view-eml {
-	align-items: center;
 	flex-direction: column;
 
 	.button-group {
 		background-color: rgba(0, 0, 0, 0.3);
+		border-top-left-radius: 9px;
+		border-top-right-radius: 9px;
 		box-sizing: border-box;
-		height: 10vh;
 		max-width: vars.$max-width;
 		padding: 20px;
 		width: 100%;
 	}
 
 	iframe {
+		border-bottom-left-radius: 9px;
+		border-bottom-right-radius: 9px;
 		height: 90vh;
 		max-width: vars.$max-width;
 		width: 100%;
@@ -171,7 +174,6 @@
 
 	.eml-type-plaintext {
 		background-color: #d0d0d0;
-		height: calc( 90vh - 40px );
 		max-width: calc( vars.$max-width - 40px );
 		padding: 20px;
 		width: calc( 100% - 40px );
@@ -181,7 +183,7 @@
 		background-color: rgba(0, 0, 0, 0.3);
 		color: #f0f0f0;
 		height: 90vh;
-		max-width: vars.$max-width;
+		max-width: 800px;
 		overflow: auto;
 		width: 100%;
 

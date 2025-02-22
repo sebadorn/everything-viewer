@@ -16,7 +16,7 @@ export class ZIPView extends BaseView {
 
 	/**
 	 *
-	 * @param {function} cb
+	 * @param {function?} cb
 	 */
 	load( cb ) {
 		this.parser.getHTML( ( err, html ) => {
@@ -37,8 +37,9 @@ export class ZIPView extends BaseView {
 			wrap.append( html );
 
 			this.nodeView.append( wrap );
+			this._openWindow();
 
-			cb();
+			cb?.();
 		} );
 	}
 

@@ -30,6 +30,7 @@ export class MainView extends Component {
 
 		const windowOpen = new Window( {
 			title: 'Everything Viewer',
+			closable: false,
 			x: 20,
 			y: 20,
 			content: [
@@ -41,6 +42,7 @@ export class MainView extends Component {
 		const windowMeta = new Window( {
 			title: 'Information',
 			id: 'meta-container',
+			closable: false,
 			x: 20,
 			y: 116,
 		} );
