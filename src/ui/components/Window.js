@@ -11,6 +11,9 @@ export const WindowState = {
 export class Window extends Component {
 
 
+	static topZindex = 9;
+
+
 	/**
 	 *
 	 * @param {object}  config
@@ -107,8 +110,6 @@ export class Window extends Component {
 
 		document.body.removeEventListener( 'mouseup', this._cbMouseUp );
 		document.body.removeEventListener( 'mousemove', this._cbMouseMove );
-
-		this._node.style.zIndex = 1;
 	}
 
 
@@ -163,7 +164,10 @@ export class Window extends Component {
 		this._lastPos.x = null;
 		this._lastPos.y = null;
 
-		this._node.style.zIndex = 100;
+		// Only increase z-index of not already top-most window.
+		if( this._node.style.zIndex < Window.topZindex ) {
+			this._node.style.zIndex = ++Window.topZindex;
+		}
 	}
 
 
@@ -261,6 +265,7 @@ export class Window extends Component {
 		header.addEventListener( 'mousedown', ev => this._onStart( ev ) );
 		close.addEventListener( 'click', _ev => this.close() );
 
+		this._node.style.zIndex = ++Window.topZindex;
 		this.state = WindowState.OPEN;
 
 		return this._node;
