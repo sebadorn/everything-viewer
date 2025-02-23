@@ -1,3 +1,4 @@
+import { Button } from '../../ui/components/Button.js';
 import { UI } from '../../ui/UI.js';
 import { BaseView } from '../BaseView.js';
 
@@ -32,13 +33,25 @@ export class GIFView extends BaseView {
 			<div class="frame-container"></div>
 			<div class="actions">
 				<input type="range" min="1" max="${numFrames}" value="1" />
-				<div class="line">
-					<button class="frame-prev">&larr;</button>
-					<span class="counter"></span>
-					<button class="frame-next">&rarr;</button>
-				</div>
+				<div class="line"></div>
 			</div>
 		` );
+
+		const btnPrev = new Button( {
+			classes: 'frame-prev',
+			text: '←',
+		} );
+
+		const btnNext = new Button( {
+			classes: 'frame-next',
+			text: '→',
+		} );
+
+		node.querySelector( '.line' ).append(
+			btnPrev.render(),
+			UI.build( '<span class="counter"></span>' ),
+			btnNext.render(),
+		);
 
 		this._frameIndex = 0;
 
@@ -49,14 +62,12 @@ export class GIFView extends BaseView {
 				this.showFrame( this._frameIndex );
 			} );
 
-			const btnPrev = node.querySelector( 'button.frame-prev' );
-			btnPrev.addEventListener( 'click', _ev => {
+			btnPrev.on( 'click', _ev => {
 				this.showFrame( --this._frameIndex );
 				slider.value = this._frameIndex + 1;
 			} );
 
-			const btnNext = node.querySelector( 'button.frame-next' );
-			btnNext.addEventListener( 'click', _ev => {
+			btnNext.on( 'click', _ev => {
 				this.showFrame( ++this._frameIndex );
 				slider.value = this._frameIndex + 1;
 			} );
