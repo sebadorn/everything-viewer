@@ -39,14 +39,6 @@ export class MainView extends Component {
 			],
 		} );
 
-		const windowMeta = new Window( {
-			title: 'Information',
-			id: 'meta-container',
-			closable: false,
-			x: 20,
-			y: 116,
-		} );
-
 		const viewerArea = UI.build( `
 			<main>
 				<div class="viewer">
@@ -66,7 +58,6 @@ export class MainView extends Component {
 		this._node = document.createDocumentFragment();
 		this._node.append(
 			windowOpen.render(),
-			windowMeta.render(),
 			viewerArea,
 		);
 

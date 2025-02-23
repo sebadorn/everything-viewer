@@ -23,8 +23,7 @@ export class BaseView {
 		this.nodeView = document.createElement( 'div' );
 		this.nodeView.className = 'view view-' + this.type;
 
-		this.nodeMeta = document.createElement( 'div' );
-		this.nodeMeta.className = 'meta meta-' + this.type;
+		this.nodeMeta = null;
 	}
 
 
@@ -75,6 +74,10 @@ export class BaseView {
 			itemValue.className = 'value';
 			itemValue.textContent = value;
 
+			if( value === null || typeof value === 'undefined' || String( value ).length === 0 ) {
+				itemValue.classList.add( 'empty' );
+			}
+
 			row.classList.add( 'item' );
 			row.append( itemName, itemValue );
 		}
@@ -85,10 +88,20 @@ export class BaseView {
 
 	/**
 	 *
+	 * @private
 	 */
 	_openWindow() {
+		let content = [this.nodeView];
+
+		if( this.nodeMeta ) {
+			const wrap = UI.build( '<div class="layout"></div>' );
+			wrap.append( this.nodeMeta, this.nodeView );
+			content = [wrap];
+		}
+
 		const win = new Window( {
 			title: UI.escapeHTML( this.parser.file.name ),
+			content: content,
 		} );
 
 		win.on( 'close', () => {
@@ -97,7 +110,6 @@ export class BaseView {
 		} );
 
 		document.body.append( win.render() );
-		win.update( { content: [this.nodeView] } );
 		setTimeout( () => win?.center(), 0 );
 	}
 
@@ -113,9 +125,14 @@ export class BaseView {
 		}
 
 		if( this.nodeMeta ) {
-			this.nodeMeta.querySelector( '.meta-table' )?.remove();
-			this.nodeMeta.querySelector( '.option-toggle-empty' )?.remove();
+			UI.removeAllChildren( this.nodeMeta );
 		}
+
+		this.nodeMeta = document.createElement( 'div' );
+		this.nodeMeta.className = 'meta meta-' + this.type;
+
+		this.nodeMeta.querySelector( '.meta-table' )?.remove();
+		this.nodeMeta.querySelector( '.option-toggle-empty' )?.remove();
 
 		if( options.toggleForEmpty ) {
 			const line = UI.build(

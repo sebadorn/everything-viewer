@@ -265,7 +265,9 @@ export class Window extends Component {
 		header.addEventListener( 'mousedown', ev => this._onStart( ev ) );
 		close.addEventListener( 'click', _ev => this.close() );
 
+		this._node.style.maxHeight = `${window.innerHeight - 80}px`;
 		this._node.style.zIndex = ++Window.topZindex;
+
 		this.state = WindowState.OPEN;
 
 		return this._node;

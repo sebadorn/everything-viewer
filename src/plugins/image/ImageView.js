@@ -32,9 +32,17 @@ export class ImageView extends BaseView {
 	 * @param {function?} cb
 	 */
 	load( cb ) {
+		let loaded = false;
+
 		const image = new Image();
 
 		image.onload = () => {
+			if( loaded ) {
+				return;
+			}
+
+			loaded = true;
+
 			image.height = image.naturalHeight;
 			image.width = image.naturalWidth;
 

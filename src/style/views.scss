@@ -28,7 +28,6 @@
 .view-video,
 .view-zip {
 	display: flex;
-	justify-content: center;
 }
 
 
@@ -55,7 +54,6 @@
 		border-radius: vars.$button-radius;
 		color: #f0f0f0;
 		font-family: vars.$font-ms;
-		margin: 40px 0;
 		max-width: vars.$max-width;
 		padding: 10px 20px;
 		white-space: pre-wrap;
@@ -83,9 +81,9 @@
 
 
 .view-dicom {
-	align-self: center;
 	flex-direction: column;
 	max-width: 1000px;
+	min-width: 600px;
 
 	.image-container {
 		height: 900px;
@@ -263,12 +261,17 @@
 	.container,
 	.valarm {
 		background-color: rgba(0, 0, 0, 0.3);
+		border: 1px solid vars.$color-primary;
 		border-radius: vars.$button-radius;
 		box-sizing: border-box;
 		color: #f0f0f0;
-		margin: 10px;
+		margin-bottom: 10px;
 		overflow: hidden;
 		padding: 20px;
+
+		&:last-child {
+			margin-bottom: 0;
+		}
 
 		&::before {
 			background-color: vars.$color-primary;
@@ -304,6 +307,16 @@
 			}
 		}
 
+		.state {
+			background-color: rgba(255, 255, 255, 0.1);
+			border-radius: 9px;
+			display: inline-block;
+			font-family: vars.$font-ms;
+			font-size: 12px;
+			margin-left: 10px;
+			padding: 2px 8px;
+		}
+
 		table {
 			margin-top: 10px;
 			width: 100%;
@@ -331,16 +344,6 @@
 
 			li {
 				padding: 1px 0;
-
-				.state {
-					background-color: rgba(255, 255, 255, 0.1);
-					border-radius: 9px;
-					display: inline-block;
-					font-family: vars.$font-ms;
-					font-size: 12px;
-					margin-left: 10px;
-					padding: 2px 8px;
-				}
 			}
 		}
 	}
@@ -394,7 +397,6 @@
 	}
 
 	div.code {
-		height: 100vh;
 		line-height: 23px;
 		max-width: vars.$max-width;
 		overflow: auto;
@@ -409,7 +411,6 @@
 	align-items: center;
 
 	.container {
-		max-width: 600px;
 		width: 100%;
 	}
 
@@ -418,7 +419,6 @@
 		border-radius: vars.$button-radius;
 		box-sizing: border-box;
 		color: #f0f0f0;
-		margin: 10px;
 		overflow: hidden;
 		padding: 20px;
 		width: 100%;

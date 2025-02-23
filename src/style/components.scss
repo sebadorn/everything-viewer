@@ -63,7 +63,7 @@
 
 
 .window {
-	background-color: color.scale( vars.$color-body, $lightness: -40% );
+	background-color: color.scale( vars.$color-body, $lightness: -30% );
 	border-radius: 9px;
 	box-sizing: border-box;
 	color: #ffffff;
@@ -133,6 +133,7 @@
 	}
 
 	.content {
+		overflow: auto;
 		padding: 10px;
 	}
 
