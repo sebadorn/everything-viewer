@@ -57,7 +57,7 @@ export class GIFView extends BaseView {
 
 		this._generateFrames( () => {
 			const slider = node.querySelector( 'input[type="range"]' );
-			slider.addEventListener( 'change', ev => {
+			slider.addEventListener( 'input', ev => {
 				this._frameIndex = ev.target.valueAsNumber - 1;
 				this.showFrame( this._frameIndex );
 			} );
