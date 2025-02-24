@@ -138,7 +138,7 @@ table {
 		tr.item {
 			display: flex;
 			flex-direction: column;
-			margin-bottom: 5px;
+			margin-bottom: 7px;
 
 			&:last-child {
 				margin-bottom: 0;
@@ -146,14 +146,6 @@ table {
 
 			&[hidden] {
 				display: none;
-			}
-
-			td {
-				padding-top: 3px;
-
-				&.empty {
-					padding-top: 0;
-				}
 			}
 		}
 
@@ -180,7 +172,8 @@ table {
 		}
 
 		.hr td {
-			border-top: 1px solid rgba(255, 255, 255, 0.1);
+			border-top: 1px solid rgba(255, 255, 255, 0.2);
+			padding-bottom: 6px;
 		}
 
 		.group-table {

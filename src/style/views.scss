@@ -49,11 +49,14 @@
 
 
 .view-csv {
+	overflow: auto;
+
 	table {
 		background-color: rgba(0, 0, 0, 0.3);
 		border-radius: vars.$button-radius;
 		color: #f0f0f0;
 		font-family: vars.$font-ms;
+		font-size: vars.$font-size-ms;
 		max-width: vars.$max-width;
 		padding: 10px 20px;
 		white-space: pre-wrap;

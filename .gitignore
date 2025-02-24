@@ -2,6 +2,7 @@
 /dist/
 /node_modules/
 /resources/
+/src/style/fonts/_ignore/
 
 # Files
 .DS_Store

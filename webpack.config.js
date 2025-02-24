@@ -25,6 +25,11 @@ module.exports = {
 				type: 'asset/resource',
 			},
 			{
+				test: /\.(woff|woff2|eot|ttf|otf)$/i,
+				include: path.resolve( __dirname, 'src/style/fonts' ),
+				type: 'asset/resource',
+			},
+			{
 				test: /\.wasm/,
 				include: path.resolve( __dirname, 'node_modules/@cornerstonejs' ),
 				type: 'asset/resource',
