@@ -237,6 +237,88 @@ export class Window extends Component {
 
 	/**
 	 *
+	 * @private
+	 * @param {string} dir
+	 */
+	_handleResize( dir ) {
+		const handle = this._node.querySelector( `.resize-handles .handle-${dir}` );
+
+		let isResizing = false;
+		const key = ( dir === 'top' || dir === 'bottom' ) ? 'clientY' : 'clientX';
+		const start = {
+			clientX: null,
+			clientY: null,
+			left: 0,
+			top: 0,
+			height: 0,
+			width: 0,
+		};
+
+		const doResize = ev => {
+			if( !isResizing ) {
+				return;
+			}
+
+			let diff = ev[key] - start[key];
+
+			if( dir === 'right' ) {
+				this._node.style.width = ( start.width + diff ) + 'px';
+			}
+			else if( dir === 'left' ) {
+				this._node.style.width = ( start.width - diff ) + 'px';
+				this._node.style.left = ( start.left + diff ) + 'px';
+			}
+			else if( dir === 'top' ) {
+				this._node.style.height = ( start.height - diff ) + 'px';
+				this._node.style.top = ( start.top + diff ) + 'px';
+			}
+			else if( dir === 'bottom' ) {
+				this._node.style.height = ( start.height + diff ) + 'px';
+			}
+		};
+
+		const endResize = _ev => {
+			document.body.removeEventListener( 'mousemove', doResize );
+			document.body.removeEventListener( 'mouseup', endResize );
+
+			isResizing = false;
+			start.clientX = null;
+			start.clientY = null;
+
+			this.fire( 'resized', { dir: dir } );
+		};
+
+		handle.addEventListener( 'mousedown', ev => {
+			document.body.addEventListener( 'mousemove', doResize );
+			document.body.addEventListener( 'mouseup', endResize );
+
+			const rect = this._node.getBoundingClientRect();
+
+			isResizing = true;
+			start.clientX = ev.clientX;
+			start.clientY = ev.clientY;
+			start.left = parseInt( this._node.style.left, 10 );
+			start.top = parseInt( this._node.style.top, 10 );
+
+			if( this._node.style.height ) {
+				start.height = parseInt( this._node.style.height, 10 );
+			}
+			else {
+				start.height = rect.height;
+			}
+
+			if( this._node.style.width ) {
+				start.width = parseInt( this._node.style.width, 10 );
+			}
+			else {
+				start.width = rect.width;
+			}
+		} );
+	}
+
+
+	/**
+	 *
 	 * @returns {HTMLElement}
 	 */
 	render() {
@@ -244,6 +326,12 @@ export class Window extends Component {
 
 		this._node = UI.build( `
 			<aside class="window window-open">
+				<div class="resize-handles">
+					<div class="handle handle-top"></div>
+					<div class="handle handle-right"></div>
+					<div class="handle handle-bottom"></div>
+					<div class="handle handle-left"></div>
+				</div>
 				<header>
 					<span class="icon toggle"></span>
 					<span class="title"></span>
@@ -256,6 +344,11 @@ export class Window extends Component {
 		` );
 
 		this._applyConfig();
+
+		this._handleResize( 'top' );
+		this._handleResize( 'right' );
+		this._handleResize( 'bottom' );
+		this._handleResize( 'left' );
 
 		const header = this._node.querySelector( ':scope > header' );
 		const arrow = header.querySelector( '.toggle' );

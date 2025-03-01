@@ -1,5 +1,6 @@
 @use 'vars';
 @use 'sass:color';
+@use 'sass:math';
 
 
 .btn {
@@ -68,9 +69,57 @@
 	box-sizing: border-box;
 	color: #ffffff;
 	min-width: 350px;
-	overflow: hidden;
-	position: fixed;
+	position: absolute;
 	z-index: 1;
+
+	$handle-size: 8px;
+
+	.resize-handles {
+		height: 100%;
+		left: 0;
+		pointer-events: none;
+		position: absolute;
+		top: 0;
+		width: 100%;
+		z-index: 10;
+
+		.handle {
+			pointer-events: all;
+			position: absolute;
+		}
+
+		.handle-top {
+			cursor: n-resize;
+			height: $handle-size;
+			left: 0;
+			top: math.div( -$handle-size, 2 );
+			width: 100%;
+		}
+
+		.handle-right {
+			cursor: e-resize;
+			height: 100%;
+			right: math.div( -$handle-size, 2 );
+			top: 0;
+			width: $handle-size;
+		}
+
+		.handle-bottom {
+			cursor: s-resize;
+			bottom: math.div( -$handle-size, 2 );
+			height: $handle-size;
+			left: 0;
+			width: 100%;
+		}
+
+		.handle-left {
+			cursor: w-resize;
+			height: 100%;
+			left: math.div( -$handle-size, 2 );
+			top: 0;
+			width: $handle-size;
+		}
+	}
 
 	header {
 		align-items: center;
@@ -138,6 +187,8 @@
 	}
 
 	&.window-collapsed {
+		height: auto !important;
+
 		header .toggle:before {
 			content: "▸";
 		}
