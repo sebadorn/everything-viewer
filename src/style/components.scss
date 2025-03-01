@@ -16,7 +16,7 @@
 	text-align: center;
 
 	&:hover {
-		background-color: vars.$color-primary-dark;
+		background-color: color.scale( vars.$color-primary, $lightness: -20% );
 		cursor: pointer;
 	}
 
@@ -63,10 +63,13 @@
 }
 
 
+$window-radius: 9px;
+
 .window {
-	background-color: color.scale( vars.$color-body, $lightness: -30% );
-	border-radius: 9px;
+	background-color: vars.$color-window;
+	border-radius: $window-radius;
 	box-sizing: border-box;
+	box-shadow: inset 0 0 1px #ffffff3f;
 	color: #ffffff;
 	min-width: 350px;
 	position: absolute;
@@ -124,6 +127,8 @@
 	header {
 		align-items: center;
 		background-color: rgba(0, 0, 0, 0.2);
+		border-top-left-radius: $window-radius;
+		border-top-right-radius: $window-radius;
 		cursor: move;
 		display: flex;
 		font-size: 14px;
@@ -189,8 +194,13 @@
 	&.window-collapsed {
 		height: auto !important;
 
-		header .toggle:before {
-			content: "▸";
+		header {
+			border-bottom-left-radius: $window-radius;
+			border-bottom-right-radius: $window-radius;
+
+			.toggle:before {
+				content: "▸";
+			}
 		}
 
 		.content {

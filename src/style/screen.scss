@@ -8,7 +8,7 @@
 }
 
 html {
-	scrollbar-color: #f0f0f0 vars.$color-primary-dark;
+	scrollbar-color: #f0f0f0 transparent;
 }
 
 html,
@@ -17,7 +17,12 @@ body {
 }
 
 body {
-	background-color: color.scale( vars.$color-body, $lightness: 10% );
+	background-color: #8CBC82;
+	background-image:
+		linear-gradient(217deg, #1D7874, #1D787400 70.71%),
+		linear-gradient(127deg, #8CBC82, #8CBC8200 70.71%),
+		linear-gradient(336deg, #084C61, #084C6100 70.71%),
+	;
 	box-sizing: border-box;
 	display: flex;
 	flex-direction: column;
@@ -29,19 +34,13 @@ body {
 a {
 	color: vars.$color-link;
 
-	a:hover {
+	&:hover {
 		text-decoration: none;
 	}
 
 	&:visited {
 		color: lightgray;
 	}
-}
-
-h1 {
-	font-size: 54px;
-	font-weight: bold;
-	text-shadow: 0 2px 0 vars.$color-link;
 }
 
 iframe {
@@ -81,7 +80,7 @@ a#github {
 	text-decoration: none;
 
 	&:hover {
-		background-color: vars.$color-primary-dark;
+		background-color: color.scale( vars.$color-primary, $lightness: -20% );
 		cursor: pointer;
 	}
 }
@@ -213,13 +212,12 @@ main {
 	width: 100%;
 
 	.viewer {
-		background-color: rgba(0, 0, 0, 0.2);
 		display: flex;
 		flex-grow: 1;
 		justify-content: center;
 
 		.note-dragdrop {
-			color: #f0f0f0;
+			color: #ffffff;
 			font-size: 32px;
 			height: fit-content;
 			position: relative;
@@ -227,6 +225,12 @@ main {
 			text-transform: uppercase;
 			top: 40%;
 			user-select: none;
+
+			h1 {
+				font-size: 54px;
+				font-weight: bold;
+				text-shadow: 0 2px 0 #0000003f;
+			}
 		}
 	}
 }

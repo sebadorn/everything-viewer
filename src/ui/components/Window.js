@@ -244,7 +244,8 @@ export class Window extends Component {
 		const handle = this._node.querySelector( `.resize-handles .handle-${dir}` );
 
 		let isResizing = false;
-		const key = ( dir === 'top' || dir === 'bottom' ) ? 'clientY' : 'clientX';
+
+		const clientPos = ( dir === 'top' || dir === 'bottom' ) ? 'clientY' : 'clientX';
 		const start = {
 			clientX: null,
 			clientY: null,
@@ -259,7 +260,7 @@ export class Window extends Component {
 				return;
 			}
 
-			let diff = ev[key] - start[key];
+			const diff = ev[clientPos] - start[clientPos];
 
 			if( dir === 'right' ) {
 				this._node.style.width = ( start.width + diff ) + 'px';
