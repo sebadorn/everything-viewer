@@ -30,6 +30,7 @@ Okay, not *everything*. The idea is to support different formats and maybe provi
 * CSV – https://github.com/vanillaes/csv
 * dicomParser – https://github.com/cornerstonejs/dicomParser
 * highlight.js – https://highlightjs.org/
+* highlightjs-line-numbers.js – https://wcoder.github.io/highlightjs-line-numbers.js/
 * ical.js – https://github.com/mozilla-comm/ical.js
 * JSZip – https://github.com/Stuk/jszip
 * omggif – https://github.com/deanm/omggif
