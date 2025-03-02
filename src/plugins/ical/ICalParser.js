@@ -95,14 +95,14 @@ export class ICalParser extends BaseParser {
 			freebusy.forEach( fb => {
 				const dateTime = fb[3];
 
-				const start = ICAL.Time.fromDateTimeString( dateTime[0] );
+				const start = this.ICAL.Time.fromDateTimeString( dateTime[0] );
 				const nodeStart = this._buildTimeSelect( start );
 
 				let nodeEnd = null;
 				let sep = '';
 
 				if( dateTime[1].length >= 16 ) {
-					const value = ICAL.Time.fromDateTimeString( dateTime[1] );
+					const value = this.ICAL.Time.fromDateTimeString( dateTime[1] );
 					nodeEnd = this._buildTimeSelect( value );
 					sep = ' – ';
 				}
@@ -123,7 +123,7 @@ export class ICalParser extends BaseParser {
 		const due = this._getParameterValue( vevent, 'due' );
 
 		if( due ) {
-			const dueTime = ICAL.Time.fromDateTimeString( due );
+			const dueTime = this.ICAL.Time.fromDateTimeString( due );
 			const row = this._buildHTMLTableRowTime( 'Due', dueTime );
 			table.append( row );
 		}

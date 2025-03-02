@@ -30,19 +30,13 @@ export class MainView extends Component {
 
 		const windowOpen = new Window( {
 			title: 'Everything Viewer',
+			closable: false,
 			x: 20,
 			y: 20,
 			content: [
 				btnOpen,
 				UI.build( '<a href="https://github.com/sebadorn/everything-viewer" id="github">GitHub</a>' ),
 			],
-		} );
-
-		const windowMeta = new Window( {
-			title: 'Information',
-			id: 'meta-container',
-			x: 20,
-			y: 116,
 		} );
 
 		const viewerArea = UI.build( `
@@ -64,7 +58,6 @@ export class MainView extends Component {
 		this._node = document.createDocumentFragment();
 		this._node.append(
 			windowOpen.render(),
-			windowMeta.render(),
 			viewerArea,
 		);
 

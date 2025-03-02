@@ -38,7 +38,7 @@ export class Button extends Component {
 		const hasText = typeof this._config.text === 'string';
 
 		// Reset button except for listeners
-		this._node.innerHTML = '';
+		UI.removeAllChildren( this._node );
 		this._node.className = '';
 
 		this._node.classList.add( 'btn' );

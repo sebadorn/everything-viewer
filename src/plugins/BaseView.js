@@ -1,3 +1,4 @@
+import { Window } from '../ui/components/Window.js';
 import { UI } from '../ui/UI.js';
 
 
@@ -22,8 +23,7 @@ export class BaseView {
 		this.nodeView = document.createElement( 'div' );
 		this.nodeView.className = 'view view-' + this.type;
 
-		this.nodeMeta = document.createElement( 'div' );
-		this.nodeMeta.className = 'meta meta-' + this.type;
+		this.nodeMeta = null;
 	}
 
 
@@ -74,6 +74,10 @@ export class BaseView {
 			itemValue.className = 'value';
 			itemValue.textContent = value;
 
+			if( value === null || typeof value === 'undefined' || String( value ).length === 0 ) {
+				itemValue.classList.add( 'empty' );
+			}
+
 			row.classList.add( 'item' );
 			row.append( itemName, itemValue );
 		}
@@ -84,8 +88,41 @@ export class BaseView {
 
 	/**
 	 *
-	 * @param {?object}  options
-	 * @param {?boolean} options.toggleForEmpty
+	 * @private
+	 * @param {object?} config
+	 * @returns {Window}
+	 */
+	_openWindow( config ) {
+		let content = [this.nodeView];
+
+		if( this.nodeMeta ) {
+			const wrap = UI.build( '<div class="layout"></div>' );
+			wrap.append( this.nodeMeta, this.nodeView );
+			content = [wrap];
+		}
+
+		config = config || {};
+		config.title ??= UI.escapeHTML( this.parser.file.name );
+		config.content ??= content;
+
+		const win = new Window( config );
+
+		win.on( 'close', () => {
+			this.parser?.destroy();
+			this.destroy();
+		} );
+
+		document.body.append( win.render() );
+		setTimeout( () => win?.center(), 0 );
+
+		return win;
+	}
+
+
+	/**
+	 *
+	 * @param {object?}  options
+	 * @param {boolean?} options.toggleForEmpty
 	 */
 	buildMetaNode( options = {} ) {
 		if( Object.keys( this.metaData ).length === 0 ) {
@@ -93,9 +130,14 @@ export class BaseView {
 		}
 
 		if( this.nodeMeta ) {
-			this.nodeMeta.querySelector( '.meta-table' )?.remove();
-			this.nodeMeta.querySelector( '.option-toggle-empty' )?.remove();
+			UI.removeAllChildren( this.nodeMeta );
 		}
+
+		this.nodeMeta = document.createElement( 'div' );
+		this.nodeMeta.className = 'meta meta-' + this.type;
+
+		this.nodeMeta.querySelector( '.meta-table' )?.remove();
+		this.nodeMeta.querySelector( '.option-toggle-empty' )?.remove();
 
 		if( options.toggleForEmpty ) {
 			const line = UI.build(
@@ -134,7 +176,7 @@ export class BaseView {
 
 	/**
 	 * Load and build the view's contents.
-	 * @param {function} cb
+	 * @param {function?} cb
 	 */
 	load( cb ) {
 		const note = document.createElement( 'p' );
@@ -144,8 +186,9 @@ export class BaseView {
 		this.buildMetaNode();
 
 		this.nodeView.append( note );
+		this._openWindow();
 
-		cb();
+		cb?.();
 	}
 
 

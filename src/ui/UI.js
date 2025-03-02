@@ -6,9 +6,6 @@ export const UI = {
 
 	_domParser: new DOMParser(),
 
-	/** @type {Plugin?} */
-	_prevPlugin: null,
-
 
 	/**
 	 *
@@ -245,12 +242,20 @@ export const UI = {
 			return;
 		}
 
-		this._prevPlugin?.reset();
 		const plugin = await Registry.getPluginForImport( fileOrDir );
-		this._prevPlugin = plugin;
-
 		const view = plugin.getView();
-		view.load( () => this.update( view ) );
+		view.load();
+	},
+
+
+	/**
+	 *
+	 * @param {Node} node
+	 */
+	removeAllChildren( node ) {
+		while( node.firstChild ) {
+			node.removeChild( node.lastChild );
+		}
 	},
 
 
@@ -259,8 +264,8 @@ export const UI = {
 	 * @param {BaseView?} view
 	 */
 	update( view ) {
-		this._updateMetaInfo( view );
-		this._updateViewer( view );
+		// this._updateMetaInfo( view );
+		// this._updateViewer( view );
 	},
 
 

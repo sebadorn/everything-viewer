@@ -30,7 +30,7 @@ export class VideoView extends BaseView {
 
 	/**
 	 *
-	 * @param {function} cb
+	 * @param {function?} cb
 	 */
 	load( cb ) {
 		this._objectURL = URL.createObjectURL( this.parser.file );
@@ -63,7 +63,9 @@ export class VideoView extends BaseView {
 				this.buildMetaNode();
 
 				this.nodeView.append( video );
-				cb();
+				this._openWindow();
+
+				cb?.();
 			} );
 
 			video.src = this._objectURL;

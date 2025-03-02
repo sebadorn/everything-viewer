@@ -2,13 +2,12 @@
 
 
 .view {
+	max-height: 1000px;
 	width: 100%;
 
 	.note {
-		color: #f0f0f0;
-		font-size: 32px;
+		font-size: 24px;
 		max-width: vars.$max-width;
-		text-align: center;
 	}
 }
 
@@ -27,12 +26,6 @@
 .view-video,
 .view-zip {
 	display: flex;
-	justify-content: center;
-}
-
-
-.view-base {
-	align-items: center;
 }
 
 
@@ -49,12 +42,14 @@
 
 
 .view-csv {
+	overflow: auto;
+
 	table {
 		background-color: rgba(0, 0, 0, 0.3);
 		border-radius: vars.$button-radius;
 		color: #f0f0f0;
 		font-family: vars.$font-ms;
-		margin: 40px 0;
+		font-size: vars.$font-size-ms;
 		max-width: vars.$max-width;
 		padding: 10px 20px;
 		white-space: pre-wrap;
@@ -82,12 +77,21 @@
 
 
 .view-dicom {
-	align-self: center;
 	flex-direction: column;
 	max-width: 1000px;
+	min-width: 600px;
 
 	.image-container {
 		height: 900px;
+
+		.viewport-element {
+			width: auto !important;
+		}
+
+		.cornerstone-canvas {
+			max-width: 100%;
+			width: auto !important;
+		}
 	}
 
 	.actions {
@@ -151,19 +155,11 @@
 
 
 .view-eml {
-	align-items: center;
 	flex-direction: column;
 
-	.button-group {
-		background-color: rgba(0, 0, 0, 0.3);
-		box-sizing: border-box;
-		height: 10vh;
-		max-width: vars.$max-width;
-		padding: 20px;
-		width: 100%;
-	}
-
 	iframe {
+		border-bottom-left-radius: 9px;
+		border-bottom-right-radius: 9px;
 		height: 90vh;
 		max-width: vars.$max-width;
 		width: 100%;
@@ -171,7 +167,6 @@
 
 	.eml-type-plaintext {
 		background-color: #d0d0d0;
-		height: calc( 90vh - 40px );
 		max-width: calc( vars.$max-width - 40px );
 		padding: 20px;
 		width: calc( 100% - 40px );
@@ -181,7 +176,7 @@
 		background-color: rgba(0, 0, 0, 0.3);
 		color: #f0f0f0;
 		height: 90vh;
-		max-width: vars.$max-width;
+		max-width: 800px;
 		overflow: auto;
 		width: 100%;
 
@@ -261,13 +256,17 @@
 	.container,
 	.valarm {
 		background-color: rgba(0, 0, 0, 0.3);
+		border: 1px solid vars.$color-primary;
 		border-radius: vars.$button-radius;
 		box-sizing: border-box;
 		color: #f0f0f0;
-		margin: 10px;
+		margin-bottom: 10px;
 		overflow: hidden;
 		padding: 20px;
-		width: 100%;
+
+		&:last-child {
+			margin-bottom: 0;
+		}
 
 		&::before {
 			background-color: vars.$color-primary;
@@ -303,6 +302,16 @@
 			}
 		}
 
+		.state {
+			background-color: rgba(255, 255, 255, 0.1);
+			border-radius: 9px;
+			display: inline-block;
+			font-family: vars.$font-ms;
+			font-size: 12px;
+			margin-left: 10px;
+			padding: 2px 8px;
+		}
+
 		table {
 			margin-top: 10px;
 			width: 100%;
@@ -330,16 +339,6 @@
 
 			li {
 				padding: 1px 0;
-
-				.state {
-					background-color: rgba(255, 255, 255, 0.1);
-					border-radius: 9px;
-					display: inline-block;
-					font-family: vars.$font-ms;
-					font-size: 12px;
-					margin-left: 10px;
-					padding: 2px 8px;
-				}
 			}
 		}
 	}
@@ -361,7 +360,6 @@
 
 
 .view-image {
-	align-items: center;
 	overflow: auto;
 
 	img {
@@ -386,20 +384,29 @@
 
 
 .view-text {
+	flex-direction: column;
+
+	.button-group {
+		border-bottom: 1px solid vars.$color-window;
+	}
+
 	textarea {
 		resize: none;
-		max-width: vars.$max-width;
 		width: 100%;
 	}
 
 	div.code {
-		height: 100vh;
 		line-height: 23px;
-		max-width: vars.$max-width;
 		overflow: auto;
 		padding: 20px;
-		white-space: pre;
+		white-space: pre-wrap;
 		width: 100%;
+	}
+
+	td.hljs-ln-numbers {
+		padding-right: 20px;
+		text-align: right;
+		user-select: none;
 	}
 }
 
@@ -408,7 +415,6 @@
 	align-items: center;
 
 	.container {
-		max-width: 600px;
 		width: 100%;
 	}
 
@@ -417,7 +423,6 @@
 		border-radius: vars.$button-radius;
 		box-sizing: border-box;
 		color: #f0f0f0;
-		margin: 10px;
 		overflow: hidden;
 		padding: 20px;
 		width: 100%;

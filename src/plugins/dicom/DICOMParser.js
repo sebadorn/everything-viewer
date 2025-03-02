@@ -4,6 +4,9 @@ import { BaseParser } from '../BaseParser.js';
 export class DICOMParser extends BaseParser {
 
 
+	static numInstances = 0;
+
+
 	/**
 	 *
 	 * @param {import('../Registry.js').ImportData} data
@@ -15,6 +18,10 @@ export class DICOMParser extends BaseParser {
 		if( data.fileList ) {
 			this.entries = data.fileList;
 		}
+
+		this._fileManagerIds = [];
+
+		DICOMParser.numInstances++;
 	}
 
 
@@ -86,6 +93,7 @@ export class DICOMParser extends BaseParser {
 	 */
 	async addAndLoadFile( file ) {
 		const imageId = this.wadouri.fileManager.add( file );
+		this._fileManagerIds.push( imageId );
 
 		return await this.wadouri.loadImage( imageId ).promise;
 	}
@@ -95,14 +103,20 @@ export class DICOMParser extends BaseParser {
 	 *
 	 */
 	destroy() {
-		try {
-			this.cache.purgeCache();
-			this.wadouri.dataSetCacheManager.purge();
-			this.wadouri.fileManager.purge();
+		if( DICOMParser.numInstances === 1 ) {
+			console.log( '[DICOMParser.destroy] Purging cornerstone caches.' );
+
+			try {
+				this.cache.purgeCache();
+				this.wadouri.dataSetCacheManager.purge();
+				this.wadouri.fileManager.purge();
+			}
+			catch( err ) {
+				console.error( '[DICOMParser.destroy]', err );
+			}
 		}
-		catch( err ) {
-			console.error( '[DICOMParser.destroy]', err );
-		}
+
+		DICOMParser.numInstances--;
 	}
 
 

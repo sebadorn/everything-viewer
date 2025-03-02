@@ -302,6 +302,15 @@ export class DICOMView extends BaseView {
 	/**
 	 *
 	 * @private
+	 */
+	_handleResize() {
+		// TODO:
+	}
+
+
+	/**
+	 *
+	 * @private
 	 * @returns {Promise<void>}
 	 */
 	async _initViewport() {
@@ -316,9 +325,9 @@ export class DICOMView extends BaseView {
 
 		const imageContainer = this.nodeView.querySelector( '.image-container' );
 
-		this._renderingEnginge = new RenderingEngine();
+		this._renderingEngine = new RenderingEngine();
 
-		this._renderingEnginge.enableElement( {
+		this._renderingEngine.enableElement( {
 			viewportId: 'ctStack',
 			type: ViewportType.STACK,
 			element: imageContainer,
@@ -327,7 +336,7 @@ export class DICOMView extends BaseView {
 			},
 		} );
 
-		this._viewport = this._renderingEnginge.getViewport( 'ctStack' );
+		this._viewport = this._renderingEngine.getViewport( 'ctStack' );
 	}
 
 
@@ -360,7 +369,6 @@ export class DICOMView extends BaseView {
 		super.destroy();
 
 		clearTimeout( this._timer );
-		this.parser.destroy();
 
 		this._images = null;
 		this._imageId = null;
@@ -371,7 +379,7 @@ export class DICOMView extends BaseView {
 
 	/**
 	 *
-	 * @param {function} cb
+	 * @param {function?} cb
 	 */
 	load( cb ) {
 		this.parser.parse( async ( err, imageOrRecord ) => {
@@ -386,8 +394,11 @@ export class DICOMView extends BaseView {
 					this._numFrames = this._images.length;
 
 					this._buildControls();
+					const win = this._openWindow();
 
-					cb();
+					win.on( 'resized', () => this._handleResize() );
+
+					cb?.();
 
 					await this._initViewport();
 					this._viewport.setStack( this._images.map( image => image.imageId ) );
@@ -400,8 +411,9 @@ export class DICOMView extends BaseView {
 			else if( Array.isArray( imageOrRecord ) ) {
 				this._buildDICOMDIRFileList( imageOrRecord );
 				this.buildMetaNode();
+				this._openWindow();
 
-				cb();
+				cb?.();
 			}
 			// Single file.
 			else {
@@ -415,8 +427,11 @@ export class DICOMView extends BaseView {
 
 				this.buildMetaNode( { toggleForEmpty: true } );
 				this._buildControls();
+				const win = this._openWindow();
 
-				cb();
+				win.on( 'resized', () => this._handleResize() );
+
+				cb?.();
 
 				this._imageId = imageOrRecord.imageId;
 				await this._initViewport();
@@ -432,7 +447,6 @@ export class DICOMView extends BaseView {
 				}
 
 				this._viewport.setStack( stack );
-
 				this._controlGoto( 0 );
 			}
 		} );
