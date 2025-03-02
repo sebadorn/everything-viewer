@@ -89,6 +89,7 @@ export class BaseView {
 	/**
 	 *
 	 * @private
+	 * @returns {Window}
 	 */
 	_openWindow() {
 		let content = [this.nodeView];
@@ -111,6 +112,8 @@ export class BaseView {
 
 		document.body.append( win.render() );
 		setTimeout( () => win?.center(), 0 );
+
+		return win;
 	}
 
 

@@ -302,6 +302,15 @@ export class DICOMView extends BaseView {
 	/**
 	 *
 	 * @private
+	 */
+	_handleResize() {
+		// TODO:
+	}
+
+
+	/**
+	 *
+	 * @private
 	 * @returns {Promise<void>}
 	 */
 	async _initViewport() {
@@ -316,9 +325,9 @@ export class DICOMView extends BaseView {
 
 		const imageContainer = this.nodeView.querySelector( '.image-container' );
 
-		this._renderingEnginge = new RenderingEngine();
+		this._renderingEngine = new RenderingEngine();
 
-		this._renderingEnginge.enableElement( {
+		this._renderingEngine.enableElement( {
 			viewportId: 'ctStack',
 			type: ViewportType.STACK,
 			element: imageContainer,
@@ -327,7 +336,7 @@ export class DICOMView extends BaseView {
 			},
 		} );
 
-		this._viewport = this._renderingEnginge.getViewport( 'ctStack' );
+		this._viewport = this._renderingEngine.getViewport( 'ctStack' );
 	}
 
 
@@ -385,7 +394,9 @@ export class DICOMView extends BaseView {
 					this._numFrames = this._images.length;
 
 					this._buildControls();
-					this._openWindow();
+					const win = this._openWindow();
+
+					win.on( 'resized', () => this._handleResize() );
 
 					cb?.();
 
@@ -416,7 +427,9 @@ export class DICOMView extends BaseView {
 
 				this.buildMetaNode( { toggleForEmpty: true } );
 				this._buildControls();
-				this._openWindow();
+				const win = this._openWindow();
+
+				win.on( 'resized', () => this._handleResize() );
 
 				cb?.();
 

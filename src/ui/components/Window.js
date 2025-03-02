@@ -298,22 +298,10 @@ export class Window extends Component {
 			isResizing = true;
 			start.clientX = ev.clientX;
 			start.clientY = ev.clientY;
-			start.left = parseInt( this._node.style.left, 10 );
-			start.top = parseInt( this._node.style.top, 10 );
-
-			if( this._node.style.height ) {
-				start.height = parseInt( this._node.style.height, 10 );
-			}
-			else {
-				start.height = rect.height;
-			}
-
-			if( this._node.style.width ) {
-				start.width = parseInt( this._node.style.width, 10 );
-			}
-			else {
-				start.width = rect.width;
-			}
+			start.left = rect.left;
+			start.top = rect.top;
+			start.height = rect.height;
+			start.width = rect.width;
 		} );
 	}
 

@@ -14,6 +14,7 @@
 	line-height: 17px;
 	padding: 6px 18px;
 	text-align: center;
+	user-select: none;
 
 	&:hover {
 		background-color: color.scale( vars.$color-primary, $lightness: -20% );
@@ -71,6 +72,9 @@ $window-radius: 9px;
 	box-sizing: border-box;
 	box-shadow: inset 0 0 1px #ffffff3f;
 	color: #ffffff;
+	display: flex;
+	flex-direction: column;
+	min-height: 78px;
 	min-width: 350px;
 	position: absolute;
 	z-index: 1;
@@ -187,6 +191,8 @@ $window-radius: 9px;
 	}
 
 	.content {
+		box-sizing: border-box;
+		height: 100%;
 		overflow: auto;
 		padding: 10px;
 	}

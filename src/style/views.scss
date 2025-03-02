@@ -83,6 +83,15 @@
 
 	.image-container {
 		height: 900px;
+
+		.viewport-element {
+			width: auto !important;
+		}
+
+		.cornerstone-canvas {
+			max-width: 100%;
+			width: auto !important;
+		}
 	}
 
 	.actions {
@@ -361,7 +370,6 @@
 
 
 .view-image {
-	align-items: center;
 	overflow: auto;
 
 	img {
