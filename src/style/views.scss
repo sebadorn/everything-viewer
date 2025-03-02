@@ -157,16 +157,6 @@
 .view-eml {
 	flex-direction: column;
 
-	.button-group {
-		background-color: rgba(0, 0, 0, 0.3);
-		border-top-left-radius: 9px;
-		border-top-right-radius: 9px;
-		box-sizing: border-box;
-		max-width: vars.$max-width;
-		padding: 20px;
-		width: 100%;
-	}
-
 	iframe {
 		border-bottom-left-radius: 9px;
 		border-bottom-right-radius: 9px;
@@ -394,19 +384,29 @@
 
 
 .view-text {
+	flex-direction: column;
+
+	.button-group {
+		border-bottom: 1px solid vars.$color-window;
+	}
+
 	textarea {
 		resize: none;
-		max-width: vars.$max-width;
 		width: 100%;
 	}
 
 	div.code {
 		line-height: 23px;
-		max-width: vars.$max-width;
 		overflow: auto;
 		padding: 20px;
-		white-space: pre;
+		white-space: pre-wrap;
 		width: 100%;
+	}
+
+	td.hljs-ln-numbers {
+		padding-right: 20px;
+		text-align: right;
+		user-select: none;
 	}
 }
 

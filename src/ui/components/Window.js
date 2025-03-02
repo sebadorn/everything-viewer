@@ -23,6 +23,8 @@ export class Window extends Component {
 	 * @param {string?} config.title
 	 * @param {number?} config.x
 	 * @param {number?} config.y
+	 * @param {number?} config.width
+	 * @param {number?} config.height
 	 */
 	constructor( config ) {
 		super();
@@ -96,6 +98,14 @@ export class Window extends Component {
 
 		if( typeof this._config.y === 'number' && !skip.includes( 'y' ) ) {
 			this._node.style.top = this._config.y + 'px';
+		}
+
+		if( typeof this._config.width === 'number' && !skip.includes( 'width' ) ) {
+			this._node.style.width = this._config.width + 'px';
+		}
+
+		if( typeof this._config.height === 'number' && !skip.includes( 'height' ) ) {
+			this._node.style.height = this._config.height + 'px';
 		}
 	}
 

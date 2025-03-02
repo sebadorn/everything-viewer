@@ -89,9 +89,10 @@ export class BaseView {
 	/**
 	 *
 	 * @private
+	 * @param {object?} config
 	 * @returns {Window}
 	 */
-	_openWindow() {
+	_openWindow( config ) {
 		let content = [this.nodeView];
 
 		if( this.nodeMeta ) {
@@ -100,10 +101,11 @@ export class BaseView {
 			content = [wrap];
 		}
 
-		const win = new Window( {
-			title: UI.escapeHTML( this.parser.file.name ),
-			content: content,
-		} );
+		config = config || {};
+		config.title ??= UI.escapeHTML( this.parser.file.name );
+		config.content ??= content;
+
+		const win = new Window( config );
 
 		win.on( 'close', () => {
 			this.parser?.destroy();

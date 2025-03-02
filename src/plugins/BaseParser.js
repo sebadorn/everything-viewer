@@ -84,7 +84,7 @@ export class BaseParser {
 		// Special cases
 		const name = this.file.name.toLowerCase();
 
-		if( name === '.gitmodules' ) {
+		if( ['.gitconfig', '.gitmodules'].includes( name ) ) {
 			return 'ini';
 		}
 		else if( name === 'cmakelists.txt' ) {

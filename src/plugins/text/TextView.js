@@ -1,3 +1,5 @@
+import { Button } from '../../ui/components/Button.js';
+import { ButtonGroup } from '../../ui/components/ButtonGroup.js';
 import { BaseView } from '../BaseView.js';
 
 
@@ -10,6 +12,59 @@ export class TextView extends BaseView {
 	 */
 	constructor( parser ) {
 		super( parser, 'text' );
+
+		this._originalText = '';
+		this._formatted = null;
+	}
+
+
+	/**
+	 *
+	 * @private
+	 * @param {HTMLElement} block
+	 * @returns {ButtonGroup}
+	 */
+	_buildButtonsJson( block ) {
+		return new ButtonGroup( [
+			new Button( {
+				text: 'Original',
+				classes: 'selected',
+				onClick: () => {
+					delete block.dataset.highlighted;
+					block.innerHTML = '';
+					block.textContent = this._originalText;
+					TextView.hljs.highlightElement( block );
+					TextView.hljs.lineNumbersBlock( block );
+				},
+			} ),
+			new Button( {
+				text: 'Formatted',
+				onClick: () => {
+					let formatted = this._originalText;
+
+					if( this._formatted ) {
+						formatted = this._formatted;
+					}
+					else {
+						try {
+							formatted = JSON.parse( this._originalText );
+							formatted = JSON.stringify( formatted, null, 2 );
+							this._formatted = formatted;
+						}
+						catch( err ) {
+							console.error( '[TextView._buildButtonsJson]', err.message );
+							window.alert( err.message );
+						}
+					}
+
+					delete block.dataset.highlighted;
+					block.innerHTML = '';
+					block.textContent = formatted;
+					TextView.hljs.highlightElement( block );
+					TextView.hljs.lineNumbersBlock( block );
+				},
+			} ),
+		] );
 	}
 
 
@@ -22,10 +77,16 @@ export class TextView extends BaseView {
 			return TextView.hljs;
 		}
 
-		TextView.hljs = ( await import(
+		// Assignment to `window` necessary for `highlightjs-line-numbers` to work.
+		TextView.hljs = window.hljs = ( await import(
 			/* webpackChunkName: "hljs_core" */
 			'highlight.js/lib/core'
 		) ).default;
+
+		await import(
+			/* webpackChunkName: "hlsjs_line_numbers" */
+			'highlightjs-line-numbers.js'
+		);
 
 		const imports = {
 			'bash': await import(
@@ -87,6 +148,10 @@ export class TextView extends BaseView {
 			TextView.hljs.registerLanguage( key, lang );
 		}
 
+		TextView.hljs.initLineNumbersOnLoad( {
+			singleLine: true,
+		} );
+
 		return TextView.hljs;
 	}
 
@@ -96,26 +161,34 @@ export class TextView extends BaseView {
 	 * @param {function?} cb
 	 */
 	load( cb ) {
+		const lang = this.parser.detectLanguage();
+
 		const block = document.createElement( 'div' );
 		block.className = 'code';
+
+		if( lang === 'json' ) {
+			const btnGroup = this._buildButtonsJson( block );
+			this.nodeView.appendChild( btnGroup.render() );
+		}
 
 		this.nodeView.appendChild( block );
 
 		this.parser.getText( async ( _err, text ) => {
+			this._originalText = text;
 			block.textContent = text;
 
-			const lang = this.parser.detectLanguage();
+			const hljs = await TextView.initHljs();
 
 			if( lang ) {
-				const hljs = await TextView.initHljs();
-
 				block.className += ' language-' + lang;
 				hljs.highlightElement( block );
 			}
 
+			hljs.lineNumbersBlock( block );
+
 			this.mdAdd( 'Lines', ( text.match( /\n/g ) || [] ).length );
 			this.buildMetaNode();
-			this._openWindow();
+			this._openWindow( { width: 1000 } );
 
 			cb?.();
 		} );

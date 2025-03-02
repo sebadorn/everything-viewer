@@ -17,6 +17,7 @@
     "@vanillaes/csv": "^3.0.4",
     "dicom-parser": "^1.8.21",
     "highlight.js": "^11.11.1",
+    "highlightjs-line-numbers.js": "^2.9.0",
     "ical.js": "^2.1.0",
     "jszip": "^3.10.1",
     "omggif": "^1.0.10",
