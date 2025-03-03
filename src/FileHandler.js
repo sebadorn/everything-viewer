@@ -1,6 +1,213 @@
 export const FileHandler = {
 
 
+	/** @type {object} */
+	extensionMap: {
+		apache: [
+			'htaccess',
+		],
+		bash: [
+			'bash',
+			'bash_history',
+			'bash_logout',
+			'bashrc',
+			'profile',
+			'sh',
+			'zsh',
+			'zshenv',
+			'zshrc',
+		],
+		c: [
+			'c',
+			'h',
+		],
+		cmake: [
+			'cmake',
+		],
+		cpp: [
+			'c++',
+			'cc',
+			'cp',
+			'cpp',
+			'cxx',
+			'hpp',
+			'in',
+			'm',
+		],
+		csharp: [
+			'cs',
+		],
+		css: [
+			'css',
+		],
+		d: [
+			'd',
+		],
+		dart: [
+			'dart',
+		],
+		diff: [
+			'diff',
+		],
+		dns: [
+			'dns',
+			'zone',
+		],
+		doxygen: [
+			'dox',
+		],
+		ini: [
+			'gitconfig',
+			'gitignore',
+			'gitmodules',
+			'gni',
+			'hgignore',
+			'ini',
+			'toml',
+		],
+		java: [
+			'java',
+			'jsp',
+		],
+		javascript: [
+			'cjs',
+			'js',
+			'jsx',
+			'mjs',
+		],
+		json: [
+			'arb',
+			'jshintrc',
+			'json',
+			'flutter',
+		],
+		glsl: [
+			'frag',
+			'glsl',
+			'vert',
+		],
+		latex: [
+			'tex',
+		],
+		less: [
+			'less',
+		],
+		lua: [
+			'lua',
+			'pluto',
+		],
+		makefile: [
+			'mak',
+			'make',
+			'mk',
+		],
+		markdown: [
+			'md',
+		],
+		php: [
+			'php',
+		],
+		plaintext: [
+			'cfg',
+			'conf',
+		],
+		powershell: [
+			'ps',
+			'ps1',
+			'pwsh',
+		],
+		properties: [
+			'npmrc',
+			'properties',
+			'vimrc',
+		],
+		python: [
+			'gyp',
+			'py',
+		],
+		ruby: [
+			'gemspec',
+			'podspec',
+			'rb',
+		],
+		rust: [
+			'rs',
+		],
+		sass: [
+			'sass',
+		],
+		scss: [
+			'scss',
+		],
+		sql: [
+			'sql',
+		],
+		typescript: [
+			'ts',
+			'tsx',
+		],
+		xml: [
+			'htm',
+			'html',
+			'plist',
+			'ui',
+			'xhtml',
+			'xml',
+		],
+		yaml: [
+			'yaml',
+			'yml',
+		],
+	},
+
+
+	/**
+	 *
+	 * @param {File}   file
+	 * @param {string} mimeType
+	 * @return {string?}
+	 */
+	detectLanguage( file, mimeType ) {
+		const ext = this.getFileExt( file );
+
+		// Extension
+		for( const lang in this.extensionMap ) {
+			const list = this.extensionMap[lang];
+
+			if( list.includes( ext ) ) {
+				return lang;
+			}
+		}
+
+		// MIME type
+		const mimeMap = {
+			'application/x-shellscript': 'sh',
+		};
+
+		if( mimeMap[mimeType] ) {
+			return mimeMap[mimeType];
+		}
+
+		// Special cases
+		const name = file.name.toLowerCase();
+
+		if( name === 'httpd.conf' ) {
+			return 'apache';
+		}
+		else if( name === 'cmakelists.txt' ) {
+			return 'cmake';
+		}
+		else if( name.endsWith( '.css.map' ) ) {
+			return 'json';
+		}
+		else if( ['gnumakefile', 'makefile'].includes( name ) ) {
+			return 'makefile';
+		}
+
+		return null;
+	},
+
+
 	/**
 	 * Some fallback MIME type detection just going by file extension.
 	 * But only for a few ones, that some browsers may not report when
@@ -178,9 +385,13 @@ export const FileHandler = {
 		// Full types
 		const knownTypes = [
 			'application/json',
+			'application/sql',
+			'application/toml',
+			'application/x-designer',
 			'application/x-javascript',
 			'application/x-php',
 			'application/x-python',
+			'application/x-ruby',
 			'application/x-shellscript',
 			'application/x-yaml',
 		];
@@ -193,6 +404,8 @@ export const FileHandler = {
 		const knownNames = [
 			'authors',
 			'changelog',
+			'code_of_conduct',
+			'contributing',
 			'contributors',
 			'copying',
 			'install',
@@ -206,29 +419,24 @@ export const FileHandler = {
 			return true;
 		}
 
-		// Extensions
-		const knownExts = [
-			'cfg',
-			'dart',
-			'frag',
-			'glsl',
-			'in',
-			'ini',
-			'less',
-			'proto',
-			'vert',
-		];
-
-		if( knownExts.includes( ext ) ) {
+		// Special cases
+		if( ext === 'bat' && ['application/x-bat', 'application/x-msdos-program'].includes( type ) ) {
 			return true;
 		}
-
-		// Special cases
-		if( ext === 'bat' && type === 'application/x-msdos-program' ) {
+		else if( name.endsWith( '.css.map' ) ) {
 			return true;
 		}
 		else if( name.length > 1 && name.startsWith( '.' ) ) {
 			return true;
+		}
+
+		// Extensions
+		for( const lang in this.extensionMap ) {
+			const list = this.extensionMap[lang];
+
+			if( list.includes( ext ) ) {
+				return true;
+			}
 		}
 
 		return false;

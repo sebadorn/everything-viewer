@@ -401,12 +401,14 @@
 		padding: 20px;
 		white-space: pre-wrap;
 		width: 100%;
+		word-break: break-all;
 	}
 
 	td.hljs-ln-numbers {
 		padding-right: 20px;
 		text-align: right;
 		user-select: none;
+		word-break: normal;
 	}
 }
 
