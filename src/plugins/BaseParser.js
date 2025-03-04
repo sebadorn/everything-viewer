@@ -1,6 +1,3 @@
-import { FileHandler } from '../FileHandler.js';
-
-
 export class BaseParser {
 
 
