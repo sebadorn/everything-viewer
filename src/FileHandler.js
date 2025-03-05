@@ -1,3 +1,6 @@
+import { fileTypeFromBuffer } from 'file-type';
+
+
 export const FileHandler = {
 
 
@@ -251,18 +254,26 @@ export const FileHandler = {
 	 * @returns {Promise<string?>}
 	 */
 	async getMimeType( file ) {
-		// Normally it is only the first 4 bytes. But:
+		// Most of the time it is only the first 4 bytes. But:
 		// - DICOM files have 128 bytes before that.
 		// - NIFTI files have 344 bytes before that.
-		const arrayBuffer = await file.slice( 0, 344 + 4 ).arrayBuffer();
+		// The "file-type" package has 4100 as default size.
+		const arrayBuffer = await file.slice( 0, 4100 ).arrayBuffer();
 
-		const arr = new Uint8Array( arrayBuffer );
-		const header = arr.reduce(
-			( prev, current ) => prev + current.toString( 16 ).padStart( 2, '0' ),
-			''
-		);
-		const fallbackType = file.type || this.extToMimeType( this.getFileExt( file ) );
-		let type = this.headerToMimeType( header, fallbackType );
+		let type = await fileTypeFromBuffer( arrayBuffer );
+
+		if( type?.mime ) {
+			type = type.mime;
+		}
+		else {
+			const arr = new Uint8Array( arrayBuffer );
+			const header = arr.reduce(
+				( prev, current ) => prev + current.toString( 16 ).padStart( 2, '0' ),
+				''
+			);
+			const fallbackType = file.type || this.extToMimeType( this.getFileExt( file ) );
+			type = this.headerToMimeType( header, fallbackType );
+		}
 
 		if( typeof type === 'string' ) {
 			type = type.toLowerCase();

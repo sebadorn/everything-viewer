@@ -17,6 +17,7 @@
     "@cornerstonejs/tools": "^3.0.1",
     "@vanillaes/csv": "^3.0.4",
     "dicom-parser": "^1.8.21",
+    "file-type": "^20.4.0",
     "highlight.js": "^11.11.1",
     "highlightjs-line-numbers.js": "^2.9.0",
     "ical.js": "^2.1.0",
