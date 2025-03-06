@@ -59,14 +59,22 @@ export const FileHandler = {
 		doxygen: [
 			'dox',
 		],
+		glsl: [
+			'frag',
+			'glsl',
+			'vert',
+		],
 		ini: [
 			'gitconfig',
 			'gitignore',
 			'gitmodules',
 			'gni',
+			'godot',
 			'hgignore',
 			'ini',
 			'toml',
+			'tres', // Godot
+			'tscn', // Godot
 		],
 		java: [
 			'java',
@@ -84,11 +92,6 @@ export const FileHandler = {
 			'json',
 			'flutter',
 		],
-		glsl: [
-			'frag',
-			'glsl',
-			'vert',
-		],
 		latex: [
 			'tex',
 		],
@@ -103,6 +106,7 @@ export const FileHandler = {
 			'mak',
 			'make',
 			'mk',
+			'ninja',
 		],
 		markdown: [
 			'md',
@@ -227,6 +231,7 @@ export const FileHandler = {
 
 		const map = {
 			csv: 'text/csv',
+			gd: 'application/x-gdscript',
 			ical: 'text/calendar',
 			ics: 'text/calendar',
 			ifb: 'text/calendar',
@@ -399,6 +404,7 @@ export const FileHandler = {
 			'application/sql',
 			'application/toml',
 			'application/x-designer',
+			'application/x-gdscript',
 			'application/x-javascript',
 			'application/x-php',
 			'application/x-python',
@@ -422,6 +428,7 @@ export const FileHandler = {
 			'install',
 			'license',
 			'makefile',
+			'meson.build',
 			'readme',
 			'todo',
 		];
