@@ -35,6 +35,10 @@ export class Model3DView extends BaseView {
 	 * @param {function?} cb
 	 */
 	async load( cb ) {
+		const babylonjs = await import(
+			/* webpackChunkName: "babylonjs_core" */
+			'@babylonjs/core'
+		);
 		const babylonjsViewer = await import(
 			/* webpackChunkName: "babylonjs_viewer" */
 			'@babylonjs/viewer'
@@ -44,10 +48,23 @@ export class Model3DView extends BaseView {
 		this._viewer.extension = this.parser.ext;
 		this._viewer.source = URL.createObjectURL( this.parser.file );
 
-		this.buildMetaNode();
+		this._viewer.addEventListener( 'viewerready', _ev => {
+			const scene = this._viewer.viewerDetails.scene;
 
+			scene.cameras[0].onViewMatrixChangedObservable.add( ( evData, _evState ) => {
+				const camDir = evData.position;
+				const lightDir = scene.lights[0]?.direction;
+				lightDir?.set( camDir.x, camDir.y, camDir.z );
+			} );
+		} );
+
+		this.buildMetaNode();
 		this.nodeView.append( this._viewer );
-		this._openWindow();
+
+		this._openWindow( {
+			height: 600,
+			width: 760,
+		} );
 
 		cb?.();
 	}

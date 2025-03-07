@@ -158,8 +158,8 @@
 	flex-direction: column;
 
 	iframe {
-		border-bottom-left-radius: 9px;
-		border-bottom-right-radius: 9px;
+		border-bottom-left-radius: vars.$border-radius;
+		border-bottom-right-radius: vars.$border-radius;
 		height: 90vh;
 		max-width: vars.$max-width;
 		width: 100%;
@@ -304,7 +304,7 @@
 
 		.state {
 			background-color: rgba(255, 255, 255, 0.1);
-			border-radius: 9px;
+			border-radius: vars.$border-radius;
 			display: inline-block;
 			font-family: vars.$font-ms;
 			font-size: 12px;
@@ -363,13 +363,23 @@
 	overflow: auto;
 
 	img {
-		background: repeating-conic-gradient(
-			rgba(0, 0, 0, 0.1) 0% 25%,
-			rgba(255, 255, 255, 0.1) 0% 50%
-		);
+		background: vars.$bg-alpha-tiles;
 		background-size: 20px 20px;
 		flex-grow: 0;
 		flex-shrink: 0;
+	}
+}
+
+
+.view-model3d {
+	babylon-viewer {
+		background-image: vars.$bg-alpha-tiles;
+		background-size: 20px 20px;
+		border-radius: vars.$border-radius;
+		height: 100%;
+		min-height: 200px;
+		min-width: 200px;
+		width: 100%;
 	}
 }
 
