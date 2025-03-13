@@ -314,13 +314,9 @@ export class DICOMView extends BaseView {
 	 * @returns {Promise<void>}
 	 */
 	async _initViewport() {
-		const { RenderingEngine } = await import(
+		const { Enums, RenderingEngine } = await import(
 			/* webpackChunkName: "cornerstone_core" */
 			'@cornerstonejs/core'
-		);
-		const { OrientationAxis, ViewportType } = await import(
-			/* webpackChunkName: "cornerstone_core_enums" */
-			'@cornerstonejs/core/enums'
 		);
 
 		const imageContainer = this.nodeView.querySelector( '.image-container' );
@@ -329,10 +325,10 @@ export class DICOMView extends BaseView {
 
 		this._renderingEngine.enableElement( {
 			viewportId: 'ctStack',
-			type: ViewportType.STACK,
+			type: Enums.ViewportType.STACK,
 			element: imageContainer,
 			defaultOptions: {
-				orientation: OrientationAxis.AXIAL,
+				orientation: Enums.OrientationAxis.AXIAL,
 			},
 		} );
 
@@ -370,6 +366,10 @@ export class DICOMView extends BaseView {
 
 		clearTimeout( this._timer );
 
+		this._renderingEngine?.destroy();
+		this._renderingEngine = null;
+		this._viewport = null;
+
 		this._images = null;
 		this._imageId = null;
 
@@ -393,6 +393,7 @@ export class DICOMView extends BaseView {
 					this._images = images;
 					this._numFrames = this._images.length;
 
+					this.buildMetaNode();
 					this._buildControls();
 					const win = this._openWindow();
 

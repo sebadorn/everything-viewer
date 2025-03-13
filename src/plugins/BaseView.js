@@ -108,8 +108,13 @@ export class BaseView {
 		const win = new Window( config );
 
 		win.on( 'close', () => {
-			this.parser?.destroy();
-			this.destroy();
+			if( config.destroyOrder ) {
+				config.destroyOrder.forEach( item => item.destroy() );
+			}
+			else {
+				this.parser?.destroy();
+				this.destroy();
+			}
 		} );
 
 		document.body.append( win.render() );
@@ -132,8 +137,10 @@ export class BaseView {
 		if( this.nodeMeta ) {
 			UI.removeAllChildren( this.nodeMeta );
 		}
+		else {
+			this.nodeMeta = document.createElement( 'div' );
+		}
 
-		this.nodeMeta = document.createElement( 'div' );
 		this.nodeMeta.className = 'meta meta-' + this.type;
 
 		this.nodeMeta.querySelector( '.meta-table' )?.remove();

@@ -76,7 +76,8 @@
 }
 
 
-.view-dicom {
+.view-dicom,
+.view-nifti {
 	flex-direction: column;
 	max-width: 1000px;
 	min-width: 600px;
@@ -149,6 +150,27 @@
 			line-height: 22px;
 			list-style-position: inside;
 			list-style-type: decimal-leading-zero;
+		}
+	}
+}
+
+
+.view-nifti {
+	max-width: none;
+
+	.viewports {
+		display: flex;
+	}
+
+	.image-container {
+		border-right: 1px solid rgba(255, 255, 255, 0.1);
+		flex-grow: 0;
+		flex-shrink: 0;
+		height: 512px;
+		width: 512px;
+
+		&:last-child {
+			border-right: 0;
 		}
 	}
 }

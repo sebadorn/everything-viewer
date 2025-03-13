@@ -266,6 +266,7 @@ export const FileHandler = {
 		const arrayBuffer = await file.slice( 0, 4100 ).arrayBuffer();
 
 		let type = await fileTypeFromBuffer( arrayBuffer );
+		console.debug( '[getMimeType] file-type:', type );
 
 		if( type?.mime ) {
 			type = type.mime;
@@ -326,7 +327,9 @@ export const FileHandler = {
 			// Spells out "n+1" for NIFTI/.nii files.
 			else if( header.substring( 688, 688 + 6 ) === '6e2b31' ) {
 				header8 = '6e2b3100';
-				type = 'application/octet-stream';
+				// Usually the type is "application/octet-stream", we just
+				// change it to x-nifti for detection by the plugin.
+				type = 'application/x-nifti';
 			}
 		}
 

@@ -17,6 +17,7 @@ Okay, not *everything*. The idea is to support different formats and maybe provi
 * iCal
 * Image – *if the browser supports the format*
 	* GIF: Step through each frame
+* NIFTI (.nii)
 * PDF – *if the browser has a PDF viewer integrated*
 * Text
 	* With syntax highlighting for selected languages
