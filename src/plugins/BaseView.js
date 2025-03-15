@@ -134,7 +134,10 @@ export class BaseView {
 			return;
 		}
 
+		let toggleEmptyState = false;
+
 		if( this.nodeMeta ) {
+			toggleEmptyState = !!this.nodeMeta.querySelector( '#metadata-toggle-empty' )?.checked;
 			UI.removeAllChildren( this.nodeMeta );
 		}
 		else {
@@ -155,7 +158,12 @@ export class BaseView {
 			);
 
 			const input = line.querySelector( 'input' );
+			input.checked = toggleEmptyState;
 			input.addEventListener( 'change', _ev => this.toggleEmptyMetaData( input.checked ) );
+
+			if( toggleEmptyState ) {
+				setTimeout( () => this.toggleEmptyMetaData( toggleEmptyState ), 0 );
+			}
 
 			this.nodeMeta.append( line );
 		}
