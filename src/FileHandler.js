@@ -91,6 +91,7 @@ export const FileHandler = {
 			'jshintrc',
 			'json',
 			'flutter',
+			'gltf',
 		],
 		latex: [
 			'tex',

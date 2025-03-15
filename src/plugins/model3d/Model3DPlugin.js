@@ -15,8 +15,9 @@ export class Model3DPlugin extends Plugin {
 	canHandleImport( fileInfo ) {
 		const formats = [
 			'glb',
-			'gltf',
+			// 'gltf',
 			'obj',
+			'ply',
 			'splat',
 			'stl',
 		];

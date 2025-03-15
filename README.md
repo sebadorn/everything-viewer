@@ -5,8 +5,7 @@ Okay, not *everything*. The idea is to support different formats and maybe provi
 
 ## Supported formats
 
-* 3D models
-	* Single .glb, .gltf, .obj, .splat or .stl files
+* 3D models (.glb, .obj, .ply, .splat, .stl)
 * Audio – *if the browser supports the format*
 * CSV
 * DCM, DICOM
@@ -14,14 +13,14 @@ Okay, not *everything*. The idea is to support different formats and maybe provi
 	* Show the email headers
 	* Show the email body with external resources removed
 	* Show the email body with loaded external resources
-* iCal
+* iCal (.ical, .ics, .ifb, .vcs)
 * Image – *if the browser supports the format*
 	* GIF: Step through each frame
 * NIFTI (.nii)
 * PDF – *if the browser has a PDF viewer integrated*
 * Text
 	* With syntax highlighting for selected languages
-* VCF (vCard)
+* vCard (.vcf)
 * Video – *if the browser supports the format*
 * ZIP
 	* Show a list of the directory structure and files
