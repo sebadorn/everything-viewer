@@ -308,6 +308,10 @@ export class NIFTIView extends BaseView {
 
 			this._initViewport( () => {
 				this._frameIndex = this._viewports.axial.getCurrentImageIdIndex();
+
+				this.mdAdd( 'Photometric Interpretation', this._volume.metadata.PhotometricInterpretation || '' );
+				this.buildMetaNode();
+
 				this._updateControls();
 			} );
 		} );
