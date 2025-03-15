@@ -1,4 +1,5 @@
 import { BaseParser } from '../BaseParser.js';
+import { NIFTIParser } from '../nifti/NIFTIParser.js';
 
 
 export class DICOMParser extends BaseParser {
@@ -107,7 +108,10 @@ export class DICOMParser extends BaseParser {
 			console.log( '[DICOMParser.destroy] Purging cornerstone caches.' );
 
 			try {
-				this.cache.purgeCache();
+				if( NIFTIParser.numInstances === 0 ) {
+					this.cache.purgeCache();
+				}
+
 				this.wadouri.dataSetCacheManager.purge();
 				this.wadouri.fileManager.purge();
 			}

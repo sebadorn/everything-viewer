@@ -1,4 +1,219 @@
+import { fileTypeFromBuffer } from 'file-type';
+
+
 export const FileHandler = {
+
+
+	/** @type {object} */
+	extensionMap: {
+		apache: [
+			'htaccess',
+		],
+		bash: [
+			'bash',
+			'bash_history',
+			'bash_logout',
+			'bashrc',
+			'profile',
+			'sh',
+			'zsh',
+			'zshenv',
+			'zshrc',
+		],
+		c: [
+			'c',
+			'h',
+		],
+		cmake: [
+			'cmake',
+		],
+		cpp: [
+			'c++',
+			'cc',
+			'cp',
+			'cpp',
+			'cxx',
+			'hpp',
+			'in',
+			'm',
+		],
+		csharp: [
+			'cs',
+		],
+		css: [
+			'css',
+		],
+		d: [
+			'd',
+		],
+		dart: [
+			'dart',
+		],
+		diff: [
+			'diff',
+		],
+		dns: [
+			'dns',
+			'zone',
+		],
+		doxygen: [
+			'dox',
+		],
+		glsl: [
+			'frag',
+			'glsl',
+			'vert',
+		],
+		ini: [
+			'gitconfig',
+			'gitignore',
+			'gitmodules',
+			'gni',
+			'godot',
+			'hgignore',
+			'ini',
+			'toml',
+			'tres', // Godot
+			'tscn', // Godot
+		],
+		java: [
+			'java',
+			'jsp',
+		],
+		javascript: [
+			'cjs',
+			'js',
+			'jsx',
+			'mjs',
+		],
+		json: [
+			'arb',
+			'jshintrc',
+			'json',
+			'flutter',
+			'gltf',
+		],
+		latex: [
+			'tex',
+		],
+		less: [
+			'less',
+		],
+		lua: [
+			'lua',
+			'pluto',
+		],
+		makefile: [
+			'mak',
+			'make',
+			'mk',
+			'ninja',
+		],
+		markdown: [
+			'md',
+		],
+		php: [
+			'php',
+		],
+		plaintext: [
+			'cfg',
+			'conf',
+		],
+		powershell: [
+			'ps',
+			'ps1',
+			'pwsh',
+		],
+		properties: [
+			'npmrc',
+			'properties',
+			'vimrc',
+		],
+		python: [
+			'gyp',
+			'py',
+		],
+		ruby: [
+			'gemspec',
+			'podspec',
+			'rb',
+		],
+		rust: [
+			'rs',
+		],
+		sass: [
+			'sass',
+		],
+		scss: [
+			'scss',
+		],
+		sql: [
+			'sql',
+		],
+		typescript: [
+			'ts',
+			'tsx',
+		],
+		xml: [
+			'htm',
+			'html',
+			'plist',
+			'ui',
+			'xhtml',
+			'xml',
+		],
+		yaml: [
+			'yaml',
+			'yml',
+		],
+	},
+
+
+	/**
+	 *
+	 * @param {File}   file
+	 * @param {string} mimeType
+	 * @return {string?}
+	 */
+	detectLanguage( file, mimeType ) {
+		const ext = this.getFileExt( file );
+
+		// Extension
+		for( const lang in this.extensionMap ) {
+			const list = this.extensionMap[lang];
+
+			if( list.includes( ext ) ) {
+				return lang;
+			}
+		}
+
+		// MIME type
+		const mimeMap = {
+			'application/x-shellscript': 'sh',
+		};
+
+		if( mimeMap[mimeType] ) {
+			return mimeMap[mimeType];
+		}
+
+		// Special cases
+		const name = file.name.toLowerCase();
+
+		if( name === 'httpd.conf' ) {
+			return 'apache';
+		}
+		else if( name === 'cmakelists.txt' ) {
+			return 'cmake';
+		}
+		else if( name.endsWith( '.css.map' ) ) {
+			return 'json';
+		}
+		else if( ['gnumakefile', 'makefile'].includes( name ) ) {
+			return 'makefile';
+		}
+
+		return null;
+	},
 
 
 	/**
@@ -17,6 +232,7 @@ export const FileHandler = {
 
 		const map = {
 			csv: 'text/csv',
+			gd: 'application/x-gdscript',
 			ical: 'text/calendar',
 			ics: 'text/calendar',
 			ifb: 'text/calendar',
@@ -44,18 +260,27 @@ export const FileHandler = {
 	 * @returns {Promise<string?>}
 	 */
 	async getMimeType( file ) {
-		// Normally it is only the first 4 bytes. But:
+		// Most of the time it is only the first 4 bytes. But:
 		// - DICOM files have 128 bytes before that.
 		// - NIFTI files have 344 bytes before that.
-		const arrayBuffer = await file.slice( 0, 344 + 4 ).arrayBuffer();
+		// The "file-type" package has 4100 as default size.
+		const arrayBuffer = await file.slice( 0, 4100 ).arrayBuffer();
 
-		const arr = new Uint8Array( arrayBuffer );
-		const header = arr.reduce(
-			( prev, current ) => prev + current.toString( 16 ).padStart( 2, '0' ),
-			''
-		);
-		const fallbackType = file.type || this.extToMimeType( this.getFileExt( file ) );
-		let type = this.headerToMimeType( header, fallbackType );
+		let type = await fileTypeFromBuffer( arrayBuffer );
+		console.debug( '[getMimeType] file-type:', type );
+
+		if( type?.mime ) {
+			type = type.mime;
+		}
+		else {
+			const arr = new Uint8Array( arrayBuffer );
+			const header = arr.reduce(
+				( prev, current ) => prev + current.toString( 16 ).padStart( 2, '0' ),
+				''
+			);
+			const fallbackType = file.type || this.extToMimeType( this.getFileExt( file ) );
+			type = this.headerToMimeType( header, fallbackType );
+		}
 
 		if( typeof type === 'string' ) {
 			type = type.toLowerCase();
@@ -103,7 +328,9 @@ export const FileHandler = {
 			// Spells out "n+1" for NIFTI/.nii files.
 			else if( header.substring( 688, 688 + 6 ) === '6e2b31' ) {
 				header8 = '6e2b3100';
-				type = 'application/octet-stream';
+				// Usually the type is "application/octet-stream", we just
+				// change it to x-nifti for detection by the plugin.
+				type = 'application/x-nifti';
 			}
 		}
 
@@ -178,9 +405,14 @@ export const FileHandler = {
 		// Full types
 		const knownTypes = [
 			'application/json',
+			'application/sql',
+			'application/toml',
+			'application/x-designer',
+			'application/x-gdscript',
 			'application/x-javascript',
 			'application/x-php',
 			'application/x-python',
+			'application/x-ruby',
 			'application/x-shellscript',
 			'application/x-yaml',
 		];
@@ -193,11 +425,14 @@ export const FileHandler = {
 		const knownNames = [
 			'authors',
 			'changelog',
+			'code_of_conduct',
+			'contributing',
 			'contributors',
 			'copying',
 			'install',
 			'license',
 			'makefile',
+			'meson.build',
 			'readme',
 			'todo',
 		];
@@ -206,29 +441,24 @@ export const FileHandler = {
 			return true;
 		}
 
-		// Extensions
-		const knownExts = [
-			'cfg',
-			'dart',
-			'frag',
-			'glsl',
-			'in',
-			'ini',
-			'less',
-			'proto',
-			'vert',
-		];
-
-		if( knownExts.includes( ext ) ) {
+		// Special cases
+		if( ext === 'bat' && ['application/x-bat', 'application/x-msdos-program'].includes( type ) ) {
 			return true;
 		}
-
-		// Special cases
-		if( ext === 'bat' && type === 'application/x-msdos-program' ) {
+		else if( name.endsWith( '.css.map' ) ) {
 			return true;
 		}
 		else if( name.length > 1 && name.startsWith( '.' ) ) {
 			return true;
+		}
+
+		// Extensions
+		for( const lang in this.extensionMap ) {
+			const list = this.extensionMap[lang];
+
+			if( list.includes( ext ) ) {
+				return true;
+			}
 		}
 
 		return false;

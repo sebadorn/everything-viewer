@@ -76,7 +76,8 @@
 }
 
 
-.view-dicom {
+.view-dicom,
+.view-nifti {
 	flex-direction: column;
 	max-width: 1000px;
 	min-width: 600px;
@@ -154,12 +155,33 @@
 }
 
 
+.view-nifti {
+	max-width: none;
+
+	.viewports {
+		display: flex;
+	}
+
+	.image-container {
+		border-right: 1px solid rgba(255, 255, 255, 0.1);
+		flex-grow: 0;
+		flex-shrink: 0;
+		height: 512px;
+		width: 512px;
+
+		&:last-child {
+			border-right: 0;
+		}
+	}
+}
+
+
 .view-eml {
 	flex-direction: column;
 
 	iframe {
-		border-bottom-left-radius: 9px;
-		border-bottom-right-radius: 9px;
+		border-bottom-left-radius: vars.$border-radius;
+		border-bottom-right-radius: vars.$border-radius;
 		height: 90vh;
 		max-width: vars.$max-width;
 		width: 100%;
@@ -213,13 +235,16 @@
 	align-items: center;
 	flex-direction: column;
 
+	.content-image,
 	.frame-container {
-		background: repeating-conic-gradient(
-			rgba(0, 0, 0, 0.1) 0% 25%,
-			rgba(255, 255, 255, 0.1) 0% 50%
-		);
+		background: vars.$bg-alpha-tiles;
 		background-size: 20px 20px;
+		box-sizing: border-box;
 		display: flex;
+		justify-content: center;
+		min-width: 320px;
+		padding: 20px;
+		width: 100%;
 	}
 
 	.actions {
@@ -304,7 +329,7 @@
 
 		.state {
 			background-color: rgba(255, 255, 255, 0.1);
-			border-radius: 9px;
+			border-radius: vars.$border-radius;
 			display: inline-block;
 			font-family: vars.$font-ms;
 			font-size: 12px;
@@ -363,13 +388,23 @@
 	overflow: auto;
 
 	img {
-		background: repeating-conic-gradient(
-			rgba(0, 0, 0, 0.1) 0% 25%,
-			rgba(255, 255, 255, 0.1) 0% 50%
-		);
+		background: vars.$bg-alpha-tiles;
 		background-size: 20px 20px;
 		flex-grow: 0;
 		flex-shrink: 0;
+	}
+}
+
+
+.view-model3d {
+	babylon-viewer {
+		background-image: vars.$bg-alpha-tiles;
+		background-size: 20px 20px;
+		border-radius: vars.$border-radius;
+		height: 100%;
+		min-height: 200px;
+		min-width: 200px;
+		width: 100%;
 	}
 }
 
@@ -401,12 +436,14 @@
 		padding: 20px;
 		white-space: pre-wrap;
 		width: 100%;
+		word-break: break-all;
 	}
 
 	td.hljs-ln-numbers {
 		padding-right: 20px;
 		text-align: right;
 		user-select: none;
+		word-break: normal;
 	}
 }
 

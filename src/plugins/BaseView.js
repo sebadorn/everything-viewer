@@ -108,8 +108,13 @@ export class BaseView {
 		const win = new Window( config );
 
 		win.on( 'close', () => {
-			this.parser?.destroy();
-			this.destroy();
+			if( config.destroyOrder ) {
+				config.destroyOrder.forEach( item => item.destroy() );
+			}
+			else {
+				this.parser?.destroy();
+				this.destroy();
+			}
 		} );
 
 		document.body.append( win.render() );
@@ -129,11 +134,16 @@ export class BaseView {
 			return;
 		}
 
+		let toggleEmptyState = false;
+
 		if( this.nodeMeta ) {
+			toggleEmptyState = !!this.nodeMeta.querySelector( '#metadata-toggle-empty' )?.checked;
 			UI.removeAllChildren( this.nodeMeta );
 		}
+		else {
+			this.nodeMeta = document.createElement( 'div' );
+		}
 
-		this.nodeMeta = document.createElement( 'div' );
 		this.nodeMeta.className = 'meta meta-' + this.type;
 
 		this.nodeMeta.querySelector( '.meta-table' )?.remove();
@@ -148,7 +158,12 @@ export class BaseView {
 			);
 
 			const input = line.querySelector( 'input' );
+			input.checked = toggleEmptyState;
 			input.addEventListener( 'change', _ev => this.toggleEmptyMetaData( input.checked ) );
+
+			if( toggleEmptyState ) {
+				setTimeout( () => this.toggleEmptyMetaData( toggleEmptyState ), 0 );
+			}
 
 			this.nodeMeta.append( line );
 		}

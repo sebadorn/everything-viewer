@@ -19,6 +19,7 @@ export class DICOMView extends BaseView {
 		this._frameTime = 33.333; // [ms]
 
 		this._listenerKeyNav = null;
+		this._metaGroups = null;
 		this._timer = 0;
 	}
 
@@ -29,122 +30,131 @@ export class DICOMView extends BaseView {
 	 * @param {object} dataSet
 	 */
 	_addMetaInfo( dataSet ) {
-		this.mdAddGroup(
-			'Patient',
-			[
-				{ name: 'Patient ID', value: dataSet.string( 'x00100020' ) },
-				{ name: 'Issuer of Patient ID', value: dataSet.string( 'x00100021' ) },
-				{ name: 'Type of Patient ID', value: dataSet.string( 'x00100022' ) },
-				{ hr: 1 },
-				{ name: 'Patient Name', value: dataSet.string( 'x00100010' ) },
-				{ name: 'Other Patient Names', value: dataSet.string( 'x00101001' ) },
-				{ name: 'Patient Birth Date', value: dataSet.string( 'x00100030' ) },
-				{ name: 'Patient Birth Time', value: dataSet.string( 'x00100032' ) },
-				{ name: 'Patient Sex', value: dataSet.string( 'x00100040' ) },
-				{ name: 'Ethnic Group', value: dataSet.string( 'x00102160' ) },
-				{ name: 'Patient Breed Desc.', value: dataSet.string( 'x00102292' ) },
-				{ name: 'Patient Species Desc.', value: dataSet.string( 'x00102201' ) },
-				{ name: 'Patient Comments', value: dataSet.string( 'x00104000' ) },
-				{ name: 'Strain Desc.', value: dataSet.string( 'x00100212' ) },
-				{ name: 'Strain Nomenclature', value: dataSet.string( 'x00100213' ) },
-				{ name: 'Strain Addit. Info.', value: dataSet.string( 'x00100218' ) },
-				{ hr: 1 },
-				{ name: 'Responsible Person', value: dataSet.string( 'x00102297' ) },
-				{ name: 'Resp. Person Role', value: dataSet.string( 'x00102298' ) },
-				{ name: 'Resp. Organization', value: dataSet.string( 'x00102299' ) }
-			]
+		const isFirstRun = !this._metaGroups;
+
+		this._metaGroups = this._metaGroups || {};
+
+		const keys = [
+			'patient',
+			'patientStudy',
+			'generalStudy',
+			'generalSeries',
+			'generalImage',
+			'generalEquipment',
+		];
+
+		keys.forEach( key => {
+			this._metaGroups[key] = this._metaGroups[key] || [];
+			this._metaGroups[key].length = 0;
+		} );
+
+		this._metaGroups.patient.push(
+			{ name: 'Patient ID', value: dataSet.string( 'x00100020' ) },
+			{ name: 'Issuer of Patient ID', value: dataSet.string( 'x00100021' ) },
+			{ name: 'Type of Patient ID', value: dataSet.string( 'x00100022' ) },
+			{ hr: 1 },
+			{ name: 'Patient Name', value: dataSet.string( 'x00100010' ) },
+			{ name: 'Other Patient Names', value: dataSet.string( 'x00101001' ) },
+			{ name: 'Patient Birth Date', value: dataSet.string( 'x00100030' ) },
+			{ name: 'Patient Birth Time', value: dataSet.string( 'x00100032' ) },
+			{ name: 'Patient Sex', value: dataSet.string( 'x00100040' ) },
+			{ name: 'Ethnic Group', value: dataSet.string( 'x00102160' ) },
+			{ name: 'Patient Breed Desc.', value: dataSet.string( 'x00102292' ) },
+			{ name: 'Patient Species Desc.', value: dataSet.string( 'x00102201' ) },
+			{ name: 'Patient Comments', value: dataSet.string( 'x00104000' ) },
+			{ name: 'Strain Desc.', value: dataSet.string( 'x00100212' ) },
+			{ name: 'Strain Nomenclature', value: dataSet.string( 'x00100213' ) },
+			{ name: 'Strain Addit. Info.', value: dataSet.string( 'x00100218' ) },
+			{ hr: 1 },
+			{ name: 'Responsible Person', value: dataSet.string( 'x00102297' ) },
+			{ name: 'Resp. Person Role', value: dataSet.string( 'x00102298' ) },
+			{ name: 'Resp. Organization', value: dataSet.string( 'x00102299' ) },
 		);
 
-		this.mdAddGroup(
-			'Patient Study',
-			[
-				{ name: 'Admitting Diagnoses Desc.', value: dataSet.string( 'x00081080' ) },
-				{ name: 'Patient\'s Age (years)', value: dataSet.string( 'x00101010' ) },
-				{ name: 'Patient\'s Size (m)', value: dataSet.string( 'x00101020' ) },
-				{ name: 'Patient\'s BMI', value: dataSet.string( 'x00101022' ) },
-				{ name: 'Measured AP Dimension (mm)', value: dataSet.string( 'x00101023' ) },
-				{ name: 'Measured Lateral Dimension (mm)', value: dataSet.string( 'x00101024' ) },
-				{ name: 'Patient\'s Weight (kg)', value: dataSet.string( 'x00101030' ) },
-				{ name: 'Medical Alerts', value: dataSet.string( 'x00102000' ) },
-				{ name: 'Allergies', value: dataSet.string( 'x00102110' ) },
-				{ name: 'Occupation', value: dataSet.string( 'x00102180' ) },
-				{ name: 'Smoking Status', value: dataSet.string( 'x001021a0' ) },
-				{ name: 'Addit. Patient History', value: dataSet.string( 'x001021b0' ) },
-				{ name: 'Pregnancy Status', value: DICOMParser.getPregnancyStatus( dataSet.string( 'x001021c0' ) ) },
-				{ name: 'Last Menstrual Date', value: dataSet.string( 'x001021d0' ) },
-				{ name: 'Patient\'s Sex Neutered', value: dataSet.string( 'x00102203' ) },
-				{ name: 'Reason for Visit', value: dataSet.string( 'x00321066' ) },
-				{ name: 'Admission ID', value: dataSet.string( 'x00380010' ) },
-				{ name: 'Service Episode ID', value: dataSet.string( 'x00380060' ) },
-				{ name: 'Service Episode Desc.', value: dataSet.string( 'x00380062' ) },
-				{ name: 'Patient State', value: dataSet.string( 'x00380500' ) }
-			]
+		this._metaGroups.patientStudy.push(
+			{ name: 'Admitting Diagnoses Desc.', value: dataSet.string( 'x00081080' ) },
+			{ name: 'Patient\'s Age (years)', value: dataSet.string( 'x00101010' ) },
+			{ name: 'Patient\'s Size (m)', value: dataSet.string( 'x00101020' ) },
+			{ name: 'Patient\'s BMI', value: dataSet.string( 'x00101022' ) },
+			{ name: 'Measured AP Dimension (mm)', value: dataSet.string( 'x00101023' ) },
+			{ name: 'Measured Lateral Dimension (mm)', value: dataSet.string( 'x00101024' ) },
+			{ name: 'Patient\'s Weight (kg)', value: dataSet.string( 'x00101030' ) },
+			{ name: 'Medical Alerts', value: dataSet.string( 'x00102000' ) },
+			{ name: 'Allergies', value: dataSet.string( 'x00102110' ) },
+			{ name: 'Occupation', value: dataSet.string( 'x00102180' ) },
+			{ name: 'Smoking Status', value: dataSet.string( 'x001021a0' ) },
+			{ name: 'Addit. Patient History', value: dataSet.string( 'x001021b0' ) },
+			{ name: 'Pregnancy Status', value: DICOMParser.getPregnancyStatus( dataSet.string( 'x001021c0' ) ) },
+			{ name: 'Last Menstrual Date', value: dataSet.string( 'x001021d0' ) },
+			{ name: 'Patient\'s Sex Neutered', value: dataSet.string( 'x00102203' ) },
+			{ name: 'Reason for Visit', value: dataSet.string( 'x00321066' ) },
+			{ name: 'Admission ID', value: dataSet.string( 'x00380010' ) },
+			{ name: 'Service Episode ID', value: dataSet.string( 'x00380060' ) },
+			{ name: 'Service Episode Desc.', value: dataSet.string( 'x00380062' ) },
+			{ name: 'Patient State', value: dataSet.string( 'x00380500' ) },
 		);
 
-		this.mdAddGroup(
-			'General Study',
-			[
-				{ name: 'Study Date', value: dataSet.string( 'x00080020' ) },
-				{ name: 'Study Time', value: dataSet.string( 'x00080030' ) },
-				{ name: 'Accession Number', value: dataSet.string( 'x00080050' ) },
-				{ name: 'Referring Physician Name', value: dataSet.string( 'x00080090' ) },
-				{ name: 'Consulting Physician\'s Name', value: dataSet.string( 'x0008109c' ) },
-				{ name: 'Study Desc.', value: dataSet.string( 'x00081030' ) },
-				{ name: 'Physician(s) of Record', value: dataSet.string( 'x00081048' ) },
-				{ name: 'Physician(s) Reading Study', value: dataSet.string( 'x00081060' ) },
-				{ name: 'Study ID', value: dataSet.string( 'x00200010' ) },
-				{ name: 'Requesting Service', value: dataSet.string( 'x00321033' ) }
-			]
+		this._metaGroups.generalStudy.push(
+			{ name: 'Study Date', value: dataSet.string( 'x00080020' ) },
+			{ name: 'Study Time', value: dataSet.string( 'x00080030' ) },
+			{ name: 'Accession Number', value: dataSet.string( 'x00080050' ) },
+			{ name: 'Referring Physician Name', value: dataSet.string( 'x00080090' ) },
+			{ name: 'Consulting Physician\'s Name', value: dataSet.string( 'x0008109c' ) },
+			{ name: 'Study Desc.', value: dataSet.string( 'x00081030' ) },
+			{ name: 'Physician(s) of Record', value: dataSet.string( 'x00081048' ) },
+			{ name: 'Physician(s) Reading Study', value: dataSet.string( 'x00081060' ) },
+			{ name: 'Study ID', value: dataSet.string( 'x00200010' ) },
+			{ name: 'Requesting Service', value: dataSet.string( 'x00321033' ) },
 		);
 
-		this.mdAddGroup(
-			'General Series',
-			[
-				{ name: 'Series Date', value: dataSet.string( 'x00080021' ) },
-				{ name: 'Series Time', value: dataSet.string( 'x00080031' ) },
-				{ name: 'Modality', value: DICOMParser.getModalityName( dataSet.string( 'x00080060' ) ) },
-				{ name: 'Series Desc.', value: dataSet.string( 'x0008103e' ) },
-				{ name: 'Performing Physician\'s Name', value: dataSet.string( 'x00081050' ) },
-				{ name: 'Operator\'s Name', value: dataSet.string( 'x00081070' ) },
-				{ name: 'Anatomical Orientation Type', value: dataSet.string( 'x00102210' ) },
-				{ name: 'Body Part Examined', value: dataSet.string( 'x00180015' ) },
-				{ name: 'Protocol Name', value: dataSet.string( 'x00181030' ) },
-				{ name: 'Patient Position', value: dataSet.string( 'x00185100' ) },
-				{ name: 'Series Number', value: dataSet.string( 'x00200011' ) },
-				{ name: 'Laterality', value: dataSet.string( 'x00200060' ) },
-				{ name: 'Performed Procedure Step Desc.', value: dataSet.string( 'x00400254' ) },
-				{ name: 'Comments on the Procedure Step', value: dataSet.string( 'x00400280' ) }
-			]
+		this._metaGroups.generalSeries.push(
+			{ name: 'Series Date', value: dataSet.string( 'x00080021' ) },
+			{ name: 'Series Time', value: dataSet.string( 'x00080031' ) },
+			{ name: 'Modality', value: DICOMParser.getModalityName( dataSet.string( 'x00080060' ) ) },
+			{ name: 'Series Desc.', value: dataSet.string( 'x0008103e' ) },
+			{ name: 'Performing Physician\'s Name', value: dataSet.string( 'x00081050' ) },
+			{ name: 'Operator\'s Name', value: dataSet.string( 'x00081070' ) },
+			{ name: 'Anatomical Orientation Type', value: dataSet.string( 'x00102210' ) },
+			{ name: 'Body Part Examined', value: dataSet.string( 'x00180015' ) },
+			{ name: 'Protocol Name', value: dataSet.string( 'x00181030' ) },
+			{ name: 'Patient Position', value: dataSet.string( 'x00185100' ) },
+			{ name: 'Series Number', value: dataSet.string( 'x00200011' ) },
+			{ name: 'Laterality', value: dataSet.string( 'x00200060' ) },
+			{ name: 'Performed Procedure Step Desc.', value: dataSet.string( 'x00400254' ) },
+			{ name: 'Comments on the Procedure Step', value: dataSet.string( 'x00400280' ) },
 		);
 
-		this.mdAddGroup(
-			'General Image',
-			[
-				{ name: 'Image Type', value: dataSet.string( 'x00080008' ) },
-				{ name: 'Patient Orientation', value: dataSet.string( 'x00200020' ) },
-				{ name: 'Image Laterality', value: dataSet.string( 'x00200062' ) },
-				{ name: 'Image Comments', value: dataSet.string( 'x00204000' ) }
-			]
+		this._metaGroups.generalImage.push(
+			{ name: 'Image Type', value: dataSet.string( 'x00080008' ) },
+			{ name: 'Patient Orientation', value: dataSet.string( 'x00200020' ) },
+			{ name: 'Image Laterality', value: dataSet.string( 'x00200062' ) },
+			{ name: 'Image Comments', value: dataSet.string( 'x00204000' ) },
 		);
 
-		this.mdAddGroup(
-			'General Equipment',
-			[
-				{ name: 'Manufacturer', value: dataSet.string( 'x00080070' ) },
-				{ name: 'Institution Name', value: dataSet.string( 'x00080080' ) },
-				{ name: 'Institution Address', value: dataSet.string( 'x00080081' ) },
-				{ name: 'Station Name', value: dataSet.string( 'x00081010' ) },
-				{ name: 'Institutional Department Name', value: dataSet.string( 'x00081040' ) },
-				{ name: 'Manufacturer\'s Model Name', value: dataSet.string( 'x00081090' ) },
-				{ name: 'Device Serial Number', value: dataSet.string( 'x00181000' ) },
-				{ name: 'Device UID', value: dataSet.string( 'x00181002' ) },
-				{ name: 'Gantry ID', value: dataSet.string( 'x00181008' ) },
-				{ name: 'Software Versions', value: dataSet.string( 'x00181020' ) },
-				{ name: 'Spatial Resolution', value: dataSet.string( 'x00181050' ) },
-				{ name: 'Date of Last Calibration', value: dataSet.string( 'x00181200' ) },
-				{ name: 'Time of Last Calibration', value: dataSet.string( 'x00181201' ) }
-			]
+		this._metaGroups.generalEquipment.push(
+			{ name: 'Manufacturer', value: dataSet.string( 'x00080070' ) },
+			{ name: 'Institution Name', value: dataSet.string( 'x00080080' ) },
+			{ name: 'Institution Address', value: dataSet.string( 'x00080081' ) },
+			{ name: 'Station Name', value: dataSet.string( 'x00081010' ) },
+			{ name: 'Institutional Department Name', value: dataSet.string( 'x00081040' ) },
+			{ name: 'Manufacturer\'s Model Name', value: dataSet.string( 'x00081090' ) },
+			{ name: 'Device Serial Number', value: dataSet.string( 'x00181000' ) },
+			{ name: 'Device UID', value: dataSet.string( 'x00181002' ) },
+			{ name: 'Gantry ID', value: dataSet.string( 'x00181008' ) },
+			{ name: 'Software Versions', value: dataSet.string( 'x00181020' ) },
+			{ name: 'Spatial Resolution', value: dataSet.string( 'x00181050' ) },
+			{ name: 'Date of Last Calibration', value: dataSet.string( 'x00181200' ) },
+			{ name: 'Time of Last Calibration', value: dataSet.string( 'x00181201' ) },
 		);
+
+		if( isFirstRun ) {
+			this.mdAddGroup( 'Patient', this._metaGroups.patient );
+			this.mdAddGroup( 'Patient Study', this._metaGroups.patientStudy );
+			this.mdAddGroup( 'General Study', this._metaGroups.generalStudy );
+			this.mdAddGroup( 'General Series', this._metaGroups.generalSeries );
+			this.mdAddGroup( 'General Image', this._metaGroups.generalImage );
+			this.mdAddGroup( 'General Equipment', this._metaGroups.generalEquipment );
+		}
 	}
 
 
@@ -233,6 +243,7 @@ export class DICOMView extends BaseView {
 					btnPlayPause.update( { text: '▶' } );
 					clearTimeout( this._timer );
 					this._timer = 0;
+					this._updateMeta();
 				}
 			} );
 
@@ -288,10 +299,11 @@ export class DICOMView extends BaseView {
 	/**
 	 *
 	 * @private
-	 * @param {number} index
+	 * @param {number}  index
+	 * @param {boolean} [updateMeta = true]
 	 */
-	_controlGoto( index ) {
-		this._frameIndex = this.showImage( index );
+	_controlGoto( index, updateMeta = true ) {
+		this._frameIndex = this.showImage( index, updateMeta );
 
 		if( this._counter ) {
 			this._counter.textContent = ( this._frameIndex + 1 ) + '/' + this._numFrames;
@@ -314,13 +326,9 @@ export class DICOMView extends BaseView {
 	 * @returns {Promise<void>}
 	 */
 	async _initViewport() {
-		const { RenderingEngine } = await import(
+		const { Enums, RenderingEngine } = await import(
 			/* webpackChunkName: "cornerstone_core" */
 			'@cornerstonejs/core'
-		);
-		const { OrientationAxis, ViewportType } = await import(
-			/* webpackChunkName: "cornerstone_core_enums" */
-			'@cornerstonejs/core/enums'
 		);
 
 		const imageContainer = this.nodeView.querySelector( '.image-container' );
@@ -329,10 +337,10 @@ export class DICOMView extends BaseView {
 
 		this._renderingEngine.enableElement( {
 			viewportId: 'ctStack',
-			type: ViewportType.STACK,
+			type: Enums.ViewportType.STACK,
 			element: imageContainer,
 			defaultOptions: {
-				orientation: OrientationAxis.AXIAL,
+				orientation: Enums.OrientationAxis.AXIAL,
 			},
 		} );
 
@@ -353,12 +361,36 @@ export class DICOMView extends BaseView {
 		const delay = this._frameIndex === 0 ? this._frameDelay : 0;
 
 		this._timer = setTimeout( () => {
-			this._controlGoto( ++this._frameIndex );
+			this._controlGoto( ++this._frameIndex, false );
 			slider.value = this._frameIndex + 1;
 
 			this._timer = 0;
 			this._playback( slider );
 		}, this._frameTime + delay );
+	}
+
+
+	/**
+	 * 
+	 * @private
+	 */
+	_updateMeta() {
+		if( !this._images?.length ) {
+			return;
+		}
+
+		clearTimeout( this._metaUpdateTimeout );
+
+		this._metaUpdateTimeout = setTimeout( () => {
+			const dataSet = this._images[this._frameIndex]?.data;
+
+			if( !dataSet ) {
+				return;
+			}
+
+			this._addMetaInfo( dataSet );
+			this.buildMetaNode( { toggleForEmpty: true } );
+		}, 200 );
 	}
 
 
@@ -369,6 +401,10 @@ export class DICOMView extends BaseView {
 		super.destroy();
 
 		clearTimeout( this._timer );
+
+		this._renderingEngine?.destroy();
+		this._renderingEngine = null;
+		this._viewport = null;
 
 		this._images = null;
 		this._imageId = null;
@@ -393,6 +429,7 @@ export class DICOMView extends BaseView {
 					this._images = images;
 					this._numFrames = this._images.length;
 
+					this.buildMetaNode();
 					this._buildControls();
 					const win = this._openWindow();
 
@@ -483,10 +520,11 @@ export class DICOMView extends BaseView {
 
 	/**
 	 *
-	 * @param {number} index
+	 * @param {number}  index
+	 * @param {boolean} [updateMeta = true]
 	 * @returns {number}
 	 */
-	showImage( index ) {
+	showImage( index, updateMeta = true ) {
 		if( index >= this._numFrames ) {
 			index = 0;
 		}
@@ -495,6 +533,10 @@ export class DICOMView extends BaseView {
 		}
 
 		this._viewport.setImageIdIndex( index );
+
+		if( updateMeta ) {
+			this._updateMeta();
+		}
 
 		return index;
 	}

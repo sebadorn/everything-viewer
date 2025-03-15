@@ -1,3 +1,8 @@
+$bg-alpha-tiles: repeating-conic-gradient(
+	rgba(0, 0, 0, 0.1) 0% 25%,
+	rgba(255, 255, 255, 0.1) 0% 50%
+);
+$border-radius: 9px;
 $button-radius: 6px;
 $color-link: #8CBC82;
 $color-primary: #1D7874;
