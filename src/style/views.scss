@@ -235,13 +235,16 @@
 	align-items: center;
 	flex-direction: column;
 
+	.content-image,
 	.frame-container {
-		background: repeating-conic-gradient(
-			rgba(0, 0, 0, 0.1) 0% 25%,
-			rgba(255, 255, 255, 0.1) 0% 50%
-		);
+		background: vars.$bg-alpha-tiles;
 		background-size: 20px 20px;
+		box-sizing: border-box;
 		display: flex;
+		justify-content: center;
+		min-width: 320px;
+		padding: 20px;
+		width: 100%;
 	}
 
 	.actions {

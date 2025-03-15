@@ -1,4 +1,5 @@
 import { Button } from '../../ui/components/Button.js';
+import { ButtonGroup } from '../../ui/components/ButtonGroup.js';
 import { UI } from '../../ui/UI.js';
 import { BaseView } from '../BaseView.js';
 
@@ -24,16 +25,76 @@ export class GIFView extends BaseView {
 	/**
 	 *
 	 * @private
+	 * @returns {HTMLElement}
+	 */
+	_buildActions() {
+		const header = new ButtonGroup( [
+			new Button( {
+				text: 'Image',
+				onClick: () => {
+					const frames = this.nodeView.querySelector( '.content-frames' );
+					frames.style.display = 'none';
+
+					const image = this.nodeView.querySelector( '.content-image' );
+					image.style.display = '';
+				},
+			} ),
+			new Button( {
+				text: 'Frames',
+				classes: 'selected',
+				onClick: () => {
+					const frames = this.nodeView.querySelector( '.content-frames' );
+					frames.style.display = '';
+
+					const image = this.nodeView.querySelector( '.content-image' );
+					image.style.display = 'none';
+				},
+			} ),
+		] );
+
+		return header.render();
+	}
+
+
+	/**
+	 *
+	 * @private
+	 * @returns {HTMLElement}
+	 */
+	_buildImage() {
+		const image = new Image();
+
+		image.onerror = err => {
+			console.error( '[GIFView._buildImage]', err );
+		};
+
+		this.parser.getBase64( ( _err, src ) => {
+			image.src = src;
+		} );
+
+		const node = UI.build( '<div class="content-image"></div>' );
+		node.style.display = 'none';
+		node.append( image );
+
+		return node;
+	}
+
+
+	/**
+	 *
+	 * @private
 	 * @param {function} cb
 	 */
 	_buildSlideshow( cb ) {
 		const numFrames = this._gifReader.numFrames();
 
 		const node = UI.build( `
-			<div class="frame-container"></div>
-			<div class="actions">
-				<input type="range" min="1" max="${numFrames}" value="1" />
-				<div class="line"></div>
+			<div class="content-frames">
+				<div class="frame-container"></div>
+				<div class="actions">
+					<input type="range" min="1" max="${numFrames}" value="1" />
+					<div class="line"></div>
+				</div>
 			</div>
 		` );
 
@@ -205,7 +266,12 @@ export class GIFView extends BaseView {
 			this.buildMetaNode();
 
 			this._buildSlideshow( node => {
-				this.nodeView.append( node );
+				this.nodeView.append(
+					this._buildActions(),
+					this._buildImage(),
+					node,
+				);
+
 				this.showFrame( this._frameIndex );
 				this._openWindow();
 

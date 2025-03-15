@@ -39,6 +39,24 @@ export class BaseParser {
 	 *
 	 * @param {function} cb
 	 */
+	getBase64( cb ) {
+		const reader = new FileReader();
+
+		reader.onload = () => cb( null, reader.result );
+
+		reader.onerror = err => {
+			console.error( '[BaseParser.getBase64]', err );
+			cb( err, null );
+		};
+
+		reader.readAsDataURL( this.file );
+	}
+
+
+	/**
+	 *
+	 * @param {function} cb
+	 */
 	getText( cb ) {
 		const promise = this.file.text();
 
