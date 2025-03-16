@@ -20,13 +20,65 @@ export class CFBView extends BaseView {
 	/**
 	 *
 	 * @private
-	 * @param {object} fileData
+	 * @param {import('@kenjiuno/msgreader').FieldsData} fileData
 	 */
 	_addMetaInfo( fileData ) {
-		// TODO: Add more available meta info, like sender and recipients
+		if( fileData.senderEmail || fileData.senderName ) {
+			let sender = null;
+
+			if( fileData.senderName ) {
+				sender = fileData.senderName;
+
+				if( fileData.senderEmail ) {
+					sender += ` <${fileData.senderEmail}>`;
+				}
+			}
+			else {
+				sender = `<${fileData.senderEmail}>`;
+			}
+
+			this.mdAdd( 'Sender', sender );
+		}
+
+		if( Array.isArray( fileData.recipients ) ) {
+			fileData.recipients.forEach( r => {
+				let name = 'Recipient';
+
+				if( r.recipType ) {
+					name += ' ' + String( r.recipType ).toUpperCase();
+				}
+
+				let value = null;
+
+				if( r.name ) {
+					value = r.name;
+
+					if( r.email ) {
+						value += ` <${r.email}>`;
+					}
+				}
+				else {
+					value = `<${r.email}>`;
+				}
+
+				this.mdAdd( name, value );
+			} );
+		}
 
 		if( Array.isArray( fileData.attachments ) ) {
 			this.mdAdd( 'Attachments', fileData.attachments.length );
+		}
+
+		if( fileData.creationTime ) {
+			this.mdAdd( 'Creation time', fileData.creationTime );
+		}
+
+		if( fileData.lastModificationTime ) {
+			this.mdAdd( 'Last modification', fileData.lastModificationTime );
+		}
+
+		if( fileData.messageDeliveryTime ) {
+			this.mdAdd( 'Delivery time', fileData.messageDeliveryTime );
 		}
 	}
 
