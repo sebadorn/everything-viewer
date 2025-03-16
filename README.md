@@ -7,6 +7,7 @@ Okay, not *everything*. The idea is to support different formats and maybe provi
 
 * 3D models (.glb, .obj, .ply, .splat, .stl)
 * Audio – *if the browser supports the format*
+* CFB (.msg)
 * CSV
 * DCM, DICOM
 * EML
@@ -37,6 +38,7 @@ Okay, not *everything*. The idea is to support different formats and maybe provi
 * highlightjs-line-numbers.js – https://wcoder.github.io/highlightjs-line-numbers.js/
 * ical.js – https://github.com/mozilla-comm/ical.js
 * JSZip – https://github.com/Stuk/jszip
+* msgreader – https://github.com/HiraokaHyperTools/msgreader
 * omggif – https://github.com/deanm/omggif
 * vCardJS – https://github.com/nilclass/vcardjs
 

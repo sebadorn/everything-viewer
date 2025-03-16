@@ -1,7 +1,5 @@
 import { Button } from '../../ui/components/Button.js';
 import { ButtonGroup } from '../../ui/components/ButtonGroup.js';
-import { Window } from '../../ui/components/Window.js';
-import { UI } from '../../ui/UI.js';
 import { BaseView } from '../BaseView.js';
 
 
@@ -14,7 +12,6 @@ export class EMLView extends BaseView {
 	 */
 	constructor( parser ) {
 		super( parser, 'eml' );
-		this._window = null;
 	}
 
 

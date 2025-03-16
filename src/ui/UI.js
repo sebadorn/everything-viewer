@@ -1,10 +1,8 @@
+import { DocumentUtils } from '../DocumentUtils.js';
 import { Registry } from '../plugins/Registry.js';
 
 
 export const UI = {
-
-
-	_domParser: new DOMParser(),
 
 
 	/**
@@ -51,7 +49,7 @@ export const UI = {
 	 * @returns {HTMLElement}
 	 */
 	build( html ) {
-		const doc = this._domParser.parseFromString( html.trim(), 'text/html' );
+		const doc = DocumentUtils.buildDocument( html.trim() );
 		let node = null;
 
 		if( doc.body.childElementCount > 1 ) {
@@ -230,6 +228,21 @@ export const UI = {
 		}
 
 		return size.toFixed( 1 ) + ' ' + unit;
+	},
+
+
+	/**
+	 *
+	 * @param {HTMLImageElement} image
+	 * @param {function} cb
+	 */
+	onImageComplete( image, cb ) {
+		if( image.complete ) {
+			cb();
+		}
+		else {
+			image.onload = cb;
+		}
 	},
 
 

@@ -72,7 +72,13 @@ export class BaseView {
 
 			const itemValue = document.createElement( 'td' );
 			itemValue.className = 'value';
-			itemValue.textContent = value;
+
+			if( md.options?.valueAsHTML === true ) {
+				itemValue.innerHTML = value;
+			}
+			else {
+				itemValue.textContent = value;
+			}
 
 			if( value === null || typeof value === 'undefined' || String( value ).length === 0 ) {
 				itemValue.classList.add( 'empty' );
@@ -209,11 +215,13 @@ export class BaseView {
 
 	/**
 	 * Add item to meta data.
-	 * @param {string} name
-	 * @param {string} value
+	 * @param {string}   name
+	 * @param {string}   value
+	 * @param {object?}  options
+	 * @param {boolean?} options.valueAsHTML
 	 */
-	mdAdd( name, value ) {
-		this.metaData.push( { name, value } );
+	mdAdd( name, value, options ) {
+		this.metaData.push( { name, value, options } );
 	}
 
 

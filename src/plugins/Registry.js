@@ -2,6 +2,7 @@ import { FileHandler } from '../FileHandler.js';
 import { Plugin } from './Plugin.js';
 
 import { AudioPlugin } from './audio/AudioPlugin.js';
+import { CFBPlugin } from './cfb/CFBPlugin.js';
 import { CSVPlugin } from './csv/CSVPlugin.js';
 import { DICOMPlugin } from './dicom/DICOMPlugin.js';
 import { EMLPlugin } from './eml/EMLPlugin.js';
@@ -33,6 +34,7 @@ export const Registry = {
 		this._plugins = [
 			this._basePlugin,
 			new AudioPlugin(),
+			new CFBPlugin(),
 			new CSVPlugin(),
 			new DICOMPlugin(),
 			new EMLPlugin(),

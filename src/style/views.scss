@@ -14,12 +14,14 @@
 
 .view-base,
 .view-audio,
+.view-cfb,
 .view-csv,
 .view-dicom,
 .view-eml,
 .view-gif,
 .view-ical,
 .view-image,
+.view-nifti,
 .view-pdf,
 .view-text,
 .view-vcf,
@@ -176,22 +178,104 @@
 }
 
 
+.view-cfb,
 .view-eml {
 	flex-direction: column;
 
 	iframe {
 		border-bottom-left-radius: vars.$border-radius;
 		border-bottom-right-radius: vars.$border-radius;
+		box-sizing: border-box;
 		height: 90vh;
-		max-width: vars.$max-width;
 		width: 100%;
 	}
+}
 
+
+.view-cfb {
+	min-width: 600px;
+
+	iframe {
+		background-color: #d0d0d0;
+		height: 100%;
+		padding: 20px;
+	}
+
+	.content-attachments,
+	.content-body {
+		height: 100%;
+	}
+
+	.content-body {
+		display: flex;
+		flex-direction: column;
+
+		.subject {
+			background-color: rgba(0, 0, 0, 0.3);
+			flex-grow: 0;
+			flex-shrink: 0;
+			font-family: vars.$font-ms;
+			font-size: vars.$font-size-ms;
+			margin-top: 1px;
+			padding: 10px;
+		}
+	}
+
+	.content-attachments {
+		background-color: rgba(0, 0, 0, 0.3);
+		border-bottom-left-radius: vars.$border-radius;
+		border-bottom-right-radius: vars.$border-radius;
+		margin-top: 1px;
+		overflow: auto;
+
+		li.attachment {
+			align-items: flex-start;
+			background-color: vars.$color-window;
+			border-radius: 3px;
+			display: flex;
+			margin: 0 10px 10px;
+			padding: 10px;
+
+			&:first-child {
+				margin-top: 10px;
+			}
+		}
+
+		.image {
+			align-items: center;
+			background: vars.$bg-alpha-tiles;
+			background-size: 20px 20px;
+			border-radius: 3px;
+			display: flex;
+			height: 100px;
+			justify-content: center;
+			margin-right: 20px;
+			overflow: hidden;
+			width: 100px;
+
+			img {
+				max-height: 100%;
+				max-width: 100%;
+				object-fit: contain;
+			}
+		}
+
+		.info {
+			font-family: vars.$font-ms;
+			font-size: vars.$font-size-ms;
+		}
+
+		th {
+			padding: 0 10px 5px 0;
+		}
+	}
+}
+
+
+.view-eml {
 	.eml-type-plaintext {
 		background-color: #d0d0d0;
-		max-width: calc( vars.$max-width - 40px );
 		padding: 20px;
-		width: calc( 100% - 40px );
 	}
 
 	.headers {
