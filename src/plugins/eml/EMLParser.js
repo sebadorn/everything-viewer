@@ -1,3 +1,4 @@
+import { DocumentUtils } from '../../DocumentUtils.js';
 import { BaseParser } from '../BaseParser.js';
 
 
@@ -11,88 +12,7 @@ export class EMLParser extends BaseParser {
 	constructor( data ) {
 		super( data );
 
-		this._domParser = new DOMParser();
 		this._lastParsed = null;
-	}
-
-
-	/**
-	 *
-	 * @private
-	 * @param {string} content
-	 * @returns {string}
-	 */
-	_decodeContent( content ) {
-		content = content.replaceAll( /=[\r]?\n/g, '' );
-		content = content.replaceAll( /(=[0-9A-Z]{2})+/g, match => {
-			try {
-				return decodeURIComponent( match.replaceAll( '=', '%' ) );
-			}
-			catch( err ) {
-				console.error( err, match );
-				return match;
-			}
-		} );
-
-		return content;
-	}
-
-
-	/**
-	 * Try to remove or disable everything that loads external resources.
-	 * @param {Document} doc 
-	 */
-	_removeExternal( doc ) {
-		// Remove src of images, except if the data is inlined.
-		const images = doc.querySelectorAll( 'img' );
-		images.forEach( img => {
-			const src = img.getAttribute( 'src' ) || '';
-
-			if( !src.startsWith( 'data:' ) ) {
-				img.removeAttribute( 'src' );
-			}
-		} );
-
-		// Remove certain elements completely.
-		const toRemove = doc.querySelectorAll( [
-			'audio[src]',
-			'embed',
-			'iframe',
-			'link[rel="stylesheet"]',
-			'object',
-			'script',
-			'source',
-			'video[src]',
-		].join( ',' ) );
-		toRemove.forEach( node => node.remove() );
-
-		// Remove certain attributes.
-		const attr = doc.querySelectorAll( '[background]' );
-		attr.forEach( node => {
-			const value = node.getAttribute( 'background' ) || '';
-
-			if( value.includes( '//' ) ) {
-				node.removeAttribute( 'background' );
-			}
-		} );
-
-		// Styles
-		const styles = doc.querySelectorAll( 'style' );
-		styles.forEach( node => {
-			let style = node.textContent;
-			style = style.replaceAll( /url[ \t]*\([ \t]*.+[ \t]*\)/gi, 'url()' );
-			node.textContent = style;
-		} );
-	}
-
-
-	/**
-	 *
-	 * @param {string} html
-	 * @return {Document?}
-	 */
-	buildBodyDOM( html ) {
-		return this._domParser.parseFromString( html, 'text/html' );
 	}
 
 
@@ -129,19 +49,6 @@ export class EMLParser extends BaseParser {
 
 	/**
 	 *
-	 * @param {string} body
-	 * @return {Document?}
-	 */
-	buildPlainTextDOM( text ) {
-		return this._domParser.parseFromString(
-			`<pre>${text}</pre>`,
-			'text/html'
-		);
-	}
-
-
-	/**
-	 *
 	 * @param {object}   options
 	 * @param {boolean} [options.remove_external = true]
 	 * @param {function} cb
@@ -156,7 +63,7 @@ export class EMLParser extends BaseParser {
 		}
 
 		if( this._lastParsed ) {
-			let body = this._decodeContent( this._lastParsed.body );
+			let body = DocumentUtils.decodeContent( this._lastParsed.body );
 			let doc = null;
 
 			let contentType = this.getHeader( this._lastParsed.headers, 'content-type' ) || '';
@@ -165,15 +72,15 @@ export class EMLParser extends BaseParser {
 			let type = 'plaintext';
 
 			if( contentType.startsWith( 'text/html' ) ) {
-				doc = this.buildBodyDOM( body, options );
+				doc = DocumentUtils.buildDocument( body );
 				type = 'html';
 			}
 			else {
-				doc = this.buildPlainTextDOM( body );
+				doc = DocumentUtils.buildDocument( `<pre>${body}</pre>` );
 			}
 
 			if( doc && options.remove_external ) {
-				this._removeExternal( doc );
+				DocumentUtils.removeExternalResources( doc );
 			}
 
 			cb( null, doc, type );
