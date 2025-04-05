@@ -160,3 +160,13 @@
 	src: url('./fonts/roboto-mono/roboto-mono-v23-cyrillic_latin_latin-ext-700italic.woff2') format('woff2');
 	/* Chrome 36+, Opera 23+, Firefox 39+, Safari 12+, iOS 10+ */
 }
+
+
+/* material-symbols-sharp-regular - latin */
+@font-face {
+	font-display: swap; /* Check https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-display for other options. */
+	font-family: 'Material Symbols Sharp';
+	font-style: normal;
+	font-weight: 400;
+	src: url('./fonts/material-symbols-sharp/material-symbols-sharp-v226-latin-regular.woff2') format('woff2'); /* Chrome 36+, Opera 23+, Firefox 39+, Safari 12+, iOS 10+ */
+}

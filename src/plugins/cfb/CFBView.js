@@ -1,6 +1,7 @@
 import { DocumentUtils } from '../../DocumentUtils.js';
 import { Button } from '../../ui/components/Button.js';
 import { ButtonGroup } from '../../ui/components/ButtonGroup.js';
+import { Icons } from '../../ui/Icons.js';
 import { UI } from '../../ui/UI.js';
 import { BaseView } from '../BaseView.js';
 
@@ -161,6 +162,13 @@ export class CFBView extends BaseView {
 
 			item.querySelector( '.image' ).append( image );
 		}
+		else {
+			const imageWrap = item.querySelector( '.image' );
+			imageWrap.classList.add( 'symbol' );
+
+			const icon = this._getAttachmentIcon( attachment );
+			imageWrap.append( UI.build( `<span class="icon">${icon}</span>` ) );
+		}
 
 		return item;
 	}
@@ -217,6 +225,23 @@ export class CFBView extends BaseView {
 		} );
 
 		this.nodeView.append( this._buildActions(), node );
+	}
+
+
+	/**
+	 *
+	 * @private
+	 * @param {import('@kenjiuno/msgreader').FieldsData} attachment
+	 * @returns {string}
+	 */
+	_getAttachmentIcon( attachment ) {
+		let icon = Icons.attachment;
+
+		if( attachment.extension === '.zip' ) {
+			icon = Icons.format_zip;
+		}
+
+		return icon;
 	}
 
 

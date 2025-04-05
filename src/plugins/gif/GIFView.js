@@ -1,5 +1,6 @@
 import { Button } from '../../ui/components/Button.js';
 import { ButtonGroup } from '../../ui/components/ButtonGroup.js';
+import { Icons } from '../../ui/Icons.js';
 import { UI } from '../../ui/UI.js';
 import { BaseView } from '../BaseView.js';
 
@@ -100,12 +101,12 @@ export class GIFView extends BaseView {
 
 		const btnPrev = new Button( {
 			classes: 'frame-prev',
-			text: '←',
+			icon: Icons.arrow_prev,
 		} );
 
 		const btnNext = new Button( {
 			classes: 'frame-next',
-			text: '→',
+			icon: Icons.arrow_next,
 		} );
 
 		node.querySelector( '.line' ).append(

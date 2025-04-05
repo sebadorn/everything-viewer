@@ -121,12 +121,14 @@
 
 		.wrap-playback {
 			border-left: 1px solid rgba(255, 255, 255, 0.3);
+			display: flex;
 			margin-left: 10px;
 			padding-left: 10px;
 		}
 
 		select.speed {
 			height: 29px;
+			margin-right: 10px;
 		}
 
 		.counter {
@@ -253,10 +255,19 @@
 			overflow: hidden;
 			width: 100px;
 
+			&.symbol {
+				background: rgba(0, 0, 0, 0.3);
+			}
+
 			img {
 				max-height: 100%;
 				max-width: 100%;
 				object-fit: contain;
+			}
+
+			.icon {
+				color: #c0c0c0;
+				font-size: 48px;
 			}
 		}
 
@@ -593,14 +604,13 @@
 
 
 .view-zip {
-	align-items: center;
-
 	.wrap {
 		background-color: rgba(0, 0, 0, 0.3);
 		box-sizing: border-box;
 		color: #f0f0f0;
 		font-family: vars.$font-ms;
-		height: 100vh;
+		font-size: vars.$font-size-ms;
+		height: 100%;
 		max-width: vars.$max-width;
 		overflow: auto;
 		padding: 20px 10px;
@@ -624,30 +634,22 @@
 		}
 
 		td {
-			padding: 5px 10px;
+			padding: 3px 10px;
 		}
 
-		.zip-dir .name {
-			font-weight: 600;
+		.zip-dir {
+			.icon {
+				color: #e1d627;
+			}
 
-			.text:before {
-				content: "📂";
-				display: inline-block;
-				margin-right: 10px;
+			.name {
+				font-weight: 600;
 			}
 		}
 
 		.name .indent {
 			font-weight: normal;
 			opacity: 0.1;
-		}
-
-		.zip-file .name {
-			.text:before {
-				content: "📄";
-				display: inline-block;
-				margin-right: 10px;
-			}
 		}
 
 		.size {
@@ -660,6 +662,25 @@
 		td.date {
 			opacity: 0.7;
 			white-space: nowrap;
+		}
+
+		.icon {
+			margin-right: 5px;
+			position: relative;
+			top: -1px;
+			vertical-align: middle;
+
+			&.image {
+				color: #75c2e8;
+			}
+
+			&.movie {
+				color: #e6a735;
+			}
+
+			&.terminal {
+				color: #ff0000;
+			}
 		}
 	}
 }

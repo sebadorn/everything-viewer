@@ -9,6 +9,7 @@
 	border: 0;
 	border-radius: vars.$button-radius;
 	color: #f0f0f0;
+	display: inline-flex;
 	font-family: vars.$font-ms;
 	font-size: 14px;
 	line-height: 17px;
@@ -31,6 +32,10 @@
 
 	&.active {
 		background-color: vars.$color-link;
+	}
+
+	.icon {
+		font-size: 17px;
 	}
 }
 
@@ -148,11 +153,7 @@
 		.icon {
 			border-radius: 50%;
 			cursor: default;
-			display: inline-block;
-			flex-grow: 0;
-			flex-shrink: 0;
-			min-width: 20px;
-			text-align: center;
+			font-size: 17px;
 		}
 
 		.toggle {
@@ -160,10 +161,6 @@
 
 			&:hover  {
 				background-color: vars.$color-primary;
-			}
-
-			&:before {
-				content: "▾";
 			}
 		}
 
@@ -175,15 +172,17 @@
 			white-space: nowrap;
 		}
 
+		.actions {
+			display: flex;
+		}
+
 		.close {
 			display: none;
+			font-size: 15px;
+			padding: 1px;
 
 			&:hover  {
 				background-color: vars.$color-primary;
-			}
-
-			&:before {
-				content: "×";
 			}
 		}
 	}
@@ -208,10 +207,6 @@
 		header {
 			border-bottom-left-radius: vars.$border-radius;
 			border-bottom-right-radius: vars.$border-radius;
-
-			.toggle:before {
-				content: "▸";
-			}
 		}
 
 		.content {

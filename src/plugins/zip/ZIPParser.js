@@ -1,3 +1,4 @@
+import { FileHandler } from '../../FileHandler.js';
 import { UI } from '../../ui/UI.js';
 import { BaseParser } from '../BaseParser.js';
 
@@ -58,7 +59,7 @@ export class ZIPParser extends BaseParser {
 				fileName = fileName.split( '/' ).pop();
 			}
 
-			const levelIndent = '····'.repeat( depth );
+			const levelIndent = '··'.repeat( depth );
 
 			const indent = document.createElement( 'span' );
 			indent.className = 'indent';
@@ -70,7 +71,7 @@ export class ZIPParser extends BaseParser {
 
 			const name = document.createElement( 'td' );
 			name.className = 'name';
-			name.append( indent, text );
+			name.append( indent, this.getIconElement( file ), text );
 
 			const size = document.createElement( 'td' );
 			size.className = 'size';
@@ -111,6 +112,45 @@ export class ZIPParser extends BaseParser {
 				cb( null, html );
 			} );
 		} );
+	}
+
+
+	/**
+	 *
+	 * @param {File} file
+	 * @returns {HTMLElement}
+	 */
+	getIconElement( file ) {
+		const icon = document.createElement( 'span' );
+		icon.className = 'icon';
+
+		if( file.dir ) {
+			icon.textContent = 'folder_open';
+		}
+		else {
+			icon.textContent = 'description';
+
+			const ext = FileHandler.getFileExt( file );
+
+			if( FileHandler.executableExtensions.includes( ext ) ) {
+				icon.textContent = 'terminal';
+			}
+			else if( FileHandler.detectLanguage( file ) !== null ) {
+				icon.textContent = 'code';
+			}
+			else {
+				if( FileHandler.imageExtensions.includes( ext ) ) {
+					icon.textContent = 'image';
+				}
+				else if( FileHandler.videoExtensions.includes( ext ) ) {
+					icon.textContent = 'movie';
+				}
+			}
+
+			icon.classList.add( icon.textContent );
+		}
+
+		return icon;
 	}
 
 
