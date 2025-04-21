@@ -266,8 +266,15 @@ export const FileHandler = {
 		// The "file-type" package has 4100 as default size.
 		const arrayBuffer = await file.slice( 0, 4100 ).arrayBuffer();
 
-		let type = await fileTypeFromBuffer( arrayBuffer );
-		console.debug( '[getMimeType] file-type:', type );
+		let type = null;
+
+		try {
+			type = await fileTypeFromBuffer( arrayBuffer );
+			console.debug( '[getMimeType] file-type:', type );
+		}
+		catch( err ) {
+			console.error( '[getMimeType] file-type failed:', err );
+		}
 
 		if( type?.mime ) {
 			type = type.mime;
@@ -463,6 +470,76 @@ export const FileHandler = {
 
 		return false;
 	},
+
+
+	audioExtensions: [
+		'3gp',
+		'aac',
+		'aiff',
+		'flac',
+		'm4a',
+		'midi',
+		'mp2',
+		'mp3',
+		'oga',
+		'ogg',
+		'opus',
+		'wav',
+		'wma',
+	],
+
+	executableExtensions: [
+		'bat',
+		'cmd',
+		'com',
+		'ex',
+		'exe',
+		'jse',
+		'msi',
+		'out',
+		'ps1',
+		'run',
+		'sh',
+	],
+
+	imageExtensions: [
+		'avif',
+		'bmp',
+		'gif',
+		'heif',
+		'ico',
+		'jpeg',
+		'jpg',
+		'jxl',
+		'pbm',
+		'pgm',
+		'png',
+		'pnm',
+		'ppm',
+		'psd',
+		'svg',
+		'tif',
+		'tiff',
+		'webp',
+		'xcf',
+	],
+
+	videoExtensions: [
+		'3gp',
+		'avi',
+		'flv',
+		'm4v',
+		'mkv',
+		'mov',
+		'mp4',
+		'mpeg',
+		'mpg',
+		'ogg',
+		'ogv',
+		'qt',
+		'webm',
+		'wmv',
+	],
 
 
 };

@@ -1,3 +1,4 @@
+import { Icons } from '../Icons.js';
 import { UI } from '../UI.js';
 import { Component } from './Component.js';
 
@@ -186,13 +187,16 @@ export class Window extends Component {
 	 * @private
 	 */
 	_toggleContent() {
+		const toggle = this._node.querySelector( 'header .icon.toggle' );
 		let clsList = this._node.classList;
 
 		if( clsList.contains( 'window-collapsed' ) ) {
 			clsList.replace( 'window-collapsed', 'window-open' );
+			toggle.textContent = Icons.extended;
 		}
 		else {
 			clsList.replace( 'window-open', 'window-collapsed' );
+			toggle.textContent = Icons.collapsed;
 		}
 	}
 
@@ -332,10 +336,10 @@ export class Window extends Component {
 					<div class="handle handle-left"></div>
 				</div>
 				<header>
-					<span class="icon toggle"></span>
+					<span class="icon toggle">${Icons.extended}</span>
 					<span class="title"></span>
 					<div class="actions">
-						<span class="icon close"></span>
+						<span class="icon close">${Icons.close}</span>
 					</div>
 				</header>
 				<div class="content"></div>
