@@ -13,7 +13,13 @@ export class ZIPPlugin extends Plugin {
 	 * @returns {number}
 	 */
 	canHandleImport( fileInfo ) {
-		return fileInfo.mimeType === 'application/zip' ? Priority.GENERIC : Priority.NONE;
+		const exts = [
+			'apk',
+			'xapk',
+			'zip',
+		];
+
+		return ( fileInfo.mimeType === 'application/zip' || exts.includes( fileInfo.ext ) ) ? Priority.GENERIC : Priority.NONE;
 	}
 
 

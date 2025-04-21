@@ -77,7 +77,7 @@ export class ZIPParser extends BaseParser {
 			size.className = 'size';
 			size.textContent = file.dir ? '' : UI.formatSize( file._data.uncompressedSize );
 
-			if( !file.dir ) {
+			if( !file.dir && !isNaN( Number( file._data.uncompressedSize ) ) ) {
 				this.uncompressedSize += file._data.uncompressedSize;
 			}
 
