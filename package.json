@@ -10,6 +10,7 @@
   "license": "MIT",
   "author": "Sebastian Dorn",
   "dependencies": {
+    "@babylonjs/materials": "^8.8.5",
     "@babylonjs/viewer": "^8.1.1",
     "@cornerstonejs/core": "^3.0.1",
     "@cornerstonejs/dicom-image-loader": "^3.0.1",
@@ -24,6 +25,7 @@
     "highlightjs-line-numbers.js": "^2.9.0",
     "ical.js": "^2.1.0",
     "jszip": "^3.10.1",
+    "midi-player-js": "^2.0.16",
     "omggif": "^1.0.10",
     "vcardjs": "^0.3.0"
   },

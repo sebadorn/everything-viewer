@@ -35,10 +35,6 @@ export class Model3DView extends BaseView {
 	 * @param {function?} cb
 	 */
 	async load( cb ) {
-		const babylonjs = await import(
-			/* webpackChunkName: "babylonjs_core" */
-			'@babylonjs/core'
-		);
 		const babylonjsViewer = await import(
 			/* webpackChunkName: "babylonjs_viewer" */
 			'@babylonjs/viewer'

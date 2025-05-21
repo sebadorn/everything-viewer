@@ -1,6 +1,6 @@
 # Everything Viewer
 
-Okay, not *everything*. The idea is to support different formats and maybe provide some additional information or tools.
+Okay, not *everything*. The idea is to support a bunch of different formats and maybe provide some additional information or tools.
 
 
 ## Supported formats
@@ -17,6 +17,7 @@ Okay, not *everything*. The idea is to support different formats and maybe provi
 * iCal (.ical, .ics, .ifb, .vcs)
 * Image – *if the browser supports the format*
 	* GIF: Step through each frame
+* Midi
 * NIFTI (.nii)
 * PDF – *if the browser has a PDF viewer integrated*
 * Text
@@ -38,6 +39,7 @@ Okay, not *everything*. The idea is to support different formats and maybe provi
 * highlightjs-line-numbers.js – https://wcoder.github.io/highlightjs-line-numbers.js/
 * ical.js – https://github.com/mozilla-comm/ical.js
 * JSZip – https://github.com/Stuk/jszip
+* MidiPlayerJS – https://github.com/grimmdude/MidiPlayerJS
 * msgreader – https://github.com/HiraokaHyperTools/msgreader
 * omggif – https://github.com/deanm/omggif
 * vCardJS – https://github.com/nilclass/vcardjs
