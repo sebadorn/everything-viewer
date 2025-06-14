@@ -1,5 +1,3 @@
-import MidiPlayer from 'midi-player-js';
-import { UI } from '../../ui/UI.js';
 import { BaseView } from '../BaseView.js';
 
 
@@ -12,6 +10,7 @@ export class MidiView extends BaseView {
 	 */
 	constructor( parser ) {
 		super( parser, 'midi' );
+		this.synths = [];
 	}
 
 
@@ -19,7 +18,34 @@ export class MidiView extends BaseView {
 	 *
 	 */
 	destroy() {
+		this.pause();
+
+		// Dispose the synth and make a new one
+		while( this.synths.length ) {
+			const synth = synths.shift();
+			synth.dispose();
+		}
+
 		super.destroy();
+	}
+
+
+	/**
+	 *
+	 */
+	pause() {
+		Tone.getTransport().pause();
+	}
+
+
+	/**
+	 *
+	 */
+	play() {
+		if( this.synths.length > 0 ) {
+			Tone.getTransport().start();
+			return;
+		}
 	}
 
 
@@ -28,44 +54,17 @@ export class MidiView extends BaseView {
 	 * @param {function?} cb
 	 */
 	load( cb ) {
-		this.parser.getArrayBuffer( ( err, buffer ) => {
-			this._player = new MidiPlayer.Player( ev => {
-				console.debug( '[MidiView.load]', ev );
-			} );
+		this.parser.parse( ( _err, midiData, synths ) => {
+			this.synths = synths;
 
-			this._player.on( 'fileLoaded', () => {
-				console.log( '[MidiView.load] MidiPlayer: fileLoaded' );
-				this.buildMetaNode();
-				this._openWindow();
-				cb?.();
+			// TODO: add meta info
+			this.buildMetaNode();
 
-				this._player.play();
-			} );
+			// TODO: build audio player UI
 
-			// TODO: meta info
-			// TODO: lyrics
-			// TODO: play sounds
-			// TODO: control elements for play/pause
-
-			this._player.loadArrayBuffer( buffer );
+			this._openWindow();
+			cb?.();
 		} );
-
-		// const audio = document.createElement( 'audio' );
-		// audio.setAttribute( 'controls', '' );
-		// audio.setAttribute( 'preload', 'metadata' );
-		// audio.volume = 0.5;
-
-		// audio.addEventListener( 'loadedmetadata', () => {
-		// 	this.mdAdd( 'Duration', UI.formatDuration( audio.duration * 1000 ) );
-		// 	this.buildMetaNode();
-
-		// 	this.nodeView.appendChild( audio );
-		// 	this._openWindow();
-
-		// 	cb?.();
-		// } );
-
-		// audio.src = this._objectURL;
 	}
 
 

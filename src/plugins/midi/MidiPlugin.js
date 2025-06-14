@@ -1,5 +1,6 @@
 import { MidiView } from './MidiView.js';
 import { Plugin, Priority } from '../Plugin.js';
+import { MidiParser } from './MidiParser.js';
 
 
 export class MidiPlugin extends Plugin {
@@ -13,6 +14,17 @@ export class MidiPlugin extends Plugin {
 	 */
 	canHandleImport( fileInfo ) {
 		return fileInfo.mimeType === 'audio/midi' ? Priority.HIGH : Priority.NONE;
+	}
+
+
+	/**
+	 *
+	 * @override
+	 * @returns {MidiParser}
+	 */
+	getParser() {
+		this._parser ??= new MidiParser( this._importData );
+		return this._parser;
 	}
 
 
