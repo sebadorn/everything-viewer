@@ -363,23 +363,31 @@ export class ICalParser extends BaseParser {
 	 */
 	_buildTimeSelect( icalTime ) {
 		const formats = {
-			UTC: UI.formatDateTime( icalTime.toJSDate() ),
 			ICAL: icalTime.toString(),
-			Unix: icalTime.toUnixTime()
+			UTC: UI.formatDateTime( icalTime.toJSDate() ),
+			Unix: icalTime.toUnixTime(),
 		};
 
-		if( icalTime.timezone ) {
-			formats.ICAL += ` (${icalTime.timezone})`;
+		if( icalTime.zone?.tzid ) {
+			formats.ICAL += ` (${icalTime.zone.tzid})`;
 		}
 
 		const select = document.createElement( 'select' );
 
 		for( const key in formats ) {
-			const value = formats[key];
+			let value = String( formats[key] );
+			value = value.replace( 'T', ' ' );
+			value = value.replace( /(:[0-9]{2})Z/, '$1' );
+			// Remove seconds if zero
+			value = value.replace( /( [0-9]{2}:[0-9]{2}):00/, '$1' );
+
+			if( key !== 'ICAL' ) {
+				value += ` [${key}]`;
+			}
 
 			const option = document.createElement( 'option' );
 			option.value = key;
-			option.textContent = value + ` [${key}]`;
+			option.textContent = value;
 
 			select.append( option );
 		}
