@@ -1,7 +1,18 @@
+import { Button } from '../../ui/components/Button.js';
+import { PlayerControls, PlayerState } from '../../ui/components/PlayerControls.js';
+import { Icons } from '../../ui/Icons.js';
+import { UI } from '../../ui/UI.js';
 import { BaseView } from '../BaseView.js';
 
 
 export class MidiView extends BaseView {
+
+
+	/** @type {import('tone')} */
+	Tone = null;
+
+	/** @type {import('tone').PolySynth[]} */
+	synths = [];
 
 
 	/**
@@ -10,7 +21,44 @@ export class MidiView extends BaseView {
 	 */
 	constructor( parser ) {
 		super( parser, 'midi' );
-		this.synths = [];
+	}
+
+
+	/**
+	 *
+	 * @private
+	 * @param {import('@tonejs/midi').Midi} midiData
+	 */
+	_addMetaData( midiData ) {
+		if( midiData.name ) {
+			this.mdAdd( 'Name', midiData.name );
+		}
+
+		this.mdAdd( 'Tracks', midiData.tracks.length );
+		this.mdAdd( 'Duration', UI.formatDuration( midiData.duration * 1000 ) );
+	}
+
+
+	/**
+	 *
+	 * @private
+	 * @param {import('@tonejs/midi').Midi} midiData
+	 */
+	_buildPlayer( midiData ) {
+		this._player = new PlayerControls( {
+			duration: midiData.duration,
+			onPause: () => this.pause(),
+			onPlay: () => this.play(),
+		} );
+
+		this.Tone.getTransport().on( 'start', () => this._player.state = PlayerState.PLAYING );
+		this.Tone.getTransport().on( 'pause', () => this._player.state = PlayerState.PAUSED );
+		this.Tone.getTransport().on( 'stop', () => this._player.state = PlayerState.PAUSED );
+
+		const container = UI.build( '<div class="midi-player"></div>' );
+		container.append( this._player.render() );
+
+		this.nodeView.append( container );
 	}
 
 
@@ -26,26 +74,9 @@ export class MidiView extends BaseView {
 			synth.dispose();
 		}
 
+		this.Tone.getTransport().dispose();
+
 		super.destroy();
-	}
-
-
-	/**
-	 *
-	 */
-	pause() {
-		Tone.getTransport().pause();
-	}
-
-
-	/**
-	 *
-	 */
-	play() {
-		if( this.synths.length > 0 ) {
-			Tone.getTransport().start();
-			return;
-		}
 	}
 
 
@@ -54,17 +85,43 @@ export class MidiView extends BaseView {
 	 * @param {function?} cb
 	 */
 	load( cb ) {
-		this.parser.parse( ( _err, midiData, synths ) => {
-			this.synths = synths;
+		this.parser.parse(
+			/**
+			 * @param {Error?} _err
+			 * @param {import('tone')} Tone
+			 * @param {import('@tonejs/midi').Midi} midiData 
+			 * @param {import('tone').PolySynth[]} synths 
+			 */
+			( _err, Tone, midiData, synths ) => {
+				this.Tone = Tone;
+				this.synths = synths;
 
-			// TODO: add meta info
-			this.buildMetaNode();
+				this._addMetaData( midiData );
+				this.buildMetaNode();
+				this._buildPlayer( midiData );
 
-			// TODO: build audio player UI
+				this._openWindow();
+				cb?.();
+			}
+		);
+	}
 
-			this._openWindow();
-			cb?.();
-		} );
+
+	/**
+	 *
+	 */
+	pause() {
+		this.Tone.getTransport().pause();
+	}
+
+
+	/**
+	 *
+	 */
+	play() {
+		if( this.synths.length > 0 ) {
+			this.Tone.getTransport().start();
+		}
 	}
 
 

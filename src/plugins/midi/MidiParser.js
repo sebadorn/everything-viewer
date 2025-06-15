@@ -30,6 +30,7 @@ export class MidiParser extends BaseParser {
 
 		this.getArrayBuffer( ( _err, arrayBuffer ) => {
 			this.midiData = new Midi( arrayBuffer );
+			console.debug( this.midiData );
 
 			const synths = [];
 			const now = Tone.now() + 0.5;
@@ -61,7 +62,7 @@ export class MidiParser extends BaseParser {
 					);
 				});
 
-				cb( null, this.midiData, synths );
+				cb( null, Tone, this.midiData, synths );
 			});
 		} );
 	}
