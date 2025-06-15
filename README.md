@@ -7,6 +7,7 @@ Okay, not *everything*. The idea is to support a bunch of different formats and 
 
 * 3D models (.glb, .obj, .ply, .splat, .stl)
 * Audio – *if the browser supports the format*
+	* Midi
 * CFB (.msg)
 * CSV
 * DCM, DICOM
@@ -17,7 +18,6 @@ Okay, not *everything*. The idea is to support a bunch of different formats and 
 * iCal (.ical, .ics, .ifb, .vcs)
 * Image – *if the browser supports the format*
 	* GIF: Step through each frame
-* Midi
 * NIFTI (.nii)
 * PDF – *if the browser has a PDF viewer integrated*
 * Text
@@ -39,9 +39,10 @@ Okay, not *everything*. The idea is to support a bunch of different formats and 
 * highlightjs-line-numbers.js – https://wcoder.github.io/highlightjs-line-numbers.js/
 * ical.js – https://github.com/mozilla-comm/ical.js
 * JSZip – https://github.com/Stuk/jszip
-* MidiPlayerJS – https://github.com/grimmdude/MidiPlayerJS
 * msgreader – https://github.com/HiraokaHyperTools/msgreader
 * omggif – https://github.com/deanm/omggif
+* Tone.js – https://github.com/Tonejs/Tone.js
+* Tone.js/Midi – https://github.com/Tonejs/Midi
 * vCardJS – https://github.com/nilclass/vcardjs
 
 
