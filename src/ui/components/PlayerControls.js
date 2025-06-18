@@ -2,6 +2,7 @@ import { Icons } from '../Icons';
 import { UI } from '../UI';
 import { Button } from './Button';
 import { Component } from './Component';
+import { LinearSlider, LinearSliderOrientation } from './LinearSlider';
 
 
 export const PlayerState = {
@@ -37,7 +38,6 @@ export class PlayerControls extends Component {
 	 */
 	constructor( config ) {
 		super();
-
 		this._config = config;
 	}
 
@@ -66,20 +66,35 @@ export class PlayerControls extends Component {
 	/**
 	 *
 	 * @private
-	 * @returns {object}
+	 * @returns {Component}
 	 */
 	_buildSeekbar() {
-		// TODO:
+		return new LinearSlider( {
+			max: this._config.duration,
+			formatValue: value => {
+				return UI.formatDuration( value * 1000, { formatWithColon: true } );
+			},
+			onChange: value => {
+				this._config.onChange?.( value );
+			},
+		} );
 	}
 
 
 	/**
 	 *
 	 * @private
-	 * @returns {object}
+	 * @returns {Component}
 	 */
 	_buildVolume() {
-		// TODO:
+		return new LinearSlider( {
+			showValue: false,
+			orientation: LinearSliderOrientation.vertical,
+			formatValue: value => value + '%',
+			onChange: value => {
+				this._config.onVolumeChange?.( value );
+			},
+		} );
 	}
 
 
@@ -97,12 +112,12 @@ export class PlayerControls extends Component {
 
 		if( this._config.hasSeekbar ) {
 			this._seekbar = this._buildSeekbar();
-			// this._node.append( this._seekbar.render() );
+			this._node.append( this._seekbar.render() );
 		}
 
 		if( this._config.hasVolume ) {
 			this._volumeControl = this._buildVolume();
-			// this._node.append( this._volumeControl.render() );
+			this._node.append( this._volumeControl.render() );
 		}
 
 		return this._node;

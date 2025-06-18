@@ -1,5 +1,4 @@
 import { DocumentUtils } from '../DocumentUtils.js';
-import { Registry } from '../plugins/Registry.js';
 
 
 export const UI = {
@@ -159,14 +158,49 @@ export const UI = {
 
 	/**
 	 *
-	 * @param  {number} value - Duration in milliseconds.
+	 * @param {number} value - Duration in milliseconds.
+	 * @param {object} options
+	 * @param {boolean} [options.formatWithColon = false]
 	 * @return {string}
 	 */
-	formatDuration( value ) {
+	formatDuration( value, options = {} ) {
 		let duration = Number( value );
 
 		if( isNaN( duration ) ) {
 			return value;
+		}
+
+		if( options.formatWithColon ) {
+			const steps = [
+				1000, // ms
+				60, // sec
+				60, // min
+				60, // h
+			];
+			let values = [];
+
+			for( const step of steps ) {
+				values.push( duration % step );
+
+				if( duration < step ) {
+					break;
+				}
+
+				duration = Math.floor( duration / step );
+			}
+
+			values = values.reverse();
+
+			// Omit milliseconds
+			values.pop();
+
+			while( values.length < 2 ) {
+				values.unshift( 0 );
+			}
+
+			return values
+				.map( v => Math.floor( v ).toString().padStart( 2, '0' ) )
+				.join( ':' );
 		}
 
 		let i = 0;
@@ -255,6 +289,8 @@ export const UI = {
 			return;
 		}
 
+		const { Registry } = import( '../plugins/Registry.js' );
+
 		const plugin = await Registry.getPluginForImport( fileOrDir );
 		const view = plugin.getView();
 		view.load();
@@ -269,16 +305,6 @@ export const UI = {
 		while( node.firstChild ) {
 			node.removeChild( node.lastChild );
 		}
-	},
-
-
-	/**
-	 *
-	 * @param {BaseView?} view
-	 */
-	update( view ) {
-		// this._updateMetaInfo( view );
-		// this._updateViewer( view );
 	},
 
 

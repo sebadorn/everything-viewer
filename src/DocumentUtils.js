@@ -1,7 +1,7 @@
 export const DocumentUtils = {
 
 
-	_domParser: new DOMParser(),
+	_domParser: typeof DOMParser !== 'undefined' ? new DOMParser() : null,
 
 	get domParser() { return this._domParser; },
 
