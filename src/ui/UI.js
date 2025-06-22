@@ -175,20 +175,22 @@ export const UI = {
 				1000, // ms
 				60, // sec
 				60, // min
-				60, // h
+				24, // h
 			];
 			let values = [];
 
-			for( const step of steps ) {
-				values.push( duration % step );
+			for( let i = 0; i < steps.length - 1; i++ ) {
+				const step = steps[i];
 
 				if( duration < step ) {
 					break;
 				}
 
+				values.push( duration % step );
 				duration = Math.floor( duration / step );
 			}
 
+			values.push( duration );
 			values = values.reverse();
 
 			// Omit milliseconds
