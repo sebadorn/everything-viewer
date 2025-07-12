@@ -45,15 +45,27 @@ export class MidiView extends BaseView {
 	 * @param {import('@tonejs/midi').Midi} midiData
 	 */
 	_buildPlayer( midiData ) {
+		const transport = this.Tone.getTransport();
+
+		const destination = this.Tone.getDestination();
+		destination.volume.value = this.Tone.gainToDb( 0.5 );
+
 		this._player = new PlayerControls( {
 			duration: midiData.duration,
+			volume: this.Tone.dbToGain( destination.volume.value ),
 			onPause: () => this.pause(),
 			onPlay: () => this.play(),
+			onSeek: value => transport.seconds = value * midiData.duration,
+			onVolumeChange: value => destination.volume = value,
 		} );
 
-		this.Tone.getTransport().on( 'start', () => this._player.state = PlayerState.PLAYING );
-		this.Tone.getTransport().on( 'pause', () => this._player.state = PlayerState.PAUSED );
-		this.Tone.getTransport().on( 'stop', () => this._player.state = PlayerState.PAUSED );
+		transport.on( 'start', () => this._player.state = PlayerState.PLAYING );
+		transport.on( 'pause', () => this._player.state = PlayerState.PAUSED );
+		transport.on( 'stop', () => this._player.state = PlayerState.PAUSED );
+
+		transport.scheduleRepeat( _time => {
+			this._player.progressInSeconds = transport.seconds;
+		}, 0.5 );
 
 		const container = UI.build( '<div class="midi-player"></div>' );
 		container.append( this._player.render() );

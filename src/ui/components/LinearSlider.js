@@ -2,14 +2,11 @@ import { UI } from '../UI';
 import { Component } from './Component';
 
 
-export const LinearSliderOrientation = {
-	horizontal: 1,
-	vertical: 2,
-};
-
-
 export class LinearSlider extends Component {
 
+
+	/** @type {number} */
+	_currentValue = 0;
 
 	/** @type {HTMLElement} */
 	_innerBar = null;
@@ -21,13 +18,13 @@ export class LinearSlider extends Component {
 	/**
 	 *
 	 * @param {object} config
+	 * @param {string?} config.classes
 	 * @param {number} [config.min = 0]
 	 * @param {number} [config.max = 100]
 	 * @param {boolean} [config.showValue = true]
 	 * @param {function?} config.formatValue - Optional function to use to format the displayed value.
 	 * @param {boolean} [config.canInteract = true]
 	 * @param {function?} config.onChange
-	 * @param {number} [config.orientation = LinearSliderOrientation.horizontal]
 	 */
 	constructor( config ) {
 		super();
@@ -49,6 +46,8 @@ export class LinearSlider extends Component {
 		if( typeof this._config.canInteract !== 'boolean' ) {
 			this._config.canInteract = true;
 		}
+
+		this._currentValue = this._config.min;
 	}
 
 
@@ -61,11 +60,6 @@ export class LinearSlider extends Component {
 
 		this._innerBar = UI.build( '<div class="inner-bar"></div>' );
 
-		if( this._config.showValue ) {
-			this._valueDisplay = UI.build( '<div class="value-display"></div>' );
-			this._innerBar.append( this._valueDisplay );
-		}
-
 		if( this._config.canInteract ) {
 			// TODO: events
 			// - mousedown + mousemove: move inner bar, but do not trigger yet
@@ -75,11 +69,13 @@ export class LinearSlider extends Component {
 		this._node = UI.build( '<div class="linear-slider"></div>' );
 		this._node.append( this._innerBar );
 
-		if( this._config.orientation === LinearSliderOrientation.vertical ) {
-			this._node.classList.add( 'orientation-vertical' );
+		if( this._config.showValue ) {
+			this._valueDisplay = UI.build( '<div class="value-display"></div>' );
+			this._node.append( this._valueDisplay );
 		}
-		else {
-			this._node.classList.add( 'orientation-horizontal' );
+	
+		if( typeof this._config.classes === 'string' ) {
+			this._node.classList.add( ...this._config.classes.split( ' ' ) );
 		}
 
 		return this._node;
@@ -88,10 +84,44 @@ export class LinearSlider extends Component {
 
 	/**
 	 *
-	 * @param {object} update
+	 * @returns {number}
 	 */
-	update( update ) {
-		// TODO:
+	get value() {
+		return this._currentValue;
+	}
+
+
+	/**
+	 *
+	 * @param {number} value - Value between configured min and max value.
+	 */
+	set value( value ) {
+		let newValue = Math.min( this._config.max, Math.max( this._config.min, value ) );
+
+		if( newValue !== this._currentValue && !isNaN( newValue ) ) {
+			this._currentValue = newValue;
+			this._innerBar.style.width = Math.round( this.valueProgress * 100 ) + '%';
+		}
+	}
+
+
+	/**
+	 *
+	 * @returns {number} Current value as progress [0.0, 1.0].
+	 */
+	get valueProgress() {
+		return ( this._currentValue - this._config.min ) / ( this._config.max - this._config.min );
+	}
+
+
+	/**
+	 *
+	 * @param {number} progress - Value as percentual progress [0.0, 1.0] between the configured min/max values.
+	 */
+	set valueProgress( progress ) {
+		progress = Math.min( 1, Math.max( 0, progress ) );
+		progress = this._config.min + progress * ( this._config.max - this._config.min );
+		this.value = progress;
 	}
 
 
