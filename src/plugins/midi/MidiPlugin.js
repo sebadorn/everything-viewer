@@ -39,4 +39,22 @@ export class MidiPlugin extends Plugin {
 	}
 
 
+	/**
+	 *
+	 * @param {import('./Registry.js').ImportData} data
+	 */
+	setImportData( data ) {
+		// MidiPlugin only supports single instances. Due to the current
+		// way Tone.js is used, only a single Midi file can be played.
+		this._parser?.destroy();
+		this._view?.window?.close();
+		this._view?.destroy();
+
+		this._parser = null;
+		this._view = null;
+
+		this._importData = data;
+	}
+
+
 };

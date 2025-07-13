@@ -37,7 +37,7 @@ export class PlayerControls extends Component {
 	 * @param {function} config.onPause
 	 * @param {function} config.onPlay
 	 * @param {function?} config.onSeek
-	 * @param {function?} config.onVolumeChange
+	 * @param {function?} config.onVolume
 	 */
 	constructor( config ) {
 		super();
@@ -88,8 +88,9 @@ export class PlayerControls extends Component {
 			formatValue: value => {
 				return UI.formatDuration( value * 1000, { formatWithColon: true } );
 			},
-			onChange: value => {
-				this._config.onChange?.( value );
+			onChange: ( percent, value ) => {
+				this._seekbar.value = value;
+				this._config.onSeek?.( percent, value );
 			},
 		} );
 	}
@@ -105,8 +106,9 @@ export class PlayerControls extends Component {
 			classes: 'volume',
 			showValue: false,
 			formatValue: value => value + '%',
-			onChange: value => {
-				this._config.onVolumeChange?.( value );
+			onChange: ( percent, value ) => {
+				this._volumeControl.value = value;
+				this._config.onVolume?.( percent );
 			},
 		} );
 	}

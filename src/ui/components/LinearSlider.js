@@ -53,20 +53,36 @@ export class LinearSlider extends Component {
 
 	/**
 	 *
+	 * @private
+	 * @param {number} abs
+	 * @returns {number}
+	 */
+	_absToRel( abs ) {
+		return ( abs - this._config.min ) / ( this._config.max - this._config.min );
+	}
+
+
+	/**
+	 *
+	 * @private
+	 * @param {number} rel
+	 * @returns {number}
+	 */
+	_relToAbs( rel ) {
+		return this._config.min + rel * ( this._config.max - this._config.min );
+	}
+
+
+	/**
+	 *
 	 * @returns {HTMLElement}
 	 */
 	render() {
 		super.render();
 
-		this._innerBar = UI.build( '<div class="inner-bar"></div>' );
-
-		if( this._config.canInteract ) {
-			// TODO: events
-			// - mousedown + mousemove: move inner bar, but do not trigger yet
-			// - mouseup: trigger onChange
-		}
-
 		this._node = UI.build( '<div class="linear-slider"></div>' );
+
+		this._innerBar = UI.build( '<div class="inner-bar"></div>' );
 		this._node.append( this._innerBar );
 
 		if( this._config.showValue ) {
@@ -76,6 +92,14 @@ export class LinearSlider extends Component {
 	
 		if( typeof this._config.classes === 'string' ) {
 			this._node.classList.add( ...this._config.classes.split( ' ' ) );
+		}
+
+		if( this._config.canInteract ) {
+			this._node.addEventListener( 'click', ev => {
+				const rect = this._node.getBoundingClientRect();
+				const percent = ev.offsetX / rect.width;
+				this._config.onChange?.( percent, this._relToAbs( percent ) );
+			} );
 		}
 
 		return this._node;
@@ -110,7 +134,7 @@ export class LinearSlider extends Component {
 	 * @returns {number} Current value as progress [0.0, 1.0].
 	 */
 	get valueProgress() {
-		return ( this._currentValue - this._config.min ) / ( this._config.max - this._config.min );
+		return this._absToRel( this._currentValue );
 	}
 
 

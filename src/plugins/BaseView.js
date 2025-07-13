@@ -111,9 +111,9 @@ export class BaseView {
 		config.title ??= UI.escapeHTML( this.parser.file.name );
 		config.content ??= content;
 
-		const win = new Window( config );
+		this.window = new Window( config );
 
-		win.on( 'close', () => {
+		this.window.on( 'close', () => {
 			if( config.destroyOrder ) {
 				config.destroyOrder.forEach( item => item.destroy() );
 			}
@@ -123,10 +123,10 @@ export class BaseView {
 			}
 		} );
 
-		document.body.append( win.render() );
-		setTimeout( () => win?.center(), 0 );
+		document.body.append( this.window.render() );
+		setTimeout( () => this.window?.center(), 0 );
 
-		return win;
+		return this.window;
 	}
 
 
