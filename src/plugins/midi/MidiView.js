@@ -1,12 +1,13 @@
-import { Button } from '../../ui/components/Button.js';
 import { PlayerControls, PlayerState } from '../../ui/components/PlayerControls.js';
-import { Icons } from '../../ui/Icons.js';
 import { UI } from '../../ui/UI.js';
 import { BaseView } from '../BaseView.js';
 
 
 export class MidiView extends BaseView {
 
+
+	/** @type {number?} */
+	_scheduleId = null;
 
 	/** @type {import('tone')} */
 	Tone = null;
@@ -64,7 +65,7 @@ export class MidiView extends BaseView {
 		transport.on( 'pause', () => this._player.state = PlayerState.PAUSED );
 		transport.on( 'stop', () => this._player.state = PlayerState.PAUSED );
 
-		transport.scheduleRepeat( _time => {
+		this._scheduleId = transport.scheduleRepeat( _time => {
 			this._player.progressInSeconds = Math.min( midiData.duration, transport.seconds );
 
 			if( transport.seconds > midiData.duration ) {
@@ -85,6 +86,7 @@ export class MidiView extends BaseView {
 	destroy() {
 		const transport = this.Tone.getTransport();
 		transport.stop();
+		transport.clear( this._scheduleId );
 
 		// Dispose the synths
 		while( this.synths.length > 0 ) {

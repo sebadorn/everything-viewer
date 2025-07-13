@@ -119,7 +119,11 @@ export class PlayerControls extends Component {
 	 */
 	destroy() {
 		this._seekbar?.destroy();
+		this._seekbar = null;
+
 		this._volumeControl?.destroy();
+		this._volumeControl = null;
+
 		this._node?.remove();
 	}
 

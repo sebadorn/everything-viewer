@@ -118,6 +118,8 @@ export class LinearSlider extends Component {
 	 */
 	destroy() {
 		this._overlay?.destroy();
+		this._overlay = null;
+
 		this._node?.remove();
 	}
 
