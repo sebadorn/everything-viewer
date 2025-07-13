@@ -1,5 +1,6 @@
 import { UI } from '../UI';
 import { Component } from './Component';
+import { InfoOverlay } from './InfoOverlay';
 
 
 export class LinearSlider extends Component {
@@ -11,6 +12,9 @@ export class LinearSlider extends Component {
 	/** @type {HTMLElement} */
 	_innerBar = null;
 
+	/** @type {InfoOverlay?} */
+	_overlay = null;
+
 	/** @type {HTMLElement?} */
 	_valueDisplay = null;
 
@@ -21,6 +25,7 @@ export class LinearSlider extends Component {
 	 * @param {string?} config.classes
 	 * @param {number} [config.min = 0]
 	 * @param {number} [config.max = 100]
+	 * @param {number?} config.initialValue - Defaults to config.min.
 	 * @param {boolean} [config.showValue = true]
 	 * @param {function?} config.formatValue - Optional function to use to format the displayed value.
 	 * @param {boolean} [config.canInteract = true]
@@ -47,7 +52,7 @@ export class LinearSlider extends Component {
 			this._config.canInteract = true;
 		}
 
-		this._currentValue = this._config.min;
+		this._currentValue = this._config.initialValue ?? this._config.min;
 	}
 
 
@@ -65,11 +70,55 @@ export class LinearSlider extends Component {
 	/**
 	 *
 	 * @private
+	 */
+	_hideOverlayValue() {
+		this._overlay?.hide();
+
+		this._barMarker.style.display = 'none';
+	}
+
+
+	/**
+	 *
+	 * @private
 	 * @param {number} rel
 	 * @returns {number}
 	 */
 	_relToAbs( rel ) {
 		return this._config.min + rel * ( this._config.max - this._config.min );
+	}
+
+
+	/**
+	 *
+	 * @private
+	 * @param {MouseEvent} ev
+	 */
+	_showOverlayValue( ev ) {
+		if( !this._overlay ) {
+			this._overlay = new InfoOverlay();
+			document.body.append( this._overlay.render() );
+		}
+
+		const rectBar = this._node.getBoundingClientRect();
+		const percent = ev.offsetX / rectBar.width;
+		const value = this._relToAbs( percent );
+
+		this._overlay.value = this._config.formatValue?.( value ) ?? value;
+		this._overlay.moveTo( ev.clientX, rectBar.top - 4 );
+		this._overlay.show();
+
+		this._barMarker.style.display = 'block';
+		this._barMarker.style.left = ev.offsetX + 'px';
+	}
+
+
+	/**
+	 *
+	 */
+	destroy() {
+		this._overlay?.destroy();
+		this._node?.remove();
 	}
 
 
@@ -83,7 +132,8 @@ export class LinearSlider extends Component {
 		this._node = UI.build( '<div class="linear-slider"></div>' );
 
 		this._innerBar = UI.build( '<div class="inner-bar"></div>' );
-		this._node.append( this._innerBar );
+		this._barMarker = UI.build( '<div class="bar-marker"></div>' );
+		this._node.append( this._innerBar, this._barMarker );
 
 		if( this._config.showValue ) {
 			this._valueDisplay = UI.build( '<div class="value-display"></div>' );
@@ -100,7 +150,15 @@ export class LinearSlider extends Component {
 				const percent = ev.offsetX / rect.width;
 				this._config.onChange?.( percent, this._relToAbs( percent ) );
 			} );
+
+			this._node.classList.add( 'interactive' );
 		}
+
+		this._node.addEventListener( 'mouseover', ev => this._showOverlayValue( ev ) );
+		this._node.addEventListener( 'mousemove', ev => this._showOverlayValue( ev ) );
+		this._node.addEventListener( 'mouseleave', _ev => this._hideOverlayValue() );
+
+		this.value = this._currentValue;
 
 		return this._node;
 	}
@@ -122,7 +180,7 @@ export class LinearSlider extends Component {
 	set value( value ) {
 		let newValue = Math.min( this._config.max, Math.max( this._config.min, value ) );
 
-		if( newValue !== this._currentValue && !isNaN( newValue ) ) {
+		if( !isNaN( newValue ) ) {
 			this._currentValue = newValue;
 			this._innerBar.style.width = Math.round( this.valueProgress * 100 ) + '%';
 		}

@@ -105,12 +105,22 @@ export class PlayerControls extends Component {
 		return new LinearSlider( {
 			classes: 'volume',
 			showValue: false,
-			formatValue: value => value + '%',
+			formatValue: value => Math.round( value ) + '%',
 			onChange: ( percent, value ) => {
 				this._volumeControl.value = value;
 				this._config.onVolume?.( percent );
 			},
 		} );
+	}
+
+
+	/**
+	 *
+	 */
+	destroy() {
+		this._seekbar?.destroy();
+		this._volumeControl?.destroy();
+		this._node?.remove();
 	}
 
 
@@ -122,7 +132,7 @@ export class PlayerControls extends Component {
 		super.render();
 
 		this._btnPlayPause = this._buildPlayPauseButton();
-		this._time = UI.build( '<span class="time"></span>' );
+		this._time = UI.build( '<span class="time">00:00</span>' );
 
 		const bottom = UI.build( '<div class="bottom-row"></div>' );
 		bottom.append(

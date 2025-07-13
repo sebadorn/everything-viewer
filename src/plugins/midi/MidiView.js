@@ -105,6 +105,8 @@ export class MidiView extends BaseView {
 		// silence at the start despite the played seconds counter going up.
 		this.Tone.setContext( new this.Tone.Context(), true );
 
+		this._player?.destroy();
+
 		super.destroy();
 	}
 
