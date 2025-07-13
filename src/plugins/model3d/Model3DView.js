@@ -42,9 +42,13 @@ export class Model3DView extends BaseView {
 
 		this._viewer = new babylonjsViewer.HTML3DElement();
 		this._viewer.extension = this.parser.ext;
-		this._viewer.source = URL.createObjectURL( this.parser.file );
 
-		this._viewer.addEventListener( 'viewerready', _ev => {
+		this._viewer.addEventListener( 'environmenterror', ev => console.error( 'environmenterror', ev ) );
+		this._viewer.addEventListener( 'modelerror', ev => console.error( 'modelerror', ev ) );
+
+		this._viewer.addEventListener( 'viewerready', ev => {
+			console.debug( 'viewerready', ev );
+
 			const scene = this._viewer.viewerDetails.scene;
 
 			scene.cameras[0].onViewMatrixChangedObservable.add( ( evData, _evState ) => {
@@ -61,6 +65,10 @@ export class Model3DView extends BaseView {
 			height: 600,
 			width: 760,
 		} );
+
+		setTimeout( () => {
+			this._viewer.source = URL.createObjectURL( this.parser.file );
+		}, 100 );
 
 		cb?.();
 	}
