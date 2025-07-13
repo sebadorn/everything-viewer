@@ -9,6 +9,7 @@ import { EMLPlugin } from './eml/EMLPlugin.js';
 import { GIFPlugin } from './gif/GIFPlugin.js';
 import { ICalPlugin } from './ical/ICalPlugin.js';
 import { ImagePlugin } from './image/ImagePlugin.js';
+import { MidiPlugin } from './midi/MidiPlugin.js';
 import { Model3DPlugin } from './model3d/Model3DPlugin.js';
 import { NIFTIPlugin } from './nifti/NIFTIPlugin.js';
 import { PDFPlugin } from './pdf/PDFPlugin.js';
@@ -41,6 +42,7 @@ export const Registry = {
 			new GIFPlugin(),
 			new ICalPlugin(),
 			new ImagePlugin(),
+			new MidiPlugin(),
 			new Model3DPlugin(),
 			new NIFTIPlugin(),
 			new PDFPlugin(),

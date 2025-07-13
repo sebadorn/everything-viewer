@@ -37,6 +37,11 @@
 	.icon {
 		font-size: 17px;
 	}
+
+	&.btn-icon {
+		background: none;
+		padding: 6px;
+	}
 }
 
 
@@ -70,6 +75,122 @@
 
 		&.selected {
 			background-image: linear-gradient(#00000020, transparent);
+		}
+	}
+}
+
+
+.linear-slider {
+	background-color: rgba(255, 255, 255, 0.1);
+	border-radius: 5px;
+	box-sizing: border-box;
+	height: 10px;
+	overflow: hidden;
+	position: relative;
+	width: 100%;
+
+	&.interactive {
+		cursor: pointer;
+	}
+
+	.inner-bar {
+		background-color: vars.$color-primary;
+		height: 100%;
+		pointer-events: none;
+		width: 0%;
+	}
+
+	.bar-marker {
+		background-color: vars.$color-link;
+		box-sizing: border-box;
+		display: none;
+		height: 100%;
+		left: 0;
+		pointer-events: none;
+		position: absolute;
+		top: 0;
+		width: 1px;
+		z-index: 1;
+	}
+
+	.value-display {
+		font-family: vars.$font-ms;
+		font-size: 8px;
+		pointer-events: none;
+		position: absolute;
+		right: 10px;
+		text-align: right;
+		user-select: none;
+		z-index: 10;
+	}
+}
+
+
+.info-overlay {
+	background-color: #000000;
+	color: #ffffff;
+	font-family: vars.$font-ms;
+	font-size: 13px;
+	padding: 2px 6px;
+	pointer-events: none;
+	position: absolute;
+	text-align: center;
+	user-select: none;
+	z-index: 10000;
+}
+
+
+.player-controls {
+	background-color: rgba(0, 0, 0, 0.5);
+	border-radius: vars.$button-radius;
+	box-sizing: border-box;
+	min-width: 400px;
+	padding: 10px 10px 0;
+	width: 100%;
+
+	.bottom-row {
+		align-items: center;
+		display: flex;
+		padding: 10px 0;
+	}
+
+	.btn-icon.play-pause {
+		border: 1px solid vars.$color-window;
+		margin-right: 10px;
+
+		&:hover {
+			background-color: vars.$color-primary;
+			border-color: vars.$color-primary;
+		}
+	}
+
+	.time {
+		flex-grow: 1;
+		font-family: vars.$font-ms;
+		font-size: vars.$font-size-ms;
+		margin-right: 10px;
+	}
+
+	.icon.volume {
+		font-size: 21px;
+		margin-right: 7px;
+	}
+
+	.linear-slider {
+		&.seekbar {
+			.inner-bar {
+				transition: width 500ms linear;
+			}
+		}
+
+		&.volume {
+			border-radius: 3px;
+			flex-basis: 20%;
+			height: 6px;
+
+			.inner-bar {
+				background-color: #ffffff;
+			}
 		}
 	}
 }

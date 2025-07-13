@@ -371,7 +371,8 @@
 
 
 .view-ical {
-	align-items: center;
+	max-height: unset;
+	overflow: auto;
 
 	.container,
 	.valarm {
@@ -460,6 +461,10 @@
 			li {
 				padding: 1px 0;
 			}
+		}
+
+		select {
+			max-width: 360px;
 		}
 	}
 
