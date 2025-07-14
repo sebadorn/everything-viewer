@@ -12,7 +12,7 @@ module.exports = {
 		rules: [
 			{
 				test: /\.s?css$/,
-				include: path.resolve( __dirname, 'src/style' ),
+				include: path.resolve( __dirname, 'src', 'style' ),
 				use: [
 					MiniCssExtractPlugin.loader,
 					'css-loader',
@@ -20,18 +20,18 @@ module.exports = {
 				],
 			},
 			{
-				test: /\.(gif|jpeg|jpg|png)$/,
-				include: path.resolve( __dirname, 'src/img' ),
+				test: /\.png$/,
+				include: path.resolve( __dirname, 'src', 'img' ),
 				type: 'asset/resource',
 			},
 			{
-				test: /\.(woff|woff2|eot|ttf|otf)$/i,
-				include: path.resolve( __dirname, 'src/style/fonts' ),
+				test: /\.woff2$/i,
+				include: path.resolve( __dirname, 'src', 'style', 'fonts' ),
 				type: 'asset/resource',
 			},
 			{
 				test: /\.wasm/,
-				include: path.resolve( __dirname, 'node_modules/@cornerstonejs' ),
+				include: path.resolve( __dirname, 'node_modules', '@cornerstonejs' ),
 				type: 'asset/resource',
 			},
 		],
@@ -55,7 +55,11 @@ module.exports = {
 		new CopyPlugin( {
 			patterns: [
 				{
-					from: path.resolve( __dirname, 'src/html/*.html' ),
+					from: path.resolve( __dirname, 'src', 'html', '*.html' ),
+					to: '[name][ext]',
+				},
+				{
+					from: path.resolve( __dirname, 'src', 'img', 'favicon' ),
 					to: '[name][ext]',
 				},
 			],
