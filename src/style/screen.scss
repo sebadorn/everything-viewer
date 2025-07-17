@@ -219,6 +219,19 @@ main {
 	margin: 0 auto;
 	width: 100%;
 
+	.build {
+		bottom: 10px;
+		color: #ffffff50;
+		font-family: vars.$font-ms;
+		font-size: 11px;
+		right: 10px;
+		pointer-events: none;
+		position: absolute;
+		text-align: right;
+		user-select: none;
+		z-index: 1;
+	}
+
 	.viewer {
 		display: flex;
 		flex-grow: 1;

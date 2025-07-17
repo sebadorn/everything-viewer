@@ -1,3 +1,4 @@
+import { DocumentUtils } from '../../DocumentUtils.js';
 import { DropHandler } from '../DropHandler.js';
 import { UI } from '../UI.js';
 import { Button } from './Button.js';
@@ -41,6 +42,7 @@ export class MainView extends Component {
 
 		const viewerArea = UI.build( `
 			<main>
+				<span class="build">BUILD ${DocumentUtils.getBuildNumber()}</span>
 				<div class="viewer">
 					<div class="note-dragdrop">
 						<h1>Everything Viewer</h1>
