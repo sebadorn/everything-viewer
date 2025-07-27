@@ -145,6 +145,9 @@ export class ZIPParser extends BaseParser {
 				else if( FileHandler.videoExtensions.includes( ext ) ) {
 					icon.textContent = 'movie';
 				}
+				else if( FileHandler.audioExtensions.includes( ext ) ) {
+					icon.textContent = 'music_note';
+				}
 			}
 
 			icon.classList.add( icon.textContent );
