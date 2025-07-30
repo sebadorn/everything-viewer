@@ -89,7 +89,7 @@ module.exports = {
 		fallback: {
 			'buffer': require.resolve( 'buffer/' ),
 			'fs': false,
-			'path': false,
+			'path': require.resolve( 'path-browserify' ),
 		},
 	},
 };

@@ -22,6 +22,7 @@ Okay, not *everything*. The idea is to support a bunch of different formats and 
 * PDF – *if the browser has a PDF viewer integrated*
 * Text
 	* With syntax highlighting for selected languages
+* Torrent identifiers (.torrent)
 * vCard (.vcf)
 * Video – *if the browser supports the format*
 * ZIP
@@ -41,6 +42,7 @@ Okay, not *everything*. The idea is to support a bunch of different formats and 
 * JSZip – https://github.com/Stuk/jszip
 * msgreader – https://github.com/HiraokaHyperTools/msgreader
 * omggif – https://github.com/deanm/omggif
+* parse-torrent – https://www.npmjs.com/package/parse-torrent
 * Tone.js – https://github.com/Tonejs/Tone.js
 * Tone.js/Midi – https://github.com/Tonejs/Midi
 * vCardJS – https://github.com/nilclass/vcardjs

@@ -14,6 +14,7 @@ import { Model3DPlugin } from './model3d/Model3DPlugin.js';
 import { NIFTIPlugin } from './nifti/NIFTIPlugin.js';
 import { PDFPlugin } from './pdf/PDFPlugin.js';
 import { TextPlugin } from './text/TextPlugin.js';
+import { TorrentPlugin } from './torrent/TorrentPlugin.js';
 import { VCFPlugin } from './vcf/VCFPlugin.js';
 import { VideoPlugin } from './video/VideoPlugin.js';
 import { ZIPPlugin } from './zip/ZIPPlugin.js';
@@ -47,6 +48,7 @@ export const Registry = {
 			new NIFTIPlugin(),
 			new PDFPlugin(),
 			new TextPlugin(),
+			new TorrentPlugin(),
 			new VCFPlugin(),
 			new VideoPlugin(),
 			new ZIPPlugin(),

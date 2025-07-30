@@ -43,7 +43,8 @@ export const UI = {
 
 
 	/**
-	 *
+	 * Known limitations: Does not work with elements that require
+	 * a parent element, e.g. "tr" without a "table".
 	 * @param {string} html
 	 * @returns {HTMLElement}
 	 */
@@ -67,11 +68,30 @@ export const UI = {
 
 
 	/**
+	 * 
+	 * @param {Array} entries
+	 * @returns {HTMLOListElement}
+	 */
+	buildListOrdered( entries ) {
+		const list = document.createElement( 'ol' );
+
+		entries.forEach( entry => {
+			const item = document.createElement( 'li' );
+			item.textContent = entry;
+
+			list.append( item );
+		} );
+
+		return list;
+	},
+
+
+	/**
 	 *
-	 * @param  {string}  name
-	 * @param  {string}  value
-	 * @param  {object?} options
-	 * @param  {bool}    [options.valueAsHTML = false]
+	 * @param  {string}             name
+	 * @param  {string|HTMLElement} value
+	 * @param  {object?}            options
+	 * @param  {bool}               [options.valueAsHTML = false]
 	 * @return {HTMLElement}
 	 */
 	buildTableRow( name, value, options = {} ) {
@@ -80,7 +100,10 @@ export const UI = {
 
 		const td = document.createElement( 'td' );
 
-		if( options.valueAsHTML === true ) {
+		if( value instanceof HTMLElement ) {
+			td.append( value );
+		}
+		else if( options.valueAsHTML === true ) {
 			td.innerHTML = value;
 		}
 		else {
@@ -158,8 +181,8 @@ export const UI = {
 
 	/**
 	 *
-	 * @param {number} value - Duration in milliseconds.
-	 * @param {object} options
+	 * @param {number}  value - Duration in milliseconds.
+	 * @param {object}  options
 	 * @param {boolean} [options.formatWithColon = false]
 	 * @return {string}
 	 */
@@ -238,7 +261,7 @@ export const UI = {
 
 	/**
 	 *
-	 * @param  {number}   value
+	 * @param  {number}  value
 	 * @param  {boolean} [useBinary=false]
 	 * @return {string}
 	 */

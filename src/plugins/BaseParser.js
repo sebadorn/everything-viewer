@@ -21,17 +21,22 @@ export class BaseParser {
 
 	/**
 	 *
-	 * @param {function} cb
+	 * @param {function?} cb
+	 * @returns {Promise<ArrayBuffer>}
 	 */
 	getArrayBuffer( cb ) {
 		const promise = this.file.arrayBuffer();
 
-		promise
-			.then( arrayBuffer => cb( null, arrayBuffer ) )
-			.catch( err => {
-				console.error( err );
-				cb( err, null );
-			} );
+		if( typeof cb === 'function' ) {
+			promise
+				.then( arrayBuffer => cb( null, arrayBuffer ) )
+				.catch( err => {
+					console.error( err );
+					cb( err, null );
+				} );
+		}
+
+		return promise;
 	}
 
 
@@ -55,17 +60,22 @@ export class BaseParser {
 
 	/**
 	 *
-	 * @param {function} cb
+	 * @param {function?} cb
+	 * @returns {Promise<string>}
 	 */
 	getText( cb ) {
 		const promise = this.file.text();
 
-		promise
-			.then( text => cb( null, text ) )
-			.catch( err => {
-				console.error( err );
-				cb( err, null );
-			} );
+		if( typeof cb === 'function' ) {
+			promise
+				.then( text => cb( null, text ) )
+				.catch( err => {
+					console.error( err );
+					cb( err, null );
+				} );
+		}
+
+		return promise;
 	}
 
 
