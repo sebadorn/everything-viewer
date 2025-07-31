@@ -262,21 +262,32 @@ export const UI = {
 	/**
 	 *
 	 * @param  {number}  value
-	 * @param  {boolean} [useBinary=false]
+	 * @param  {object?}  options
+	 * @param  {boolean} [options.useBinary = false]
+	 * @param  {number}  [options.decimalPlaces = 1]
+	 * @param  {boolean} [options.omitDecimalZero = true]
 	 * @return {string}
 	 */
-	formatSize( value, useBinary = false ) {
+	formatSize( value, options = {} ) {
 		let size = Number( value );
 
 		if( isNaN( size ) ) {
 			return value;
 		}
 
+		if( typeof options.decimalPlaces !== 'number' || isNaN( options.decimalPlaces ) ) {
+			options.decimalPlaces = 1;
+		}
+
+		if( typeof options.omitDecimalZero !== 'boolean' ) {
+			options.omitDecimalZero = true;
+		}
+
 		const unitsBinary = ['KiB', 'MiB', 'GiB', 'TiB', 'PiB'];
 		const unitsDecimal = ['kB', 'MB', 'GB', 'TB', 'PB'];
 
-		let step = useBinary ? 1024 : 1000;
-		let units = useBinary ? unitsBinary : unitsDecimal;
+		let step = options.useBinary ? 1024 : 1000;
+		let units = options.useBinary ? unitsBinary : unitsDecimal;
 		let unit = 'B';
 		let i = 0;
 
@@ -286,7 +297,14 @@ export const UI = {
 			i++;
 		}
 
-		return size.toFixed( 1 ) + ' ' + unit;
+		let text = size.toFixed( options.decimalPlaces );
+
+		if( options.decimalPlaces > 0 && options.omitDecimalZero ) {
+			const regExp = new RegExp( `\.?0+$` );
+			text = text.replace( regExp, '' );
+		}
+
+		return text + ' ' + unit;
 	},
 
 

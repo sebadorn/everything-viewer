@@ -30,19 +30,24 @@ export class TorrentView extends BaseView {
 			'pieces',
 		];
 
-		const table = document.createElement( 'table' );
-		table.classList.add( 'torrent-info' );
+		const list = document.createElement( 'ul' );
+		list.classList.add( 'torrent-info' );
 
 		for( const key in info ) {
 			if( ignore.includes( key ) ) {
 				continue;
 			}
 
-			let name = key;
 			let value = info[key];
+			let options = {};
 
-			if( name === 'length' ) {
-				value = UI.formatSize( value ) + ` (${value} B)`;
+			if( key === 'length' ) {
+				const formattedSize = UI.formatSize( value );
+				value = `${value} B <span class="icon">arrow_right_alt</span> ${formattedSize}`;
+				options.asHTML = true;
+			}
+			else if( key === 'infoHash' ) {
+				value = 'SHA1: ' + value;
 			}
 
 			if( Array.isArray( value ) ) {
@@ -63,10 +68,11 @@ export class TorrentView extends BaseView {
 				}
 			}
 
-			table.append( UI.buildTableRow( name, value ) );
+			const item = this._buildItem( key, value, options );
+			list.append( item );
 		}
 
-		return table;
+		return list;
 	}
 
 
@@ -122,6 +128,63 @@ export class TorrentView extends BaseView {
 		table.append( body );
 
 		return table;
+	}
+
+
+	/**
+	 *
+	 * @private
+	 * @param {string}             key
+	 * @param {string|HTMLElement} value
+	 * @param {object}             options
+	 * @param {boolean?}           options.asHTML
+	 * @returns {HTMLLIElement}
+	 */
+	_buildItem( key, value, options ) {
+		const header = document.createElement( 'div' );
+		header.classList.add( 'name' );
+		header.textContent = this._getTitle( key );
+
+		const body = document.createElement( 'div' );
+		body.classList.add( 'value' );
+
+		if( value instanceof HTMLElement ) {
+			body.append( value );
+		}
+		else if( options.asHTML ) {
+			body.innerHTML = value;
+		}
+		else {
+			body.textContent = value;
+		}
+
+		const item = document.createElement( 'li' );
+		item.classList.add( 'torrent-info-item', `key-${key}` );
+		item.append( header, body );
+
+		return item;
+	}
+
+
+	/**
+	 *
+	 * @private
+	 * @param {string} key
+	 * @returns {string}
+	 */
+	_getTitle( key ) {
+		const map = {
+			announce: 'Announce / Tracker URLs',
+			comment: 'Comment',
+			created: 'Created',
+			createdBy: 'Created By',
+			files: 'Files',
+			infoHash: 'Info Hash',
+			length: 'Size',
+			name: 'Name',
+		};
+
+		return map[key] || key;
 	}
 
 
