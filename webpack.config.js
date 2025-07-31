@@ -79,7 +79,7 @@ module.exports = {
 
 					const fileIndex = path.resolve( outputDir, 'index.html' );
 					let content = fs.readFileSync( fileIndex ).toString();
-					content = content.replace( '$BUILD', buildNumber );
+					content = content.replaceAll( '$BUILD', buildNumber );
 					fs.writeFileSync( fileIndex, content );
 				} );
 			},
