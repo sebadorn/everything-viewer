@@ -27,7 +27,6 @@ export class TorrentView extends BaseView {
 			'infoHashBuffer',
 			'lastPieceLength',
 			'pieceLength',
-			'pieces',
 		];
 
 		const list = document.createElement( 'ul' );
@@ -57,6 +56,12 @@ export class TorrentView extends BaseView {
 
 				if( key === 'files' ) {
 					value = this._buildFileTable( value );
+				}
+				else if( key === 'pieces' ) {
+					const textarea = document.createElement( 'textarea' )
+					textarea.setAttribute( 'readonly', 'readonly' );
+					textarea.value = value.join( '\n' );
+					value = textarea;
 				}
 				else {
 					value = UI.buildListOrdered( value );
@@ -182,6 +187,7 @@ export class TorrentView extends BaseView {
 			infoHash: 'Info Hash',
 			length: 'Size',
 			name: 'Name',
+			pieces: 'Pieces',
 		};
 
 		return map[key] || key;
