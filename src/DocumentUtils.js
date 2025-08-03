@@ -39,6 +39,15 @@ export const DocumentUtils = {
 
 
 	/**
+	 *
+	 * @returns {string}
+	 */
+	getBuildNumber() {
+		return document.head.dataset.build || '?';
+	},
+
+
+	/**
 	 * Try to remove or disable everything that loads external resources.
 	 * @param {Document} doc 
 	 */

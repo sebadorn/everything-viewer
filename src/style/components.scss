@@ -40,7 +40,13 @@
 
 	&.btn-icon {
 		background: none;
+		border: 1px solid vars.$color-window;
 		padding: 6px;
+
+		&:hover {
+			background-color: vars.$color-primary;
+			border-color: vars.$color-primary;
+		}
 	}
 }
 
@@ -155,13 +161,7 @@
 	}
 
 	.btn-icon.play-pause {
-		border: 1px solid vars.$color-window;
 		margin-right: 10px;
-
-		&:hover {
-			background-color: vars.$color-primary;
-			border-color: vars.$color-primary;
-		}
 	}
 
 	.time {

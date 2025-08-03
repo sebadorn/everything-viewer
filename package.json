@@ -27,6 +27,8 @@
     "ical.js": "^2.1.0",
     "jszip": "^3.10.1",
     "omggif": "^1.0.10",
+    "parse-torrent": "^11.0.18",
+    "path-browserify": "^1.0.1",
     "tone": "^15.1.22",
     "vcardjs": "^0.3.0"
   },
@@ -39,7 +41,7 @@
     "sass-loader": "^16.0.4",
     "style-loader": "^4.0.0",
     "terser-webpack-plugin": "^5.3.11",
-    "webpack": "^5.97.1",
+    "webpack": "^5.100.2",
     "webpack-cli": "^6.0.1"
   },
   "optionalDependencies": {

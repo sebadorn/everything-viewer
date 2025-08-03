@@ -219,6 +219,24 @@ main {
 	margin: 0 auto;
 	width: 100%;
 
+	.build {
+		border: 0;
+		bottom: 10px;
+		color: #ffffff50;
+		font-family: vars.$font-ms;
+		font-size: 11px;
+		right: 10px;
+		position: absolute;
+		text-align: right;
+		text-decoration: none;
+		user-select: none;
+		z-index: 1;
+
+		&:hover {
+			text-decoration: underline;
+		}
+	}
+
 	.viewer {
 		display: flex;
 		flex-grow: 1;

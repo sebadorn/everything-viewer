@@ -478,6 +478,7 @@ export const FileHandler = {
 		'aiff',
 		'flac',
 		'm4a',
+		'mid',
 		'midi',
 		'mp2',
 		'mp3',
