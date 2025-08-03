@@ -3,6 +3,7 @@ import { Button } from '../../ui/components/Button.js';
 import { UI } from '../../ui/UI.js';
 import { BaseView } from '../BaseView.js';
 import { NIFTIParser } from './NIFTIParser.js';
+import { Icons } from '../../ui/Icons.js';
 
 
 export class NIFTIView extends BaseView {
@@ -63,17 +64,17 @@ export class NIFTIView extends BaseView {
 
 		const btnPrev = new Button( {
 			classes: 'frame-prev',
-			text: '←',
+			icon: Icons.arrow_prev,
 		} );
 
 		const btnNext = new Button( {
 			classes: 'frame-next',
-			text: '→',
+			icon: Icons.arrow_next,
 		} );
 
 		const btnPlayPause = new Button( {
 			classes: 'play-pause',
-			text: '▶',
+			icon: Icons.play,
 		} );
 
 		node.querySelector( '.wrap-frame-controls' ).append(
@@ -112,12 +113,12 @@ export class NIFTIView extends BaseView {
 			btnPlayPause.on( 'click', _ev => {
 				// Start playback
 				if( !this._timer ) {
-					btnPlayPause.update( { text: '⏸' } );
+					btnPlayPause.update( { icon: Icons.pause } );
 					this._playback( this._slider );
 				}
 				// Pause playback
 				else {
-					btnPlayPause.update( { text: '▶' } );
+					btnPlayPause.update( { icon: Icons.play } );
 					clearTimeout( this._timer );
 					this._timer = 0;
 				}
