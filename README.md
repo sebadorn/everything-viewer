@@ -45,7 +45,6 @@ Okay, not *everything*. The idea is to support a bunch of different formats and 
 * parse-torrent – https://www.npmjs.com/package/parse-torrent
 * Tone.js – https://github.com/Tonejs/Tone.js
 * Tone.js/Midi – https://github.com/Tonejs/Midi
-* vCardJS – https://github.com/nilclass/vcardjs
 
 
 ## Setup

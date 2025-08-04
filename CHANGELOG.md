@@ -1,6 +1,12 @@
 # Changelog
 
 
+## Build 2025-xx-xx
+
+* **chore:** remove dependency on `vcardjs`
+* **feat(vcf):** use `ical.js` package instead of `vcardjs` to support more attributes
+
+
 ## Build 2025-08-03
 
 * **chore:** update dependencies (`@babylonjs/*`, `@cornerstonejs/*`)
