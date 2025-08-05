@@ -625,8 +625,12 @@
 		width: 100%;
 
 		table {
-			margin-top: 10px;
+			margin-bottom: 10px;
 			width: 100%;
+
+			&:last-child {
+				margin-bottom: 0;
+			}
 		}
 
 		td,

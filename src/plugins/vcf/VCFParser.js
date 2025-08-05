@@ -20,12 +20,12 @@ export class VCFParser extends BaseParser {
 	 * @private
 	 * @param {string} attr
 	 * @param {object} meta
+	 * @param {string} type
 	 * @param {string} value
 	 * @returns {HTMLElement}
 	 */
-	_buildItemDateTime( attr, meta, value ) {
-		// TODO:
-		return this._buildItemText( attr, meta, value );
+	_buildItemDateTime( attr, meta, type, value ) {
+		return this._buildItemText( attr, meta, type, value );
 	}
 
 
@@ -36,17 +36,18 @@ export class VCFParser extends BaseParser {
 	 * @param {object} meta
 	 * @param {string} meta.encoding - e.g. "b"
 	 * @param {string} meta.type - e.g. "JPEG"
+	 * @param {string} type
 	 * @param {string} value
 	 * @returns {HTMLElement}
 	 */
-	_buildItemImage( attr, meta, value ) {
+	_buildItemImage( attr, meta, type, value ) {
 		const name = this._getName( attr, meta );
 		const row = UI.buildTableRow( name, value );
 
 		if( meta.encoding === 'b' ) {
-			const type = String( meta.type ).toLowerCase();
+			const imgType = String( meta.type ).toLowerCase();
 			const td = row.querySelector( 'td' );
-			td.innerHTML = `<img src="data:image/${type};base64,${value}" />`;
+			td.innerHTML = `<img src="data:image/${imgType};base64,${value}" />`;
 		}
 
 		if( value.includes( '://' ) ) {
@@ -63,11 +64,12 @@ export class VCFParser extends BaseParser {
 	 * @private
 	 * @param {string} attr
 	 * @param {object} meta
+	 * @param {string} type
 	 * @param {string} value
 	 * @returns {HTMLElement}
 	 */
-	_buildItemPhone( attr, meta, value ) {
-		return this._buildItemText( attr, meta, value );
+	_buildItemPhone( attr, meta, type, value ) {
+		return this._buildItemText( attr, meta, type, value );
 	}
 
 
@@ -76,10 +78,11 @@ export class VCFParser extends BaseParser {
 	 * @private
 	 * @param {string} attr
 	 * @param {object} meta
-	 * @param {string} value
+	 * @param {string} type
+	 * @param {*}      value
 	 * @returns {HTMLElement}
 	 */
-	_buildItemText( attr, meta, value ) {
+	_buildItemText( attr, meta, type, value ) {
 		const name = this._getName( attr, meta );
 		const options = {};
 
@@ -89,12 +92,54 @@ export class VCFParser extends BaseParser {
 			if( attr === 'adr' ) {
 				value = nonEmpty.join( '\n' );
 			}
+			else if( attr === 'n' ) {
+				let honorificPrefix = value[3] || '';
+				let honorificSuffix = value[4] || '';
+				let firstName = value[1] || '';
+				let middleName = value[2] || '';
+				let lastName = value[0] || '';
+
+				value = '';
+
+				if( honorificPrefix.length > 0 ) {
+					value += honorificPrefix + ' ';
+				}
+
+				if( firstName.length > 0 ) {
+					value += firstName + ' ';
+				}
+
+				if( middleName.length > 0 ) {
+					value += middleName + ' ';
+				}
+
+				if( lastName.length > 0 ) {
+					value += lastName + ' ';
+				}
+
+				if( honorificSuffix.length > 0 ) {
+					if( value.length > 0 ) {
+						value += ', ';
+					}
+
+					value += honorificSuffix + ' ';
+				}
+
+				value = value.trim();
+			}
 			else {
 				value = nonEmpty.join( ' ' );
 			}
 		}
 
-		if( value.includes( '\n' ) ) {
+		// Make sure we really have a String.
+		value = String( value );
+
+		if( type === 'uri' && value.includes( '://' ) ) {
+			value = `<a href="${value}">${value}</a>`;
+			options.valueAsHTML = true;
+		}
+		else if( value.includes( '\n' ) ) {
 			value = UI.escapeHTML( value );
 			value = value.replaceAll( '\n', '<br>' );
 
@@ -122,10 +167,6 @@ export class VCFParser extends BaseParser {
 			list.push( 'adr' );
 		}
 
-		if( data.find( ele => ele[0] === 'fn' ) ) {
-			list.push( 'n' );
-		}
-
 		return list;
 	}
 
@@ -144,28 +185,46 @@ export class VCFParser extends BaseParser {
 				WORK: 'Address (Work)',
 				default: 'Address',
 			},
+			anniversary: 'Anniversary',
 			bday: 'Birthday',
+			categories: 'Categories',
 			email: {
 				HOME: 'Email (Home)',
 				WORK: 'Email (Work)',
 				default: 'Email',
 			},
-			fn: 'Name',
+			fn: 'Display Name',
+			gender: 'Gender',
+			geo: 'Geo.',
+			impp: 'Instant Messaging',
+			key: 'Key',
 			label: {
 				HOME: 'Address (Home)',
 				WORK: 'Address (Work)',
 				default: 'Address',
 			},
+			lang: 'Language',
+			logo: 'Logo',
+			member: 'Member',
 			n: 'Name',
+			nickname: 'Nickname',
+			note: 'Note',
 			org: 'Organization',
 			photo: 'Photo',
+			prodid: 'Created with',
+			related: 'Relation',
 			rev: 'Last updated',
+			role: 'Role',
+			sound: 'Sound',
 			tel: {
 				HOME: 'Phone (Home)',
 				WORK: 'Phone (Work)',
 				default: 'Phone',
 			},
 			title: 'Title',
+			tz: 'Time zone',
+			url: 'URL',
+			version: 'Version',
 		};
 
 		const item = map[attr];
@@ -191,7 +250,35 @@ export class VCFParser extends BaseParser {
 			}
 		}
 
+		if( typeof type === 'string' ) {
+			type = type.toUpperCase();
+		}
+
 		return item[type] || item.default || attr;
+	}
+
+
+	/**
+	 *
+	 * @private
+	 * @param {string} type
+	 * @returns {boolean}
+	 */
+	_isImageType( type ) {
+		const imgTypes = [
+			'bmp',
+			'gif',
+			'jpeg',
+			'jpg',
+			'png',
+		];
+
+		type = String( type ).toLowerCase();
+
+		const parts = type.split( '/' );
+		type = parts[parts.length - 1];
+
+		return imgTypes.includes( type );
 	}
 
 
@@ -204,14 +291,6 @@ export class VCFParser extends BaseParser {
 		const card = document.createElement( 'div' );
 		card.className = 'vcard';
 
-		const imgTypes = [
-			'bmp',
-			'gif',
-			'jpeg',
-			'jpg',
-			'png',
-		];
-
 		for( let i = 0; i < data.length; i++ ) {
 			const vCardData = data[i];
 
@@ -222,7 +301,7 @@ export class VCFParser extends BaseParser {
 			const ignoreAttr = this._getAttributesToIgnore( vCardData );
 
 			const table = document.createElement( 'table' );
-			card.append( table );
+			let hasTableItems = false;
 
 			for( let j = 0; j < vCardData.length; j++ ) {
 				const entry = vCardData[j];
@@ -244,159 +323,44 @@ export class VCFParser extends BaseParser {
 
 				switch( type ) {
 					case 'binary':
-						if( imgTypes.includes( String( meta.type ).toLowerCase() ) ) {
-							item = this._buildItemImage( attr, meta, value );
+						if( this._isImageType( meta.type ) ) {
+							item = this._buildItemImage( attr, meta, type, value );
+						}
+						else {
+							item = this._buildItemText( attr, meta, type, value );
 						}
 						break;
 
 					case 'date':
+					case 'date-and-or-time':
 					case 'date-time':
-						item = this._buildItemDateTime( attr, meta, value );
+					case 'time':
+					case 'timestamp':
+						item = this._buildItemDateTime( attr, meta, type, value );
 						break;
 
 					case 'phone-number':
-						item = this._buildItemPhone( attr, meta, value );
+						item = this._buildItemPhone( attr, meta, type, value );
 						break;
 
-					case 'text':
-						item = this._buildItemText( attr, meta, value );
+					// 'text', 'uri' ...
+					default:
+						item = this._buildItemText( attr, meta, type, value );
 						break;
 				}
 
 				if( item ) {
+					hasTableItems = true;
 					table.append( item );
 				}
+			}
+
+			if( hasTableItems ) {
+				card.append( table );
 			}
 		}
 
 		return card;
-
-
-		// const name = document.createElement( 'h3' );
-		// name.className = 'name';
-		// name.textContent = data.fn;
-		// card.append( name );
-
-		// if( data.title ) {
-		// 	const title = document.createElement( 'h4' );
-		// 	title.className = 'title';
-		// 	title.textContent = data.title.join( ', ' );
-		// 	card.append( title );
-		// }
-
-		// const table = document.createElement( 'table' );
-
-		// if( data.n['honorific-prefix'] ) {
-		// 	const value = data.n['honorific-prefix'].join( ' ' );
-		// 	const row = UI.buildTableRow( 'Name prefix', value );
-		// 	table.append( row );
-		// }
-
-		// if( data.n['given-name'] ) {
-		// 	const value = data.n['given-name'].join( ' ' );
-		// 	const row = UI.buildTableRow( 'Given name', value );
-		// 	table.append( row );
-		// }
-
-		// if( data.n['family-name'] ) {
-		// 	const value = data.n['family-name'].join( ' ' );
-		// 	const row = UI.buildTableRow( 'Family name', value );
-		// 	table.append( row );
-		// }
-
-		// if( data.photo ) {
-		// 	const row = UI.buildTableRow( 'Photo', data.photo );
-
-		// 	// Check for embedded base64 image data.
-		// 	const match = text.match(/\nPHOTO.+[\r]?\n/);
-		// 	let typeBase64 = null;
-
-		// 	if( match ) {
-		// 		let line = match[0];
-
-		// 		// v4.0
-		// 		if(
-		// 			line.startsWith( 'PHOTO:data:' ) &&
-		// 			line.includes( 'base64' )
-		// 		) {
-		// 			typeBase64 = line.substring( 'PHOTO:data:'.length, line.indexOf( ';base64' ) );
-		// 		}
-		// 		// v3.0
-		// 		else if( line.includes( 'ENCODING=b') ) {
-		// 			const type = line.match( /;TYPE=([a-z0-9\/]+)[;:]/i );
-
-		// 			if( type && type.length >= 2 ) {
-		// 				typeBase64 = type[0];
-		// 			}
-		// 		}
-		// 		// v2.1
-		// 		else if( line.includes( 'ENCODING=BASE64' ) ) {
-		// 			const type = line.match( /;([a-z0-9\/]+)[;:]/i );
-
-		// 			if( type && type.length >= 2 ) {
-		// 				typeBase64 = type[0];
-		// 			}
-		// 		}
-
-		// 		if( typeBase64 ) {
-		// 			typeBase64 = typeBase64.toLowerCase();
-
-		// 			if( !typeBase64.startsWith( 'image/' ) ) {
-		// 				typeBase64 = 'image/' + typeBase64;
-		// 			}
-		// 		}
-		// 	}
-
-		// 	if( typeBase64 ) {
-		// 		const td = row.querySelector( 'td' );
-		// 		td.innerHTML = `<img src="data:${typeBase64};base64,${data.photo}" />`;
-		// 	}
-		// 	else if( data.photo.includes( '://' ) ) {
-		// 		const td = row.querySelector( 'td' );
-		// 		td.innerHTML = `<a href="${data.photo}">${data.photo}</a>`;
-		// 	}
-
-		// 	table.append( row );
-		// }
-
-		// if( data.adr ) {
-		// 	const buildAdr = adr => {
-		// 		let name = 'Adr.';
-		// 		const types = this._getTypes( adr );
-
-		// 		if( types ) {
-		// 			name += ` (${types.join( ', ' )})`;
-		// 		}
-
-		// 		let value = adr.value.split( ';' )
-		// 			.filter( line => line.length > 0 )
-		// 			.map( line => line + '<br>' )
-		// 			.join( '' );
-
-		// 		const row = UI.buildTableRow( name, value, { valueAsHTML: true } );
-		// 		table.append( row );
-		// 	};
-
-		// 	if( Array.isArray( data.adr ) ) {
-		// 		data.adr.forEach( adr => buildAdr( adr ) );
-		// 	}
-		// 	else {
-		// 		buildAdr( data.adr );
-		// 	}
-		// }
-
-		// if( data.org ) {
-		// 	data.org.forEach( org => {
-		// 		let value = org['organization-name'];
-
-		// 		if( org['organization-unit'] ) {
-		// 			value += ', ' + org['organization-unit'];
-		// 		}
-
-		// 		const row = UI.buildTableRow( 'Organization', value );
-		// 		table.append( row );
-		// 	} );
-		// }
 
 		// if( data.email ) {
 		// 	data.email.forEach( email => {
@@ -440,10 +404,6 @@ export class VCFParser extends BaseParser {
 		// 		table.append( row );
 		// 	} );
 		// }
-
-		// card.append( table );
-
-		// return card;
 	}
 
 
@@ -476,16 +436,40 @@ export class VCFParser extends BaseParser {
 		const lines = text.trim().split( '\n' );
 		const newLines = [];
 
+		let version = lines.find( line => line.startsWith( 'VERSION:' ) );
+
+		if( version ) {
+			version = version.substring( 'VERSION:'.length );
+		}
+
+		const needsMoreFixing = !version || version === '2.1';
+
 		for( let i = 0; i < lines.length; i++ ) {
 			let line = lines[i];
 
-			// if( line.startsWith( 'PHOTO;' ) ) {
-			// 	if( line.includes( '://' ) ) {
-			// 		continue;
-			// 	}
-			// }
+			const parts = line.split( ':' );
+			parts[0] = parts[0].replaceAll( '#', '=' );
 
-			line = line.replace( /^([A-Z0-9]+);TYPE#/, '$1;TYPE=' );
+			const rest = parts.splice( 1 ).join( ':' );
+
+			// ical.js does not support version 2.1.
+			// Try to make the input compatible.
+			if( needsMoreFixing ) {
+				const firstProp = String( parts[0].split( ';' )[0] );
+
+				if( firstProp.length < parts[0].length ) {
+					// const props = parts[0].split( ';' );
+					let otherProps = parts[0].substring( firstProp.length + 1 );
+					otherProps = 'TYPE=' + otherProps.replaceAll( ';', ',' );
+
+					line = firstProp + ';' + otherProps + ':' + rest;
+				}
+			}
+			else {
+				if( parts.length > 1 ) {
+					line = parts[0] + ':' + rest;
+				}
+			}
 
 			newLines.push( line );
 		}
