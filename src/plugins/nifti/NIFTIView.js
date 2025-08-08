@@ -162,9 +162,10 @@ export class NIFTIView extends BaseView {
 	/**
 	 *
 	 * @private
+	 * @param {function} cb
 	 * @returns {Promise<void>}
 	 */
-	async _initViewport(cb) {
+	async _initViewport( cb ) {
 		const {
 			Enums,
 			RenderingEngine,
@@ -288,33 +289,28 @@ export class NIFTIView extends BaseView {
 
 	/**
 	 *
-	 * @param {function?} cb
+	 * @override
+	 * @returns {Promise<void>}
 	 */
-	load( cb ) {
-		this.parser.parse( async ( err, imageIds ) => {
-			if( err ) {
-				return;
-			}
+	async load() {
+		const imageIds = await this.parser.parse();
 
-			this._imageIds = imageIds;
-			this._numFrames = imageIds.length;
+		this._imageIds = imageIds;
+		this._numFrames = imageIds.length;
 
+		this.buildMetaNode();
+		this._buildControls();
+		this._openWindow( {
+			destroyOrder: [this, this.parser],
+		} );
+
+		this._initViewport( () => {
+			this._frameIndex = this._viewports.axial.getCurrentImageIdIndex();
+
+			this.mdAdd( 'Photometric Interpretation', this._volume.metadata.PhotometricInterpretation || '' );
 			this.buildMetaNode();
-			this._buildControls();
-			this._openWindow( {
-				destroyOrder: [this, this.parser],
-			} );
 
-			cb?.();
-
-			this._initViewport( () => {
-				this._frameIndex = this._viewports.axial.getCurrentImageIdIndex();
-
-				this.mdAdd( 'Photometric Interpretation', this._volume.metadata.PhotometricInterpretation || '' );
-				this.buildMetaNode();
-
-				this._updateControls();
-			} );
+			this._updateControls();
 		} );
 	}
 

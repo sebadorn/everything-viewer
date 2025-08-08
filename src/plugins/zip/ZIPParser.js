@@ -98,20 +98,13 @@ export class ZIPParser extends BaseParser {
 
 	/**
 	 *
-	 * @param {function} cb
+	 * @returns {Promise<HTMLElement>}
 	 */
-	getHTML( cb ) {
-		this.getArrayBuffer( ( _err, arrayBuffer ) => {
-			this.parse( arrayBuffer, ( err, zip ) => {
-				if( err ) {
-					cb( err );
-					return;
-				}
+	async getHTML() {
+		const arrayBuffer = await this.getArrayBuffer();
+		const zip = await this.parse( arrayBuffer );
 
-				const html = this.build( zip );
-				cb( null, html );
-			} );
-		} );
+		return this.build( zip );
 	}
 
 
@@ -160,20 +153,17 @@ export class ZIPParser extends BaseParser {
 	/**
 	 *
 	 * @param {ArrayBuffer} arrayBuffer
-	 * @param {function}    cb
+	 * @returns {Promise<JSZip>}
 	 */
-	parse( arrayBuffer, cb ) {
-		import( /* webpackChunkName: "jszip" */ 'jszip' ).then( module => {
-			const JSZip = module.default;
+	async parse( arrayBuffer ) {
+		const JSZip = ( await import(
+			/* webpackChunkName: "jszip" */
+			'jszip'
+		) ).default;
 
-			const zip = new JSZip();
-			const promise = zip.loadAsync( arrayBuffer );
-	
-			promise.then(
-				zip => cb( null, zip ),
-				err => cb( err, null )
-			);
-		} );
+		const zip = new JSZip();
+
+		return await zip.loadAsync( arrayBuffer );
 	}
 
 

@@ -197,9 +197,9 @@ export class BaseView {
 
 	/**
 	 * Load and build the view's contents.
-	 * @param {function?} cb
+	 * @returns {Promise<void>}
 	 */
-	load( cb ) {
+	async load() {
 		const note = document.createElement( 'p' );
 		note.className = 'note';
 		note.textContent = `No parser found for file of type: "${this.parser.mimeType}"`;
@@ -208,8 +208,6 @@ export class BaseView {
 
 		this.nodeView.append( note );
 		this._openWindow();
-
-		cb?.();
 	}
 
 

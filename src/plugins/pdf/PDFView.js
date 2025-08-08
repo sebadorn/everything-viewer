@@ -29,9 +29,9 @@ export class PDFView extends BaseView {
 
 	/**
 	 *
-	 * @param {function?} cb
+	 * @override
 	 */
-	load( cb ) {
+	async load() {
 		this._objectURL = URL.createObjectURL( this.parser.file );
 
 		const iframe = document.createElement( 'iframe' );
@@ -41,8 +41,6 @@ export class PDFView extends BaseView {
 
 		this.nodeView.appendChild( iframe );
 		this._openWindow();
-
-		cb?.();
 	}
 
 

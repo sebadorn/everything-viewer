@@ -43,10 +43,9 @@ export class NIFTIParser extends BaseParser {
 
 	/**
 	 *
-	 * @param   {function} cb
 	 * @returns {Promise<void>}
 	 */
-	async parse( cb ) {
+	async parse() {
 		const core = await import(
 			/* webpackChunkName: "cornerstone_core" */
 			'@cornerstonejs/core'
@@ -65,7 +64,7 @@ export class NIFTIParser extends BaseParser {
 		this._objectURL = URL.createObjectURL( this.file );
 		let imageIds = await niftiLoader.createNiftiImageIdsAndCacheMetadata( { url: this._objectURL } );
 
-		cb( null, imageIds );
+		return imageIds;
 	}
 
 

@@ -455,30 +455,28 @@ export class ICalParser extends BaseParser {
 
 	/**
 	 *
-	 * @param {function} cb
+	 * @returns {Promise<HTMLElement>}
 	 */
-	getHTML( cb ) {
-		this.getText( ( _err, text ) => {
-			this.parse( text, data => {
-				const html = this.build( data );
-				cb( null, html );
-			} );
-		} );
+	async getHTML() {
+		const text = await this.getText();
+		const data = await this.parse( text );
+
+		return this.build( data );
 	}
 
 
 	/**
 	 *
-	 * @param {string}   text
-	 * @param {function} cb
+	 * @param {string} text
+	 * @returns {Promise<object>}
 	 */
-	parse( text, cb ) {
-		import( /* webpackChunkName: "ical.js" */ 'ical.js' ).then( module => {
-			this.ICAL = module.default;
+	async parse( text ) {
+		this.ICAL = ( await import(
+			/* webpackChunkName: "ical.js" */
+			'ical.js'
+		) ).default;
 
-			const data = this.ICAL.parse( text );
-			cb( data );
-		} );
+		return this.ICAL.parse( text );
 	}
 
 

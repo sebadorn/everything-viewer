@@ -21,61 +21,39 @@ export class BaseParser {
 
 	/**
 	 *
-	 * @param {function?} cb
 	 * @returns {Promise<ArrayBuffer>}
 	 */
-	getArrayBuffer( cb ) {
-		const promise = this.file.arrayBuffer();
-
-		if( typeof cb === 'function' ) {
-			promise
-				.then( arrayBuffer => cb( null, arrayBuffer ) )
-				.catch( err => {
-					console.error( err );
-					cb( err, null );
-				} );
-		}
-
-		return promise;
+	getArrayBuffer() {
+		return this.file.arrayBuffer();
 	}
 
 
 	/**
 	 *
-	 * @param {function} cb
-	 */
-	getBase64( cb ) {
-		const reader = new FileReader();
-
-		reader.onload = () => cb( null, reader.result );
-
-		reader.onerror = err => {
-			console.error( '[BaseParser.getBase64]', err );
-			cb( err, null );
-		};
-
-		reader.readAsDataURL( this.file );
-	}
-
-
-	/**
-	 *
-	 * @param {function?} cb
 	 * @returns {Promise<string>}
 	 */
-	getText( cb ) {
-		const promise = this.file.text();
+	getBase64() {
+		const reader = new FileReader();
 
-		if( typeof cb === 'function' ) {
-			promise
-				.then( text => cb( null, text ) )
-				.catch( err => {
-					console.error( err );
-					cb( err, null );
-				} );
-		}
+		return new Promise( ( resolve, reject ) => {
+			reader.onload = () => resolve( reader.result );
 
-		return promise;
+			reader.onerror = err => {
+				console.error( '[BaseParser.getBase64]', err );
+				reject( err );
+			};
+
+			reader.readAsDataURL( this.file );
+		} );
+	}
+
+
+	/**
+	 *
+	 * @returns {Promise<string>}
+	 */
+	getText() {
+		return this.file.text();
 	}
 
 

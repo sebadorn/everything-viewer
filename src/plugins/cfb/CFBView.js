@@ -247,22 +247,22 @@ export class CFBView extends BaseView {
 
 	/**
 	 *
-	 * @param {function?} cb
+	 * @override
+	 * @returns {Promise<void>}
 	 */
-	load( cb ) {
-		this.parser.parse( ( _err, msg ) => {
-			// Logged on purpose, so users can access everything in the browser dev tools.
-			console.log( '[CFBView.load] MsgReader:', msg );
+	async load() {
+		const msg = await this.parser.parse();
 
-			this._addMetaInfo( msg.getFileData() );
-			this.buildMetaNode();
+		// Logged on purpose, so users can access everything in the browser dev tools.
+		console.log( '[CFBView.load] MsgReader:', msg );
 
-			this._buildContent( msg );
-			this._openWindow( {
-				height: 800,
-				width: Math.min( 1000, window.innerWidth ),
-			} );
-			cb?.();
+		this._addMetaInfo( msg.getFileData() );
+		this.buildMetaNode();
+
+		this._buildContent( msg );
+		this._openWindow( {
+			height: 800,
+			width: Math.min( 1000, window.innerWidth ),
 		} );
 	}
 

@@ -15,26 +15,26 @@ export class GIFParser extends BaseParser {
 
 	/**
 	 *
-	 * @param {function} cb
+	 * @returns {Promise<GifReader>}
 	 */
-	parse( cb ) {
-		this.getArrayBuffer( async ( _err, arrayBuffer ) => {
-			const { GifReader } = await import( /* webpackChunkName: "omggif" */ 'omggif' );
-			let gifReader = null;
+	async parse() {
+		const arrayBuffer = await this.getArrayBuffer();
+		const { GifReader } = await import(
+			/* webpackChunkName: "omggif" */
+			'omggif'
+		);
+		let gifReader = null;
 
-			try {
-				const uint8Buffer = new Uint8Array( arrayBuffer );
-				gifReader = new GifReader( uint8Buffer );
-			}
-			catch( err ) {
-				console.error( err );
-				cb( err, null );
+		try {
+			const uint8Buffer = new Uint8Array( arrayBuffer );
+			gifReader = new GifReader( uint8Buffer );
+		}
+		catch( err ) {
+			console.error( '[GIFParser.parse]', err );
+			throw err;
+		}
 
-				return;
-			}
-
-			cb( null, gifReader );
-		} );
+		return gifReader;
 	}
 
 

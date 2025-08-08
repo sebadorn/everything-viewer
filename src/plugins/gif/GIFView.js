@@ -60,18 +60,16 @@ export class GIFView extends BaseView {
 	/**
 	 *
 	 * @private
-	 * @returns {HTMLElement}
+	 * @returns {Promise<HTMLElement>}
 	 */
-	_buildImage() {
+	async _buildImage() {
 		const image = new Image();
 
 		image.onerror = err => {
 			console.error( '[GIFView._buildImage]', err );
 		};
 
-		this.parser.getBase64( ( _err, src ) => {
-			image.src = src;
-		} );
+		image.src = await this.parser.getBase64();
 
 		const node = UI.build( '<div class="content-image"></div>' );
 		node.style.display = 'none';
@@ -84,9 +82,9 @@ export class GIFView extends BaseView {
 	/**
 	 *
 	 * @private
-	 * @param {function} cb
+	 * @returns {HTMLElement}
 	 */
-	_buildSlideshow( cb ) {
+	_buildSlideshow() {
 		const numFrames = this._gifReader.numFrames();
 
 		const node = UI.build( `
@@ -116,47 +114,46 @@ export class GIFView extends BaseView {
 		);
 
 		this._frameIndex = 0;
+		this._generateFrames();
 
-		this._generateFrames( () => {
-			const slider = node.querySelector( 'input[type="range"]' );
-			slider.addEventListener( 'input', ev => {
-				this._frameIndex = ev.target.valueAsNumber - 1;
-				this.showFrame( this._frameIndex );
-			} );
+		const slider = node.querySelector( 'input[type="range"]' );
+		slider.addEventListener( 'input', ev => {
+			this._frameIndex = ev.target.valueAsNumber - 1;
+			this.showFrame( this._frameIndex );
+		} );
 
-			btnPrev.on( 'click', _ev => {
+		btnPrev.on( 'click', _ev => {
+			this.showFrame( --this._frameIndex );
+			slider.value = this._frameIndex + 1;
+		} );
+
+		btnNext.on( 'click', _ev => {
+			this.showFrame( ++this._frameIndex );
+			slider.value = this._frameIndex + 1;
+		} );
+
+		this._listenerKeyNav = ev => {
+			const active = document.activeElement;
+
+			if( active && active.type === 'range' ) {
+				return;
+			}
+
+			if( ev.key === 'ArrowLeft' ) {
 				this.showFrame( --this._frameIndex );
 				slider.value = this._frameIndex + 1;
-			} );
-
-			btnNext.on( 'click', _ev => {
+			}
+			else if( ev.key === 'ArrowRight' ) {
 				this.showFrame( ++this._frameIndex );
 				slider.value = this._frameIndex + 1;
-			} );
+			}
+		};
 
-			this._listenerKeyNav = ev => {
-				const active = document.activeElement;
+		document.body.addEventListener( 'keyup', this._listenerKeyNav );
 
-				if( active && active.type === 'range' ) {
-					return;
-				}
+		this._counter = node.querySelector( '.counter' );
 
-				if( ev.key === 'ArrowLeft' ) {
-					this.showFrame( --this._frameIndex );
-					slider.value = this._frameIndex + 1;
-				}
-				else if( ev.key === 'ArrowRight' ) {
-					this.showFrame( ++this._frameIndex );
-					slider.value = this._frameIndex + 1;
-				}
-			};
-
-			document.body.addEventListener( 'keyup', this._listenerKeyNav );
-
-			this._counter = node.querySelector( '.counter' );
-
-			cb( node );
-		} );
+		return node;
 	}
 
 
@@ -164,10 +161,10 @@ export class GIFView extends BaseView {
 	 * Generate a frame. Make sure to generate them in order
 	 * because of the "disposal" handling of frames.
 	 * @private
-	 * @param {number}   index
-	 * @param {function} cb
+	 * @param {number} index
+	 * @returns {HTMLCanvasElement}
 	 */
-	_generateFrame( index, cb ) {
+	_generateFrame( index ) {
 		const imgWidth = this._gifReader.width;
 		const imgHeight = this._gifReader.height;
 
@@ -186,9 +183,8 @@ export class GIFView extends BaseView {
 			this._gifReader.decodeAndBlitFrameRGBA( index, imgData.data );
 
 			newCtx.putImageData( imgData, 0, 0 );
-			cb( newCanvas );
 
-			return;
+			return newCanvas;
 		}
 
 		const prevInfo = this._gifReader.frameInfo( index - 1 );
@@ -216,31 +212,21 @@ export class GIFView extends BaseView {
 
 		newCtx.putImageData( imgData, 0, 0 );
 
-		cb( newCanvas );
+		return newCanvas;
 	}
 
 
 	/**
 	 *
 	 * @private
-	 * @param {function} cb
 	 */
-	_generateFrames( cb ) {
+	_generateFrames() {
 		const numFrames = this._gifReader.numFrames();
 
-		const next = i => {
-			if( i >= numFrames ) {
-				cb();
-				return;
-			}
-
-			this._generateFrame( i, frame => {
-				this._frames.push( frame );
-				next( i + 1 );
-			} );
-		};
-
-		next( 0 );
+		for( let i = 0; i < numFrames; i++ ) {
+			const frame = this._generateFrame( i );
+			this._frames.push( frame );
+		}
 	}
 
 
@@ -256,29 +242,25 @@ export class GIFView extends BaseView {
 
 	/**
 	 *
-	 * @param {function?} cb
+	 * @override
+	 * @returns {Promise<void>}
 	 */
-	load( cb ) {
-		this.parser.parse( ( _err, gifReader ) => {
-			this._gifReader = gifReader;
+	async load() {
+		const gifReader = await this.parser.parse();
+		this._gifReader = gifReader;
 
-			this.mdAdd( 'Dimensions', gifReader.width + '×' + gifReader.height + ' px' );
-			this.mdAdd( 'Frames', gifReader.numFrames() );
-			this.buildMetaNode();
+		this.mdAdd( 'Dimensions', gifReader.width + '×' + gifReader.height + ' px' );
+		this.mdAdd( 'Frames', gifReader.numFrames() );
+		this.buildMetaNode();
 
-			this._buildSlideshow( node => {
-				this.nodeView.append(
-					this._buildActions(),
-					this._buildImage(),
-					node,
-				);
+		this.nodeView.append(
+			this._buildActions(),
+			await this._buildImage(),
+			this._buildSlideshow(),
+		);
 
-				this.showFrame( this._frameIndex );
-				this._openWindow();
-
-				cb?.();
-			} );
-		} );
+		this.showFrame( this._frameIndex );
+		this._openWindow();
 	}
 
 

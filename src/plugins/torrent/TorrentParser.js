@@ -16,7 +16,7 @@ export class TorrentParser extends BaseParser {
 
 	/**
 	 *
-	 * @returns {object}
+	 * @returns {Promise<object>}
 	 */
 	async parse() {
 		const parseTorrent = ( await import(

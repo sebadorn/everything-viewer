@@ -15,17 +15,16 @@ export class ICalView extends BaseView {
 
 	/**
 	 *
-	 * @param {function?} cb
+	 * @override
+	 * @returns {Promise<void>}
 	 */
-	load( cb ) {
-		this.parser.getHTML( ( _err, html ) => {
-			this.buildMetaNode();
+	async load() {
+		const html = await this.parser.getHTML();
 
-			this.nodeView.append( html );
-			this._openWindow();
+		this.buildMetaNode();
 
-			cb?.();
-		} );
+		this.nodeView.append( html );
+		this._openWindow();
 	}
 
 

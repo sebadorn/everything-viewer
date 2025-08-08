@@ -340,9 +340,10 @@ export class TextView extends BaseView {
 
 	/**
 	 *
-	 * @param {function?} cb
+	 * @override
+	 * @returns {Promise<void>}
 	 */
-	load( cb ) {
+	async load() {
 		const lang = FileHandler.detectLanguage( this.parser.file, this.parser.mimeType );
 
 		const block = document.createElement( 'div' );
@@ -355,27 +356,24 @@ export class TextView extends BaseView {
 
 		this.nodeView.appendChild( block );
 
-		this.parser.getText( async ( _err, text ) => {
-			this._originalText = text;
-			block.textContent = text;
+		const text = await this.parser.getText();
+		this._originalText = text;
+		block.textContent = text;
 
-			const hljs = await TextView.initHljs( lang );
+		const hljs = await TextView.initHljs( lang );
 
-			if( lang ) {
-				block.className += ' language-' + lang;
-				hljs.highlightElement( block );
+		if( lang ) {
+			block.className += ' language-' + lang;
+			hljs.highlightElement( block );
 
-				this.mdAdd( 'Language', lang );
-			}
+			this.mdAdd( 'Language', lang );
+		}
 
-			hljs.lineNumbersBlock( block );
+		hljs.lineNumbersBlock( block );
 
-			this.mdAdd( 'Lines', ( text.match( /\n/g ) || [] ).length );
-			this.buildMetaNode();
-			this._openWindow( { width: 1000 } );
-
-			cb?.();
-		} );
+		this.mdAdd( 'Lines', ( text.match( /\n/g ) || [] ).length );
+		this.buildMetaNode();
+		this._openWindow( { width: 1000 } );
 	}
 
 

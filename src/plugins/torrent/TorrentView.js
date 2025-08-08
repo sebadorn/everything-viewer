@@ -196,17 +196,15 @@ export class TorrentView extends BaseView {
 
 	/**
 	 *
-	 * @param {function?} cb
+	 * @returns {Promise<void>}
 	 */
-	async load( cb ) {
+	async load() {
 		const info = await this.parser.parse();
 		console.debug( '[TorrentView.load]', info );
 
 		this.buildMetaNode();
 		this.nodeView.append( this._build( info ) );
 		this._openWindow();
-
-		cb?.();
 	}
 
 

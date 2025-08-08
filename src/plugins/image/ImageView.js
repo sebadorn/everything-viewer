@@ -29,9 +29,10 @@ export class ImageView extends BaseView {
 
 	/**
 	 *
-	 * @param {function?} cb
+	 * @override
+	 * @returns {Promise<void>}
 	 */
-	load( cb ) {
+	async load() {
 		let loaded = false;
 
 		const image = new Image();
@@ -51,8 +52,6 @@ export class ImageView extends BaseView {
 
 			this.nodeView.append( image );
 			this._openWindow();
-
-			cb?.();
 		};
 
 		image.onerror = () => {
@@ -64,8 +63,6 @@ export class ImageView extends BaseView {
 
 			this.nodeView.append( note );
 			this._openWindow();
-
-			cb?.();
 		};
 
 		this._objectURL = URL.createObjectURL( this.parser.file );

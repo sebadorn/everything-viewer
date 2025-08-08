@@ -32,9 +32,10 @@ export class Model3DView extends BaseView {
 
 	/**
 	 *
-	 * @param {function?} cb
+	 * @override
+	 * @returns {Promise<void>}
 	 */
-	async load( cb ) {
+	async load() {
 		const babylonjsViewer = await import(
 			/* webpackChunkName: "babylonjs_viewer" */
 			'@babylonjs/viewer'
@@ -69,8 +70,6 @@ export class Model3DView extends BaseView {
 		setTimeout( () => {
 			this._viewer.source = URL.createObjectURL( this.parser.file );
 		}, 100 );
-
-		cb?.();
 	}
 
 

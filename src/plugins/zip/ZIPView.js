@@ -16,31 +16,34 @@ export class ZIPView extends BaseView {
 
 	/**
 	 *
-	 * @param {function?} cb
+	 * @override
+	 * @returns {Promise<void>}
 	 */
-	load( cb ) {
-		this.parser.getHTML( ( err, html ) => {
-			if( err ) {
-				html = document.createElement( 'p' );
-				html.className = 'note';
-				html.textContent = err.message;
-			}
+	async load() {
+		let html = null;
+
+		try {
+			html = await this.parser.getHTML();
 
 			this.metaData.push( {
 				name: 'Uncompressed',
 				value: UI.formatSize( this.parser.uncompressedSize ),
 			} );
+
 			this.buildMetaNode();
+		}
+		catch( err ) {
+			html = document.createElement( 'p' );
+			html.className = 'note';
+			html.textContent = err.message;
+		}
 
-			const wrap = document.createElement( 'div' );
-			wrap.className = 'wrap';
-			wrap.append( html );
+		const wrap = document.createElement( 'div' );
+		wrap.className = 'wrap';
+		wrap.append( html );
 
-			this.nodeView.append( wrap );
-			this._openWindow();
-
-			cb?.();
-		} );
+		this.nodeView.append( wrap );
+		this._openWindow();
 	}
 
 

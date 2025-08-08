@@ -30,9 +30,10 @@ export class AudioView extends BaseView {
 
 	/**
 	 *
-	 * @param {function?} cb
+	 * @override
+	 * @returns {Promise<void>}
 	 */
-	load( cb ) {
+	async load() {
 		this._objectURL = URL.createObjectURL( this.parser.file );
 
 		const audio = document.createElement( 'audio' );
@@ -49,8 +50,6 @@ export class AudioView extends BaseView {
 
 			this.nodeView.append( note );
 			this._openWindow();
-
-			cb?.();
 		}
 		else {
 			audio.addEventListener( 'loadedmetadata', () => {
@@ -59,8 +58,6 @@ export class AudioView extends BaseView {
 
 				this.nodeView.appendChild( audio );
 				this._openWindow();
-
-				cb?.();
 			} );
 
 			audio.src = this._objectURL;
