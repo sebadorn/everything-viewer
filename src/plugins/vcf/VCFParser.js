@@ -38,7 +38,7 @@ export class VCFParser extends BaseParser {
 			const parts = line.split( ':' );
 			parts[0] = parts[0].replaceAll( '#', '=' );
 
-			const rest = parts.splice( 1 ).join( ':' );
+			const rest = parts.slice( 1 ).join( ':' );
 
 			// ical.js does not support version 2.1.
 			// Try to make the input compatible.

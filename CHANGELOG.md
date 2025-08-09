@@ -3,7 +3,7 @@
 
 ## Build 2025-xx-xx
 
-* **chore:** update dependencies (`@babylonjs/*`, `@cornerstonejs/*`, `ical.js`)
+* **chore:** update dependencies (`@babylonjs/*`, `@cornerstonejs/*`, `ical.js`, `@kenjiuno/msgreader`)
 * **chore:** remove dependency on `vcardjs`
 * **feat(vcf):** use `ical.js` package instead of `vcardjs` and support more attributes
 

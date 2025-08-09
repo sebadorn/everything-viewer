@@ -89,7 +89,58 @@ export class VCFView extends BaseView {
 			const nonEmpty = value.filter( ele => ele && ele.length > 0 );
 
 			if( attr === 'adr' ) {
-				value = nonEmpty.join( '\n' );
+				let poBox = value[0] || '';
+				let extAddr = value[1] || '';
+				let street = value[2] || '';
+				let locality = value[3] || '';
+				let region = value[4] || '';
+				let postal = value[5] || '';
+				let country = value[6] || '';
+
+				value = '';
+
+				if( poBox.length > 0 ) {
+					value += poBox + '\n';
+				}
+
+				if( extAddr.length > 0 ) {
+					value += extAddr + '\n';
+				}
+
+				if( street.length > 0 ) {
+					value += street + '\n';
+				}
+
+				if( locality.length > 0 ) {
+					if( region.length > 0 ) {
+						value += `${locality}, ${region}`;
+
+						if( postal.length > 0 ) {
+							value += ' ' + postal;
+						}
+
+						value += '\n';
+					}
+					else {
+						value += locality + '\n';
+					}
+				}
+
+				if( locality.length < 1 && region.length > 0 ) {
+					value += region + '\n';
+				}
+
+				if( locality.length < 1 && postal.length > 0 ) {
+					value += postal + '\n';
+				}
+
+				if( country.length > 0 ) {
+					value += country + '\n';
+				}
+
+				if( value.endsWith( '\n' ) ) {
+					value = value.substring( 0, value.length - 1 );
+				}
 			}
 			else if( attr === 'n' ) {
 				let honorificPrefix = value[3] || '';
@@ -135,13 +186,18 @@ export class VCFView extends BaseView {
 		value = String( value );
 
 		if( type === 'uri' && value.includes( '://' ) ) {
+			value = UI.escapeHTML( value.trim() );
 			value = `<a href="${value}">${value}</a>`;
 			options.valueAsHTML = true;
 		}
 		else if( value.includes( '\n' ) ) {
 			value = UI.escapeHTML( value );
 			value = value.replaceAll( '\n', '<br>' );
-
+			options.valueAsHTML = true;
+		}
+		else if( attr === 'email' && value.includes( '@' ) ) {
+			value = UI.escapeHTML( value.trim() );
+			value = `<a href="mailto:${value}">${value}</a>`;
 			options.valueAsHTML = true;
 		}
 
@@ -158,15 +214,10 @@ export class VCFView extends BaseView {
 	 * @returns {string[]} 
 	 */
 	_getAttributesToIgnore( data ) {
-		const list = [
+		return [
+			'rev',
 			'version',
 		];
-
-		if( data.find( ele => ele[0] === 'label' ) ) {
-			list.push( 'adr' );
-		}
-
-		return list;
 	}
 
 
@@ -198,9 +249,9 @@ export class VCFView extends BaseView {
 			impp: 'Instant Messaging',
 			key: 'Key',
 			label: {
-				HOME: 'Address (Home)',
-				WORK: 'Address (Work)',
-				default: 'Address',
+				HOME: 'Label (Home)',
+				WORK: 'Label (Work)',
+				default: 'Label',
 			},
 			lang: 'Language',
 			logo: 'Logo',
@@ -259,12 +310,15 @@ export class VCFView extends BaseView {
 
 	/**
 	 *
-	 * @param  {array} data
-	 * @return {HTMLDocument?}
+	 * @param {array} data
+	 * @return {object}
 	 */
 	build( data ) {
 		const card = document.createElement( 'div' );
 		card.className = 'vcard';
+
+		let version = null;
+		let lastUpdated = null;
 
 		for( let i = 0; i < data.length; i++ ) {
 			const vCardData = data[i];
@@ -289,6 +343,13 @@ export class VCFView extends BaseView {
 				const meta = entry[1] || {};
 				const type = String( entry[2] ).toLowerCase();
 				const value = entry[3];
+
+				if( attr === 'version' ) {
+					version = value;
+				}
+				else if( attr === 'rev' ) {
+					lastUpdated = value;
+				}
 
 				if( ignoreAttr.includes( attr ) ) {
 					continue;
@@ -335,50 +396,11 @@ export class VCFView extends BaseView {
 			}
 		}
 
-		return card;
-
-		// if( data.email ) {
-		// 	data.email.forEach( email => {
-		// 		let name = 'Email';
-		// 		const types = this._getTypes( email );
-
-		// 		if( types ) {
-		// 			name += ` (${types.join( ', ' )})`;
-		// 		}
-
-		// 		const row = UI.buildTableRow( name, email.value );
-
-		// 		if( email.value.includes( '@' ) ) {
-		// 			const td = row.querySelector( 'td' );
-		// 			td.innerHTML = `<a href="mailto:${email.value}">${email.value}</a>`;
-		// 		}
-
-		// 		table.append( row );
-		// 	} );
-		// }
-
-		// if( data.tel ) {
-		// 	data.tel.forEach( tel => {
-		// 		let name = 'Tel.';
-		// 		const types = this._getTypes( tel );
-
-		// 		if( types ) {
-		// 			name += ` (${types.join( ', ' )})`;
-		// 		}
-
-		// 		const row = UI.buildTableRow( name, tel.value );
-
-		// 		if( tel.value.startsWith( 'tel:' ) ) {
-		// 			const noPrefix = tel.value.substring( 4 );
-		// 			const value = tel.value.replaceAll( /-/g, '' );
-
-		// 			const td = row.querySelector( 'td' );
-		// 			td.innerHTML = `<a href="${value}">${noPrefix}</a>`;
-		// 		}
-
-		// 		table.append( row );
-		// 	} );
-		// }
+		return {
+			version: version,
+			node: card,
+			lastUpdated: lastUpdated,
+		};
 	}
 
 
@@ -417,8 +439,33 @@ export class VCFView extends BaseView {
 		container.className = 'container';
 
 		const data = await this.parser.parse( text );
-		const card = this.build( data );
-		container.append( card );
+		let version = null;
+		let lastUpdated = null;
+
+		if( Array.isArray( data ) && data.length > 0 ) {
+			if( data[0] === 'vcard' ) {
+				const result = this.build( data );
+				version = result.version;
+				lastUpdated = result.lastUpdated;
+				container.append( result.node );
+			}
+			else {
+				data.forEach( entry => {
+					const result = this.build( entry );
+					version = result.version;
+					lastUpdated = result.lastUpdated;
+					container.append( result.node );
+				} );
+			}
+		}
+
+		if( version ) {
+			this.mdAdd( 'Version', version );
+		}
+
+		if( lastUpdated ) {
+			this.mdAdd( 'Last updated', lastUpdated );
+		}
 
 		this.buildMetaNode();
 
