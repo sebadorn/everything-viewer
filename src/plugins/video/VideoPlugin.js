@@ -1,4 +1,3 @@
-import { VideoView } from './VideoView.js';
 import { Plugin, Priority } from '../Plugin.js';
 
 
@@ -19,10 +18,20 @@ export class VideoPlugin extends Plugin {
 	/**
 	 * 
 	 * @override
-	 * @returns {VideoView}
+	 * @returns {Promise<VideoView>}
 	 */
-	getView() {
-		this._view ??= new VideoView( this.getParser() );
+	async getView() {
+		if( this._view ) {
+			return this._view;
+		}
+
+		const { VideoView } = await import(
+			/* webpackChunkName: "videoview" */
+			'./VideoView.js'
+		);
+
+		this._view = new VideoView( await this.getParser() );
+
 		return this._view;
 	}
 

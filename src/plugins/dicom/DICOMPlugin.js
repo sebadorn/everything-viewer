@@ -1,5 +1,3 @@
-import { DICOMParser } from './DICOMParser.js';
-import { DICOMView } from './DICOMView.js';
 import { Plugin, Priority } from '../Plugin.js';
 import { FileHandler } from '../../FileHandler.js';
 
@@ -21,10 +19,20 @@ export class DICOMPlugin extends Plugin {
 	/**
 	 *
 	 * @override
-	 * @returns {DICOMParser}
+	 * @returns {Promise<DICOMParser>}
 	 */
-	getParser() {
-		this._parser ??= new DICOMParser( this._importData );
+	async getParser() {
+		if( this._parser ) {
+			this._parser;
+		}
+
+		const { DICOMParser } = await import(
+			/* webpackChunkName: "dicomparser" */
+			'./DICOMParser.js'
+		);
+
+		this._parser = new DICOMParser( this._importData );
+
 		return this._parser;
 	}
 
@@ -32,10 +40,20 @@ export class DICOMPlugin extends Plugin {
 	/**
 	 * 
 	 * @override
-	 * @returns {DICOMView}
+	 * @returns {Promise<DICOMView>}
 	 */
-	getView() {
-		this._view ??= new DICOMView( this.getParser() );
+	async getView() {
+		if( this._view ) {
+			return this._view;
+		}
+
+		const { DICOMView } = await import(
+			/* webpackChunkName: "dicomview" */
+			'./DICOMView.js'
+		);
+
+		this._view ??= new DICOMView( await this.getParser() );
+
 		return this._view;
 	}
 

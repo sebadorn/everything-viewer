@@ -335,7 +335,7 @@ export const UI = {
 		const { Registry } = await import( '../plugins/Registry.js' );
 
 		const plugin = await Registry.getPluginForImport( fileOrDir );
-		const view = plugin.getView();
+		const view = await plugin.getView();
 		view.load();
 	},
 

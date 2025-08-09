@@ -1,5 +1,3 @@
-import { CSVParser } from './CSVParser.js';
-import { CSVView } from './CSVView.js';
 import { Plugin, Priority } from '../Plugin.js';
 
 
@@ -20,10 +18,20 @@ export class CSVPlugin extends Plugin {
 	/**
 	 *
 	 * @override
-	 * @returns {CSVParser}
+	 * @returns {Promise<CSVParser>}
 	 */
-	getParser() {
-		this._parser ??= new CSVParser( this._importData );
+	async getParser() {
+		if( this._parser ) {
+			return this._parser;
+		}
+
+		const { CSVParser } = await import(
+			/* webpackChunkName: "csvparser" */
+			'./CSVParser.js'
+		);
+
+		this._parser = new CSVParser( this._importData );
+
 		return this._parser;
 	}
 
@@ -31,10 +39,20 @@ export class CSVPlugin extends Plugin {
 	/**
 	 * 
 	 * @override
-	 * @returns {CSVView}
+	 * @returns {Promise<CSVView>}
 	 */
-	getView() {
-		this._view ??= new CSVView( this.getParser() );
+	async getView() {
+		if( this._view ) {
+			return this._view;
+		}
+
+		const { CSVView } = await import(
+			/* webpackChunkName: "csvview" */
+			'./CSVView.js'
+		);
+
+		this._view = new CSVView( await this.getParser() );
+
 		return this._view;
 	}
 

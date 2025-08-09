@@ -1,5 +1,3 @@
-import { ZIPParser } from './ZIPParser.js';
-import { ZIPView } from './ZIPView.js';
 import { Plugin, Priority } from '../Plugin.js';
 
 
@@ -26,10 +24,20 @@ export class ZIPPlugin extends Plugin {
 	/**
 	 *
 	 * @override
-	 * @returns {ZIPParser}
+	 * @returns {Promise<ZIPParser>}
 	 */
-	getParser() {
-		this._parser ??= new ZIPParser( this._importData );
+	async getParser() {
+		if( this._parser ) {
+			return this._parser;
+		}
+
+		const { ZIPParser } = await import(
+			/* webpackChunkName: "zipparser" */
+			'./ZIPParser.js'
+		);
+
+		this._parser = new ZIPParser( this._importData );
+
 		return this._parser;
 	}
 
@@ -37,10 +45,20 @@ export class ZIPPlugin extends Plugin {
 	/**
 	 * 
 	 * @override
-	 * @returns {ZIPView}
+	 * @returns {Promise<ZIPView>}
 	 */
-	getView() {
-		this._view ??= new ZIPView( this.getParser() );
+	async getView() {
+		if( this._view ) {
+			return this._view;
+		}
+
+		const { ZIPView } = await import(
+			/* webpackChunkName: "zipview" */
+			'./ZIPView.js'
+		);
+
+		this._view = new ZIPView( await this.getParser() );
+
 		return this._view;
 	}
 

@@ -1,4 +1,3 @@
-import { ImageView } from './ImageView.js';
 import { Plugin, Priority } from '../Plugin.js';
 
 
@@ -19,10 +18,20 @@ export class ImagePlugin extends Plugin {
 	/**
 	 * 
 	 * @override
-	 * @returns {ImageView}
+	 * @returns {Promise<ImageView>}
 	 */
-	getView() {
-		this._view ??= new ImageView( this.getParser() );
+	async getView() {
+		if( this._view ) {
+			return this._view;
+		}
+
+		const { ImageView } = await import(
+			/* webpackChunkName: "imageview" */
+			'./ImageView.js'
+		);
+
+		this._view = new ImageView( await this.getParser() );
+
 		return this._view;
 	}
 

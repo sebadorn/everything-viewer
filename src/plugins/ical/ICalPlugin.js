@@ -1,5 +1,3 @@
-import { ICalParser } from './ICalParser.js';
-import { ICalView } from './ICalView.js';
 import { Plugin, Priority } from '../Plugin.js';
 
 
@@ -27,10 +25,20 @@ export class ICalPlugin extends Plugin {
 	/**
 	 *
 	 * @override
-	 * @returns {ICalParser}
+	 * @returns {Promise<ICalParser>}
 	 */
-	getParser() {
+	async getParser() {
+		if( this._parser ) {
+			return this._parser;
+		}
+
+		const { ICalParser } = await import(
+			/* webpackChunkName: "icalparser" */
+			'./ICalParser.js'
+		);
+
 		this._parser ??= new ICalParser( this._importData );
+
 		return this._parser;
 	}
 
@@ -38,10 +46,20 @@ export class ICalPlugin extends Plugin {
 	/**
 	 * 
 	 * @override
-	 * @returns {ICalView}
+	 * @returns {Promise<ICalView>}
 	 */
-	getView() {
-		this._view ??= new ICalView( this.getParser() );
+	async getView() {
+		if( this._view ) {
+			return this._view;
+		}
+
+		const { ICalView } = await import(
+			/* webpackChunkName: "icalview" */
+			'./ICalView.js'
+		);
+
+		this._view = new ICalView( await this.getParser() );
+
 		return this._view;
 	}
 

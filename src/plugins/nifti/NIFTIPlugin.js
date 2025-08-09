@@ -1,5 +1,3 @@
-import { NIFTIParser } from './NIFTIParser.js';
-import { NIFTIView } from './NIFTIView.js';
 import { Plugin, Priority } from '../Plugin.js';
 
 
@@ -20,10 +18,20 @@ export class NIFTIPlugin extends Plugin {
 	/**
 	 *
 	 * @override
-	 * @returns {NIFTIParser}
+	 * @returns {Promise<NIFTIParser>}
 	 */
-	getParser() {
-		this._parser ??= new NIFTIParser( this._importData );
+	async getParser() {
+		if( this._parser ) {
+			return this._parser;
+		}
+
+		const { NIFTIParser } = await import(
+			/* webpackChunkName: "niftiparser" */
+			'./NIFTIParser.js'
+		);
+
+		this._parser = new NIFTIParser( this._importData );
+
 		return this._parser;
 	}
 
@@ -31,10 +39,20 @@ export class NIFTIPlugin extends Plugin {
 	/**
 	 * 
 	 * @override
-	 * @returns {NIFTIView}
+	 * @returns {Promise<NIFTIView>}
 	 */
-	getView() {
-		this._view ??= new NIFTIView( this.getParser() );
+	async getView() {
+		if( this._view ) {
+			return this._view;
+		}
+
+		const { NIFTIView } = await import(
+			/* webpackChunkName: "niftiview" */
+			'./NIFTIView.js'
+		);
+
+		this._view = new NIFTIView( await this.getParser() );
+
 		return this._view;
 	}
 

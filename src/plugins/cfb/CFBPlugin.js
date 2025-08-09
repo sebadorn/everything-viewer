@@ -1,5 +1,3 @@
-import { CFBParser } from './CFBParser.js';
-import { CFBView } from './CFBView.js';
 import { Plugin, Priority } from '../Plugin.js';
 
 
@@ -20,10 +18,20 @@ export class CFBPlugin extends Plugin {
 	/**
 	 *
 	 * @override
-	 * @returns {CFBParser}
+	 * @returns {Promise<CFBParser>}
 	 */
-	getParser() {
-		this._parser ??= new CFBParser( this._importData );
+	async getParser() {
+		if( this._parser ) {
+			return this._parser;
+		}
+
+		const { CFBParser } = await import(
+			/* webpackChunkName: "cfbparser" */
+			'./CFBParser.js'
+		);
+
+		this._parser = new CFBParser( this._importData );
+
 		return this._parser;
 	}
 
@@ -31,10 +39,20 @@ export class CFBPlugin extends Plugin {
 	/**
 	 * 
 	 * @override
-	 * @returns {CFBView}
+	 * @returns {Promise<CFBView>}
 	 */
-	getView() {
-		this._view ??= new CFBView( this.getParser() );
+	async getView() {
+		if( this._view ) {
+			return this._view;
+		}
+
+		const { CFBView } = await import(
+			/* webpackChunkName: "cfbview" */
+			'./CFBView.js'
+		);
+
+		this._view = new CFBView( await this.getParser() );
+
 		return this._view;
 	}
 

@@ -1,5 +1,3 @@
-import { TorrentParser } from './TorrentParser.js';
-import { TorrentView } from './TorrentView.js';
 import { Plugin, Priority } from '../Plugin.js';
 
 
@@ -24,10 +22,20 @@ export class TorrentPlugin extends Plugin {
 	/**
 	 *
 	 * @override
-	 * @returns {TorrentParser}
+	 * @returns {Promise<TorrentParser>}
 	 */
-	getParser() {
-		this._parser ??= new TorrentParser( this._importData );
+	async getParser() {
+		if( this._parser ) {
+			return this._parser;
+		}
+
+		const { TorrentParser } = await import(
+			/* webpackChunkName: "torrentparser" */
+			'./TorrentParser.js'
+		);
+
+		this._parser = new TorrentParser( this._importData );
+
 		return this._parser;
 	}
 
@@ -35,10 +43,20 @@ export class TorrentPlugin extends Plugin {
 	/**
 	 * 
 	 * @override
-	 * @returns {TorrentView}
+	 * @returns {Promise<TorrentView>}
 	 */
-	getView() {
-		this._view ??= new TorrentView( this.getParser() );
+	async getView() {
+		if( this._view ) {
+			return this._view;
+		}
+
+		const { TorrentView } = await import(
+			/* webpackChunkName: "torrentview" */
+			'./TorrentView.js'
+		);
+
+		this._view = new TorrentView( await this.getParser() );
+
 		return this._view;
 	}
 

@@ -1,4 +1,3 @@
-import { TextView } from './TextView.js';
 import { Plugin, Priority } from '../Plugin.js';
 import { FileHandler } from '../../FileHandler.js';
 
@@ -30,10 +29,20 @@ export class TextPlugin extends Plugin {
 	/**
 	 * 
 	 * @override
-	 * @returns {TextView}
+	 * @returns {Promise<TextView>}
 	 */
-	getView() {
-		this._view ??= new TextView( this.getParser() );
+	async getView() {
+		if( this._view ) {
+			return this._view;
+		}
+
+		const { TextView } = await import(
+			/* webpackChunkName: "textview" */
+			'./TextView.js'
+		);
+
+		this._view = new TextView( await this.getParser() );
+
 		return this._view;
 	}
 

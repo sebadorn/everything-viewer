@@ -1,5 +1,3 @@
-import { EMLParser } from './EMLParser.js';
-import { EMLView } from './EMLView.js';
 import { Plugin, Priority } from '../Plugin.js';
 
 
@@ -20,10 +18,20 @@ export class EMLPlugin extends Plugin {
 	/**
 	 *
 	 * @override
-	 * @returns {EMLParser}
+	 * @returns {Promise<EMLParser>}
 	 */
-	getParser() {
-		this._parser ??= new EMLParser( this._importData );
+	async getParser() {
+		if( this._parser ) {
+			return this._parser;
+		}
+
+		const { EMLParser } = await import(
+			/* webpackChunkName: "emlparser" */
+			'./EMLParser.js'
+		);
+
+		this._parser = new EMLParser( this._importData );
+
 		return this._parser;
 	}
 
@@ -31,10 +39,20 @@ export class EMLPlugin extends Plugin {
 	/**
 	 * 
 	 * @override
-	 * @returns {EMLView}
+	 * @returns {Promise<EMLView>}
 	 */
-	getView() {
-		this._view ??= new EMLView( this.getParser() );
+	async getView() {
+		if( this._view ) {
+			return this._view;
+		}
+
+		const { EMLView } = await import(
+			/* webpackChunkName: "emlview" */
+			'./EMLView.js'
+		);
+
+		this._view = new EMLView( await this.getParser() );
+
 		return this._view;
 	}
 

@@ -6,6 +6,7 @@
 * **chore:** update dependencies (`@babylonjs/*`, `@cornerstonejs/*`, `ical.js`, `@kenjiuno/msgreader`)
 * **chore:** remove dependency on `vcardjs`
 * **feat(vcf):** use `ical.js` package instead of `vcardjs` and support more attributes
+* **refactor** reduce initial bundle size by loading more plugin view and parser code only when needed
 
 
 ## Build 2025-08-03

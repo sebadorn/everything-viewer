@@ -1,5 +1,3 @@
-import { GIFParser } from './GIFParser.js';
-import { GIFView } from './GIFView.js';
 import { Plugin, Priority } from '../Plugin.js';
 
 
@@ -20,10 +18,20 @@ export class GIFPlugin extends Plugin {
 	/**
 	 *
 	 * @override
-	 * @returns {GIFParser}
+	 * @returns {Promise<GIFParser>}
 	 */
-	getParser() {
-		this._parser ??= new GIFParser( this._importData );
+	async getParser() {
+		if( this._parser ) {
+			return this._parser;
+		}
+
+		const { GIFParser } = await import(
+			/* webpackChunkName: "gifparser" */
+			'./GIFParser.js'
+		);
+
+		this._parser = new GIFParser( this._importData );
+
 		return this._parser;
 	}
 
@@ -31,10 +39,20 @@ export class GIFPlugin extends Plugin {
 	/**
 	 * 
 	 * @override
-	 * @returns {GIFView}
+	 * @returns {Promise<GIFView>}
 	 */
-	getView() {
-		this._view ??= new GIFView( this.getParser() );
+	async getView() {
+		if( this._view ) {
+			return this._view;
+		}
+
+		const { GIFView } = await import(
+			/* webpackChunkName: "gifview" */
+			'./GIFView.js'
+		);
+
+		this._view = new GIFView( await this.getParser() );
+
 		return this._view;
 	}
 

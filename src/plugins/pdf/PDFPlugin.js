@@ -1,4 +1,3 @@
-import { PDFView } from './PDFView.js';
 import { Plugin, Priority } from '../Plugin.js';
 
 
@@ -19,10 +18,20 @@ export class PDFPlugin extends Plugin {
 	/**
 	 * 
 	 * @override
-	 * @returns {PDFView}
+	 * @returns {Promise<PDFView>}
 	 */
-	getView() {
-		this._view ??= new PDFView( this.getParser() );
+	async getView() {
+		if( this._view ) {
+			return this._view;
+		}
+
+		const { PDFView } = await import(
+			/* webpackChunkName: "pdfview" */
+			'./PDFView.js'
+		);
+
+		this._view = new PDFView( await this.getParser() );
+
 		return this._view;
 	}
 

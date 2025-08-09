@@ -1,6 +1,4 @@
-import { MidiView } from './MidiView.js';
 import { Plugin, Priority } from '../Plugin.js';
-import { MidiParser } from './MidiParser.js';
 
 
 export class MidiPlugin extends Plugin {
@@ -20,10 +18,20 @@ export class MidiPlugin extends Plugin {
 	/**
 	 *
 	 * @override
-	 * @returns {MidiParser}
+	 * @returns {Promise<MidiParser>}
 	 */
-	getParser() {
-		this._parser ??= new MidiParser( this._importData );
+	async getParser() {
+		if( this._parser ) {
+			return this._parser;
+		}
+
+		const { MidiParser } = await import(
+			/* webpackChunkName: "midiparser" */
+			'./MidiParser.js'
+		);
+
+		this._parser = new MidiParser( this._importData );
+
 		return this._parser;
 	}
 
@@ -31,10 +39,20 @@ export class MidiPlugin extends Plugin {
 	/**
 	 * 
 	 * @override
-	 * @returns {MidiView}
+	 * @returns {Promise<MidiView>}
 	 */
-	getView() {
-		this._view ??= new MidiView( this.getParser() );
+	async getView() {
+		if( this._view ) {
+			return this._view;
+		}
+
+		const { MidiView } = await import(
+			/* webpackChunkName: "midiview" */
+			'./MidiView.js'
+		);
+
+		this._view = new MidiView( await this.getParser() );
+
 		return this._view;
 	}
 
