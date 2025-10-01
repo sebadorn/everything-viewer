@@ -1,6 +1,7 @@
 import { FileHandler } from '../FileHandler.js';
 import { Plugin } from './Plugin.js';
 
+import { AIPlugin } from './ai/AIPlugin.js';
 import { AudioPlugin } from './audio/AudioPlugin.js';
 import { CFBPlugin } from './cfb/CFBPlugin.js';
 import { CSVPlugin } from './csv/CSVPlugin.js';
@@ -35,6 +36,7 @@ export const Registry = {
 	init() {
 		this._plugins = [
 			this._basePlugin,
+			new AIPlugin(),
 			new AudioPlugin(),
 			new CFBPlugin(),
 			new CSVPlugin(),

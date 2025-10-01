@@ -308,6 +308,12 @@ export const FileHandler = {
 		let header8 = header.substring( 0, 8 );
 
 		switch( header8 ) {
+			case '47475546':
+				// Usually the type is "application/octet-stream", we just
+				// change it to x-gguf for detection by the plugin.
+				type = 'application/x-gguf';
+				break;
+
 			case '47494638':
 				type = 'image/gif';
 				break;
