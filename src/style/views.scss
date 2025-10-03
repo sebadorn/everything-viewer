@@ -13,6 +13,7 @@
 
 
 .view-base,
+.view-ai,
 .view-audio,
 .view-cfb,
 .view-csv,
@@ -28,6 +29,18 @@
 .view-video,
 .view-zip {
 	display: flex;
+}
+
+
+.view-ai {
+	table.header-info {
+		font-family: vars.$font-ms;
+		font-size: vars.$font-size-ms;
+
+		.tokenizer-chat_template td {
+			white-space: pre-wrap;
+		}
+	}
 }
 
 

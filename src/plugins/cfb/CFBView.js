@@ -140,21 +140,21 @@ export class CFBView extends BaseView {
 		const info = item.querySelector( '.info' );
 		info.append(
 			UI.buildTableRow(
+				{ valueAsHTML: true },
 				'Filename:',
 				`<a href="${fileLink}" target="_blank"${download}>${fileName}</a>`,
-				{ valueAsHTML: true }
 			),
-			UI.buildTableRow( 'Filesize:', UI.formatSize( attachment.contentLength || 0 ) ),
+			UI.buildTableRow( null, 'Filesize:', UI.formatSize( attachment.contentLength || 0 ) ),
 		);
 
 		if( typeof attachment.attachMimeTag === 'string' ) {
-			info.append( UI.buildTableRow( 'Type:', attachment.attachMimeTag ) );
+			info.append( UI.buildTableRow( null, 'Type:', attachment.attachMimeTag ) );
 		}
 
 		if( image ) {
 			UI.onImageComplete( image, () => {
 				const dimension = `${image.naturalWidth}×${image.naturalHeight} px`;
-				info.append( UI.buildTableRow( 'Dimensions:', dimension ) );
+				info.append( UI.buildTableRow( null, 'Dimensions:', dimension ) );
 
 				image.width = image.naturalWidth;
 				image.height = image.naturalHeight;

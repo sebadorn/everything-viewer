@@ -83,7 +83,7 @@ export class ICalParser extends BaseParser {
 
 			if( vevent.duration ) {
 				const value = vevent.duration.toSeconds() * 1000;
-				const row = UI.buildTableRow( 'Duration', UI.formatDuration( value ) );
+				const row = UI.buildTableRow( null, 'Duration', UI.formatDuration( value ) );
 				table.append( row );
 			}
 		}
@@ -110,7 +110,7 @@ export class ICalParser extends BaseParser {
 					sep = ' / ';
 				}
 
-				const row = UI.buildTableRow( 'Period', '' );
+				const row = UI.buildTableRow( null, 'Period', '' );
 				const cell = row.querySelector( 'td' );
 				cell.innerHTML = '';
 				cell.append( nodeStart, sep, nodeEnd );
@@ -131,7 +131,7 @@ export class ICalParser extends BaseParser {
 		// Location
 
 		if( vevent.location ) {
-			const row = UI.buildTableRow( 'Location', vevent.location );
+			const row = UI.buildTableRow( null, 'Location', vevent.location );
 			row.className = 'location';
 			table.append( row );
 		}
@@ -143,7 +143,7 @@ export class ICalParser extends BaseParser {
 			const orgData = vevent.component.jCal[1].find( item => item[0] === 'organizer' );
 			let orgName = orgData?.[1]?.cn || vevent.organizer.replace( /^mailto:/, '' );
 
-			const row = UI.buildTableRow( 'Organizer', orgName );
+			const row = UI.buildTableRow( null, 'Organizer', orgName );
 			row.className = 'organizer';
 
 			if( vevent.organizer.startsWith( 'mailto:' ) ) {
@@ -163,7 +163,7 @@ export class ICalParser extends BaseParser {
 			Array.isArray( vevent.attendees ) &&
 			vevent.attendees.length > 0
 		) {
-			const row = UI.buildTableRow( 'Attendees', '' );
+			const row = UI.buildTableRow( null, 'Attendees', '' );
 			row.className = 'attendees';
 
 			const list = document.createElement( 'ul' );
@@ -198,14 +198,14 @@ export class ICalParser extends BaseParser {
 		const comment = this._getParameterValue( vevent, 'comment' );
 
 		if( comment ) {
-			const row = UI.buildTableRow( 'Comment', comment );
+			const row = UI.buildTableRow( null, 'Comment', comment );
 			table.append( row );
 		}
 
 		const url = this._getParameterValue( vevent, 'url' );
 
 		if( url ) {
-			const row = UI.buildTableRow( 'URL', url );
+			const row = UI.buildTableRow( null, 'URL', url );
 
 			const link = document.createElement( 'a' );
 			link.href = url;
@@ -245,7 +245,7 @@ export class ICalParser extends BaseParser {
 	_buildHTMLTableRowTime( name, icalTime ) {
 		const select = this._buildTimeSelect( icalTime );
 
-		const row = UI.buildTableRow( name, '' );
+		const row = UI.buildTableRow( null, name, '' );
 		row.className = name.toLowerCase();
 		row.querySelector( 'td' ).append( select );
 
@@ -282,35 +282,35 @@ export class ICalParser extends BaseParser {
 		const trigger = alarm.find( a => a[0] === 'trigger' );
 
 		if( trigger && trigger[3] ) {
-			const row = UI.buildTableRow( 'Trigger', trigger[3] );
+			const row = UI.buildTableRow( null, 'Trigger', trigger[3] );
 			table.append( row );
 		}
 
 		const duration = alarm.find( a => a[0] === 'duration' );
 
 		if( duration && duration[3] ) {
-			const row = UI.buildTableRow( 'Duration', duration[3] );
+			const row = UI.buildTableRow( null, 'Duration', duration[3] );
 			table.append( row );
 		}
 
 		const repeat = alarm.find( a => a[0] === 'repeat' );
 
 		if( repeat && repeat[3] ) {
-			const row = UI.buildTableRow( 'Repeat', repeat[3] );
+			const row = UI.buildTableRow( null, 'Repeat', repeat[3] );
 			table.append( row );
 		}
 
 		const action = alarm.find( a => a[0] === 'action' );
 
 		if( action && action[3] ) {
-			const row = UI.buildTableRow( 'Action', action[3] );
+			const row = UI.buildTableRow( null, 'Action', action[3] );
 			table.append( row );
 		}
 
 		const attach = alarm.find( a => a[0] === 'attach' );
 
 		if( attach && attach[3] ) {
-			const row = UI.buildTableRow( 'Attach', attach[3] );
+			const row = UI.buildTableRow( null, 'Attach', attach[3] );
 			table.append( row );
 		}
 

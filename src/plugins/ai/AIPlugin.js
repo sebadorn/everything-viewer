@@ -58,3 +58,14 @@ export class AIPlugin extends Plugin {
 
 
 };
+
+
+/**
+ * @typedef {object} AIModelInfo
+ * @property {string} type
+ * @property {number} version
+ * @property {number} tensor_count
+ * @property {number} metadata_kv_count
+ * @property {object} metadata
+ * @property {object} tensors
+ */

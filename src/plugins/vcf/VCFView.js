@@ -41,7 +41,7 @@ export class VCFView extends BaseView {
 	 */
 	_buildItemImage( attr, meta, type, value ) {
 		const name = this._getName( attr, meta );
-		const row = UI.buildTableRow( name, value );
+		const row = UI.buildTableRow( null, name, value );
 
 		if( meta.encoding === 'b' ) {
 			const imgType = String( meta.type ).toLowerCase();
@@ -201,7 +201,7 @@ export class VCFView extends BaseView {
 			options.valueAsHTML = true;
 		}
 
-		const row = UI.buildTableRow( name, value, options );
+		const row = UI.buildTableRow( options, name, value );
 
 		return row;
 	}

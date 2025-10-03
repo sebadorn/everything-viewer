@@ -15,6 +15,29 @@ const GGUFMetaDataValueType = {
     TypeUint64: 10,
     TypeInt64: 11,
     TypeFloat64: 12,
+
+	/**
+	 *
+	 * @param {number} value
+	 * @returns {string}
+	 */
+	toName( value ) {
+		switch( value ) {
+			case 0: return 'Uint8';
+			case 1: return 'Int8';
+			case 2: return 'Uint16';
+			case 3: return 'Int16';
+			case 4: return 'Uint32';
+			case 5: return 'Int32';
+			case 6: return 'Float32';
+			case 7: return 'Bool';
+			case 8: return 'String';
+			case 9: return 'Array';
+			case 10: return 'Uint64';
+			case 11: return 'Int64';
+			case 12: return 'Float64';
+		}
+	},
 };
 
 
@@ -205,10 +228,11 @@ export class AIParser extends BaseParser {
 	 * @returns {Promise<object>}
 	 */
 	async parse() {
-		const headerDataView = new DataView( await this.file.slice( 4, 24 ).arrayBuffer() );
-		const version = headerDataView.getUint32( 0, true );
-		const tensorCount = Number( headerDataView.getBigUint64( 4, true ) );
-		const kvCount = Number( headerDataView.getBigUint64( 4 + 8, true ) );
+		const headerDataView = new DataView( await this.file.slice( 0, 24 ).arrayBuffer() );
+		const type = this._textDecoder.decode( headerDataView.buffer.slice( 0, 4 ) );
+		const version = headerDataView.getUint32( 4, true );
+		const tensorCount = Number( headerDataView.getBigUint64( 8, true ) );
+		const kvCount = Number( headerDataView.getBigUint64( 16, true ) );
 		const stepSize = 64;
 
 		const meta = {};
@@ -242,21 +266,28 @@ export class AIParser extends BaseParser {
 				const [value, offsetIncVal] = this._readValue( metaDataViewSlice, offset, valType );
 				offset += offsetIncVal;
 
-				meta[key] = value;
+				meta[key] = {
+					type: GGUFMetaDataValueType.toName( valType ),
+					value: value,
+				};
+
 				numMetaEntries++;
 			}
 		}
+
+		const tensors = {};
 
 		if( tensorCount > 0 ) {
 			// TODO:
 		}
 
 		const info = {
-			type: 'gguf',
+			type: type,
 			version: version,
 			tensor_count: tensorCount,
 			metadata_kv_count: kvCount,
 			metadata: meta,
+			tensors: tensors,
 		};
 
 		console.debug( '[AIParser.parse]', info );

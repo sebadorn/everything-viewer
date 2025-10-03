@@ -88,30 +88,37 @@ export const UI = {
 
 	/**
 	 *
-	 * @param  {string}             name
-	 * @param  {string|HTMLElement} value
-	 * @param  {object?}            options
-	 * @param  {bool}               [options.valueAsHTML = false]
+	 * @param  {object?} options
+	 * @param  {boolean} [options.valueAsHTML = false]
+	 * @param  {string} name
+	 * @param  {(string|HTMLElement)[]} cells
 	 * @return {HTMLElement}
 	 */
-	buildTableRow( name, value, options = {} ) {
+	buildTableRow( options, name, ...cells ) {
+		options = options || {};
+
 		const th = document.createElement( 'th' );
 		th.textContent = name;
 
-		const td = document.createElement( 'td' );
-
-		if( value instanceof HTMLElement ) {
-			td.append( value );
-		}
-		else if( options.valueAsHTML === true ) {
-			td.innerHTML = value;
-		}
-		else {
-			td.textContent = value;
-		}
-
 		const row = document.createElement( 'tr' );
-		row.append( th, td );
+		row.append( th );
+
+		for( let i = 0; i < cells.length; i++ ) {
+			const value = cells[i];
+			const td = document.createElement( 'td' );
+
+			if( value instanceof HTMLElement ) {
+				td.append( value );
+			}
+			else if( options.valueAsHTML === true ) {
+				td.innerHTML = value;
+			}
+			else {
+				td.textContent = value;
+			}
+
+			row.append( td );
+		}
 
 		return row;
 	},
