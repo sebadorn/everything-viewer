@@ -252,7 +252,7 @@ export class DICOMParser extends BaseParser {
 
 	/**
 	 *
-	 * @returns {Promise<IImage|>}
+	 * @returns {Promise<IImage|string[]>}
 	 */
 	async parse() {
 		const core = await import(
@@ -271,13 +271,11 @@ export class DICOMParser extends BaseParser {
 		this.wadouri = dicomLoader.wadouri;
 
 		if( this.isDir ) {
-			this._parseHandlerDir( cb );
+			return await this._parseHandlerDir();
 		}
 		else if( this.file.name.toLowerCase() === 'dicomdir' ) {
-			this._loadFromDicomdirFile( this.file, ( err, record ) => {
-				const filePaths = this.getFilepathsFromRecord( record );
-				cb( null, filePaths );
-			} );
+			const record = await this._loadFromDicomdirFile( this.file );
+			return this.getFilepathsFromRecord( record );
 		}
 		else {
 			return await this.addAndLoadFile( this.file );
