@@ -55,9 +55,6 @@ export class Plugin {
 	 * @param {import('./Registry.js').ImportData} data
 	 */
 	setImportData( data ) {
-		this._parser?.destroy();
-		this._view?.destroy();
-
 		this._parser = null;
 		this._view = null;
 
