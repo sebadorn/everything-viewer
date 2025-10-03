@@ -118,6 +118,7 @@ export const FileHandler = {
 		plaintext: [
 			'cfg',
 			'conf',
+			'mtl',
 		],
 		powershell: [
 			'ps',
