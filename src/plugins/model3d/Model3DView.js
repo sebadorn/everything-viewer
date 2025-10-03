@@ -41,7 +41,12 @@ export class Model3DView extends BaseView {
 			'@babylonjs/viewer'
 		);
 
-		this._viewer = new babylonjsViewer.HTML3DElement();
+		this._viewer = new babylonjsViewer.HTML3DElement( {
+			cameraAutoOrbit: {
+				enabled: false,
+				speed: 0,
+			},
+		} );
 		this._viewer.extension = this.parser.ext;
 
 		this._viewer.addEventListener( 'environmenterror', ev => console.error( 'environmenterror', ev ) );
