@@ -2,31 +2,55 @@
 
 Okay, not *everything*. The idea is to support a bunch of different formats and maybe provide some additional information or tools.
 
+Modules are lazyily loaded, so only the contents actually needed for parsing and viewing an opened file will be loaded.
+
 
 ## Supported formats
 
-* 3D models (.glb, .obj, .ply, .splat, .stl)
-* Audio – *if the browser supports the format*
-	* Midi
-* CFB (.msg)
-* CSV
-* DCM, DICOM
-* EML
-	* Show the email headers
-	* Show the email body with external resources removed
-	* Show the email body with loaded external resources
-* iCal (.ical, .ics, .ifb, .vcs)
-* Image – *if the browser supports the format*
-	* GIF: Step through each frame
-* NIFTI (.nii)
-* PDF – *if the browser has a PDF viewer integrated*
-* Text
-	* With syntax highlighting for selected languages
-* Torrent identifiers (.torrent)
-* vCard (.vcf)
-* Video – *if the browser supports the format*
-* ZIP
-	* Show a list of the directory structure and files
+### 3D models
+
+* A simple viewer (Babylon Viewer) for single-file models in the format `.glb`, `.obj`, `.ply`, `.splat` and `.stl`.
+
+### AI
+
+* Show the header data of `.gguf` (GGML Universal File) AI model files.
+
+### Audio
+
+* Show the default audio element to play formats supported by the browser.
+* Support Midi files (`.mid`) using Tone.js and a custom player UI.
+
+### Image
+
+* Shows an image if the browser supports the format.
+* Offers a tool for `.gif` files to step through each frame.
+
+### Medical
+
+* Uses Cornerstone to view DCM/DICOM and NIFTI files (`.dcm`, `.dicom`, `.nii`) including showing a lot of meta data and playing images as animation if multiple are contained.
+	* Also works if drag & dropping a directory of DICOM files. Uses an optionally included `dicomdir` file for the order.
+
+### Office
+
+* Show `.csv` table data as HTML table.
+* Show exported emails in `.eml` format. Lists headers and optionally the body with external resources removed or loaded.
+* Show calendar events (`.ical`, `.ics`, `.ifb`, `.vcs`).
+* Show visiting cards / vCards (`.vcf`).
+* Show the contents of `.msg` files and list its attachments for viewing or extraction. Commonly used format for email exports.
+* Show a PDF viewer for `.pdf` files if the browser has PDF.js integrated.
+
+### Text/Code
+
+* Show the contents of text files with syntax highlighting for various programming/scripting/configuration/markup languages.
+
+### Video
+
+* Show the default video element to play formats supported by the browser.
+
+### Other
+
+* Show meta data of Torrent identifier files (`.torrent`).
+* For `.zip` files show a list of its contents. Does not supported encrypted archives yet.
 
 
 ## Libraries/Packages
