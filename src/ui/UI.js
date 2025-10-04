@@ -87,21 +87,49 @@ export const UI = {
 
 
 	/**
+	 * 
+	 * @param {...(string|HTMLElement)} headers
+	 * @returns {HTMLTableRowElement}
+	 */
+	buildTableHeaderRow( ...headers ) {
+		const row = document.createElement( 'tr' );
+
+		for( let i = 0; i < headers.length; i++ ) {
+			const value = headers[i];
+			const th = document.createElement( 'th' );
+
+			if( value instanceof HTMLElement ) {
+				th.append( value );
+			}
+			else {
+				th.textContent = value;
+			}
+
+			row.append( th );
+		}
+
+		return row;
+	},
+
+
+	/**
 	 *
 	 * @param  {object?} options
 	 * @param  {boolean} [options.valueAsHTML = false]
-	 * @param  {string} name
-	 * @param  {(string|HTMLElement)[]} cells
-	 * @return {HTMLElement}
+	 * @param  {string?} name
+	 * @param  {...(string|HTMLElement)} cells
+	 * @return {HTMLTableRowElement}
 	 */
 	buildTableRow( options, name, ...cells ) {
 		options = options || {};
 
-		const th = document.createElement( 'th' );
-		th.textContent = name;
-
 		const row = document.createElement( 'tr' );
-		row.append( th );
+
+		if( name !== null ) {
+			const th = document.createElement( 'th' );
+			th.textContent = name;
+			row.append( th );
+		}
 
 		for( let i = 0; i < cells.length; i++ ) {
 			const value = cells[i];

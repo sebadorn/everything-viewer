@@ -67,5 +67,5 @@ export class AIPlugin extends Plugin {
  * @property {number} tensor_count
  * @property {number} metadata_kv_count
  * @property {object} metadata
- * @property {object} tensors
+ * @property {object[]} tensors
  */

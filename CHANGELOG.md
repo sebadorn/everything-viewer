@@ -1,10 +1,11 @@
 # Changelog
 
 
-## Build 2025-xx-xx
+## Build 2025-10-04
 
 * **chore:** update dependencies (`@babylonjs/*`, `@cornerstonejs/*`, `ical.js`, `@kenjiuno/msgreader`)
 * **chore:** remove dependency on `vcardjs`
+* **feat(ai):** add support for `.gguf` AI model files, show info from header
 * **feat(vcf):** use `ical.js` package instead of `vcardjs` and support more attributes
 * **refactor** reduce initial bundle size by loading more plugin view and parser code only when needed
 
@@ -14,7 +15,7 @@
 * **chore:** update dependencies (`@babylonjs/*`, `@cornerstonejs/*`)
 * **feat:** add favicon
 * **feat:** add changelog and include build number on page
-* **feat(torrent):** add support for .torrent files, show contained info
+* **feat(torrent):** add support for `.torrent` files, show contained info
 * **feat(zip):** add own colored symbol for audio files
 * **fix:** add build number as cache buster for CSS and main bundle JS
 * **fix(nifti):** use font icons for icon buttons
@@ -22,4 +23,4 @@
 
 ## Build 2025-07-13
 
-* **feat(midi):** add Midi support (.mid) including an audio player
+* **feat(midi):** add Midi support (`.mid`) including an audio player

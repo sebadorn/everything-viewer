@@ -20,16 +20,39 @@ export class AIView extends BaseView {
 	 * @param {import('./AIPlugin.js').AIModelInfo} info
 	 */
 	_buildContent( info ) {
-		const node = document.createElement( 'table' );
-		node.classList.add( 'header-info' );
+		const tableGeneral = document.createElement( 'table' );
+		tableGeneral.classList.add( 'header-general' );
+		tableGeneral.append(
+			UI.buildTableHeaderRow( 'Name', 'Type', 'Value' ),
+			UI.buildTableRow( null, null, 'type', 'String', info.type ),
+			UI.buildTableRow( null, null, 'version', 'Uint32', info.version ),
+			UI.buildTableRow( null, null, 'metadata_kv_count', 'Uint64', info.metadata_kv_count ),
+			UI.buildTableRow( null, null, 'tensor_count', 'Uint64', info.tensor_count ),
+		);
 
-		node.append(
-			UI.buildTableRow( null, 'type', 'String', info.type ),
-			UI.buildTableRow( null, 'version', 'Uint32', info.version ),
-			UI.buildTableRow( null, 'metadata_kv_count', 'Uint64', info.metadata_kv_count ),
-			UI.buildTableRow( null, 'tensor_count', 'Uint64', info.tensor_count ),
+		const tableMetadata = document.createElement( 'table' );
+		tableMetadata.classList.add( 'header-metadata' );
+		tableMetadata.append(
+			UI.buildTableHeaderRow( 'Name', 'Type', 'Value' ),
 			...this._buildMetadataRows( info.metadata ),
-			...this._buildMetadataRows( info.tensors ),
+		);
+
+		const tableTensors = document.createElement( 'table' );
+		tableTensors.classList.add( 'header-tensors' );
+		tableTensors.append(
+			UI.buildTableHeaderRow( 'Name', 'Dimensions', 'Type' ),
+			...this._buildTensorRows( info.tensors ),
+		);
+
+		const node = document.createElement( 'div' );
+		node.classList.add( 'header-info' );
+		node.append(
+			UI.build( '<h3>General</h3>' ),
+			tableGeneral,
+			UI.build( '<h3>Metadata</h3>' ),
+			tableMetadata,
+			UI.build( '<h3>Tensors</h3>' ),
+			tableTensors,
 		);
 
 		this.nodeView.append( node );
@@ -75,8 +98,35 @@ export class AIView extends BaseView {
 				text += ']';
 			}
 
-			const row = UI.buildTableRow( null, key, type, text );
+			const row = UI.buildTableRow( null, null, key, type, text );
 			row.classList.add( key.replaceAll( '.', '-' ) );
+
+			rows.push( row );
+		}
+
+		return rows;
+	}
+
+
+	/**
+	 *
+	 * @private
+	 * @param {object[]} tensors
+	 * @returns {HTMLTableRowElement[]}
+	 */
+	_buildTensorRows( tensors ) {
+		const rows = [];
+
+		for( let i = 0; i < tensors.length; i++ ) {
+			const tensor = tensors[i];
+
+			const row = UI.buildTableRow(
+				null,
+				null,
+				tensor.name,
+				'[' + tensor.dimensions.join( ', ' ) + ']',
+				tensor.type,
+			);
 
 			rows.push( row );
 		}
