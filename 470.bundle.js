@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkeverything_viewer=self.webpackChunkeverything_viewer||[]).push([[470],{18643:(e,s,r)=>{r.d(s,{Model3DParser:()=>c});var t=r(62845);class c extends t.V{constructor(e){super(e),this.ext="."+e.ext}}}}]);

@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkeverything_viewer=self.webpackChunkeverything_viewer||[]).push([[4179],{13637:(e,s,i)=>{i.d(s,{ICalView:()=>a});var t=i(15287);class a extends t.P{constructor(e){super(e,"ical")}async load(){const e=await this.parser.getHTML();this.buildMetaNode(),this.nodeView.append(e),this._openWindow()}}}}]);
