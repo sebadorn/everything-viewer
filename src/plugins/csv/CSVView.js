@@ -15,8 +15,8 @@ export class CSVView extends BaseView {
 
 	/**
 	 *
-	 * @param  {array} data
-	 * @return {?HTMLDocument}
+	 * @param {any[]} data
+	 * @return {HTMLDocument?}
 	 */
 	_build( data ) {
 		const table = document.createElement( 'table' );
@@ -45,20 +45,19 @@ export class CSVView extends BaseView {
 
 	/**
 	 *
-	 * @param {function?} cb
+	 * @override
+	 * @returns {Promise<void>}
 	 */
-	load( cb ) {
-		this.parser.parse( ( _err, tableData ) => {
-			this.mdAdd( 'Columns', tableData.length > 0 ? tableData[0].length : 0 );
-			this.mdAdd( 'Rows', tableData.length );
-			this.buildMetaNode();
+	async load() {
+		const tableData = await this.parser.parse();
 
-			const html = this._build( tableData );
-			this.nodeView.append( html );
-			this._openWindow();
+		this.mdAdd( 'Columns', tableData.length > 0 ? tableData[0].length : 0 );
+		this.mdAdd( 'Rows', tableData.length );
+		this.buildMetaNode();
 
-			cb?.();
-		} );
+		const html = this._build( tableData );
+		this.nodeView.append( html );
+		this._openWindow();
 	}
 
 

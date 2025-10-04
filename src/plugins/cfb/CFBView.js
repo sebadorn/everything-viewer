@@ -140,21 +140,21 @@ export class CFBView extends BaseView {
 		const info = item.querySelector( '.info' );
 		info.append(
 			UI.buildTableRow(
+				{ valueAsHTML: true },
 				'Filename:',
 				`<a href="${fileLink}" target="_blank"${download}>${fileName}</a>`,
-				{ valueAsHTML: true }
 			),
-			UI.buildTableRow( 'Filesize:', UI.formatSize( attachment.contentLength || 0 ) ),
+			UI.buildTableRow( null, 'Filesize:', UI.formatSize( attachment.contentLength || 0 ) ),
 		);
 
 		if( typeof attachment.attachMimeTag === 'string' ) {
-			info.append( UI.buildTableRow( 'Type:', attachment.attachMimeTag ) );
+			info.append( UI.buildTableRow( null, 'Type:', attachment.attachMimeTag ) );
 		}
 
 		if( image ) {
 			UI.onImageComplete( image, () => {
 				const dimension = `${image.naturalWidth}×${image.naturalHeight} px`;
-				info.append( UI.buildTableRow( 'Dimensions:', dimension ) );
+				info.append( UI.buildTableRow( null, 'Dimensions:', dimension ) );
 
 				image.width = image.naturalWidth;
 				image.height = image.naturalHeight;
@@ -247,22 +247,22 @@ export class CFBView extends BaseView {
 
 	/**
 	 *
-	 * @param {function?} cb
+	 * @override
+	 * @returns {Promise<void>}
 	 */
-	load( cb ) {
-		this.parser.parse( ( _err, msg ) => {
-			// Logged on purpose, so users can access everything in the browser dev tools.
-			console.log( '[CFBView.load] MsgReader:', msg );
+	async load() {
+		const msg = await this.parser.parse();
 
-			this._addMetaInfo( msg.getFileData() );
-			this.buildMetaNode();
+		// Logged on purpose, so users can access everything in the browser dev tools.
+		console.log( '[CFBView.load] MsgReader:', msg );
 
-			this._buildContent( msg );
-			this._openWindow( {
-				height: 800,
-				width: Math.min( 1000, window.innerWidth ),
-			} );
-			cb?.();
+		this._addMetaInfo( msg.getFileData() );
+		this.buildMetaNode();
+
+		this._buildContent( msg );
+		this._openWindow( {
+			height: 800,
+			width: Math.min( 1000, window.innerWidth ),
 		} );
 	}
 

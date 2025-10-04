@@ -1,5 +1,3 @@
-import { VCFParser } from './VCFParser.js';
-import { VCFView } from './VCFView.js';
 import { Plugin, Priority } from '../Plugin.js';
 
 
@@ -24,10 +22,20 @@ export class VCFPlugin extends Plugin {
 	/**
 	 *
 	 * @override
-	 * @returns {VCFParser}
+	 * @returns {Promise<VCFParser>}
 	 */
-	getParser() {
-		this._parser ??= new VCFParser( this._importData );
+	async getParser() {
+		if( this._parser ) {
+			return this._parser;
+		}
+
+		const { VCFParser } = await import(
+			/* webpackChunkName: "vcfparser" */
+			'./VCFParser.js'
+		);
+
+		this._parser = new VCFParser( this._importData );
+
 		return this._parser;
 	}
 
@@ -35,10 +43,20 @@ export class VCFPlugin extends Plugin {
 	/**
 	 * 
 	 * @override
-	 * @returns {VCFView}
+	 * @returns {Promise<VCFView>}
 	 */
-	getView() {
-		this._view ??= new VCFView( this.getParser() );
+	async getView() {
+		if( this._view ) {
+			return this._view;
+		}
+
+		const { VCFView } = await import(
+			/* webpackChunkName: "vcfview" */
+			'./VCFView.js'
+		);
+
+		this._view = new VCFView( await this.getParser() );
+
 		return this._view;
 	}
 

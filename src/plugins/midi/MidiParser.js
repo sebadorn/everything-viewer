@@ -15,10 +15,9 @@ export class MidiParser extends BaseParser {
 
 	/**
 	 *
-	 * @param   {function} cb
 	 * @returns {Promise<void>}
 	 */
-	async parse( cb ) {
+	async parse() {
 		const { Midi } = await import(
 			/* webpackChunkName: "tonejs_midi" */
 			'@tonejs/midi'
@@ -28,43 +27,46 @@ export class MidiParser extends BaseParser {
 			'tone'
 		);
 
-		this.getArrayBuffer( ( _err, arrayBuffer ) => {
-			this.midiData = new Midi( arrayBuffer );
-			console.debug( this.midiData );
+		const arrayBuffer = await this.getArrayBuffer();
+		this.midiData = new Midi( arrayBuffer );
+		console.debug( this.midiData );
 
-			const synths = [];
-			const now = Tone.now() + 0.5;
+		const synths = [];
+		const now = Tone.now() + 0.5;
 
-			this.midiData.tracks.forEach( track => {
-				// Create a synth for each track
-				const synth = new Tone.PolySynth( Tone.Synth, {
-					envelope: {
-						attack: 0.02,
-						decay: 0.1,
-						sustain: 0.3,
-						release: 1,
-					},
-				} ).toDestination();
+		this.midiData.tracks.forEach( track => {
+			// Create a synth for each track
+			const synth = new Tone.PolySynth( Tone.Synth, {
+				envelope: {
+					attack: 0.02,
+					decay: 0.1,
+					sustain: 0.3,
+					release: 1,
+				},
+			} ).toDestination();
 
-				// `sync()` is important, otherwise `Tone.getTransport().start()/.pause()/.stop()`
-				// would not work and the synth would just autoplay.
-				synth.sync();
+			// `sync()` is important, otherwise `Tone.getTransport().start()/.pause()/.stop()`
+			// would not work and the synth would just autoplay.
+			synth.sync();
 
-				synths.push( synth );
+			synths.push( synth );
 
-				// Schedule all of the events
-				track.notes.forEach( note => {
-					synth.triggerAttackRelease(
-						note.name,
-						note.duration,
-						note.time + now,
-						note.velocity
-					);
-				});
-
-				cb( null, Tone, this.midiData, synths );
-			});
+			// Schedule all of the events
+			track.notes.forEach( note => {
+				synth.triggerAttackRelease(
+					note.name,
+					note.duration,
+					note.time + now,
+					note.velocity
+				);
+			} );
 		} );
+
+		return {
+			Tone: Tone,
+			midiData: this.midiData,
+			synths: synths,
+		};
 	}
 
 

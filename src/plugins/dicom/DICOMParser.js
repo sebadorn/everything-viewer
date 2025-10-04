@@ -29,39 +29,36 @@ export class DICOMParser extends BaseParser {
 	/**
 	 *
 	 * @private
-	 * @param {File}     file
-	 * @param {function} cb
+	 * @param {File} file
+	 * @returns {Promise<*>}
 	 */
-	_loadFromDicomdirFile( file, cb ) {
-		file.arrayBuffer()
-			.then( async arrayBuffer => {
-				const dicomParser = await import(
-					/* webpackChunkName: "dicom-parser" */
-					'dicom-parser'
-				);
+	async _loadFromDicomdirFile( file ) {
+		const arrayBuffer = await file.arrayBuffer();
 
-				const options = { TransferSyntaxUID: '1.2.840.10008.1.2' };
-				const dataSet = dicomParser.parseDicom( new Uint8Array( arrayBuffer ), options );
-				const record = dataSet.elements.x00041220;
+		const dicomParser = await import(
+			/* webpackChunkName: "dicom-parser" */
+			'dicom-parser'
+		);
 
-				if( !record || !Array.isArray( record.items ) ) {
-					console.error( '[DICOMParser._parseHandlerDir]' +
-						' Record is either not set or has no entries.', record );
-				}
-				else {
-					cb( null, record );
-				}
-			} )
-			.catch( err => console.error( err ) );
+		const options = { TransferSyntaxUID: '1.2.840.10008.1.2' };
+		const dataSet = dicomParser.parseDicom( new Uint8Array( arrayBuffer ), options );
+		const record = dataSet.elements.x00041220;
+
+		if( !record || !Array.isArray( record.items ) ) {
+			console.error( '[DICOMParser._parseHandlerDir]' +
+				' Record is either not set or has no entries.', record );
+		}
+
+		return record;
 	}
 
 
 	/**
 	 *
 	 * @private
-	 * @param {function} cb
+	 * @returns {Promise<any>}
 	 */
-	_parseHandlerDir( cb ) {
+	async _parseHandlerDir() {
 		const entries = this.entries;
 
 		/** @type {FileSystemFileEntry?} */
@@ -72,24 +69,28 @@ export class DICOMParser extends BaseParser {
 			);
 		} );
 
-		if( dicomdirEntry ) {
+		if( !dicomdirEntry ) {
+			return entries;
+		}
+
+		return new Promise( ( resolve, reject ) => {
 			dicomdirEntry.file(
-				file => this._loadFromDicomdirFile( file, cb ),
+				async file => {
+					const record = await this._loadFromDicomdirFile( file );
+					resolve( record );
+				},
 				err => {
 					console.error( '[DICOMParser._parseHandlerDir]', err );
-					cb( err );
+					reject( err );
 				}
 			);
-		}
-		else {
-			cb( null, entries );
-		}
+		} );
 	}
 
 
 	/**
 	 *
-	 * @param   {File} file
+	 * @param {File} file
 	 * @returns {Promise<IImage>}
 	 */
 	async addAndLoadFile( file ) {
@@ -251,10 +252,9 @@ export class DICOMParser extends BaseParser {
 
 	/**
 	 *
-	 * @param   {function} cb
-	 * @returns {Promise<void>}
+	 * @returns {Promise<IImage|string[]>}
 	 */
-	async parse( cb ) {
+	async parse() {
 		const core = await import(
 			/* webpackChunkName: "cornerstone_core" */
 			'@cornerstonejs/core'
@@ -271,17 +271,14 @@ export class DICOMParser extends BaseParser {
 		this.wadouri = dicomLoader.wadouri;
 
 		if( this.isDir ) {
-			this._parseHandlerDir( cb );
+			return await this._parseHandlerDir();
 		}
 		else if( this.file.name.toLowerCase() === 'dicomdir' ) {
-			this._loadFromDicomdirFile( this.file, ( err, record ) => {
-				const filePaths = this.getFilepathsFromRecord( record );
-				cb( null, filePaths );
-			} );
+			const record = await this._loadFromDicomdirFile( this.file );
+			return this.getFilepathsFromRecord( record );
 		}
 		else {
-			const image = await this.addAndLoadFile( this.file );
-			cb( null, image );
+			return await this.addAndLoadFile( this.file );
 		}
 	}
 

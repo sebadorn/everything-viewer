@@ -86,29 +86,27 @@ export class EMLView extends BaseView {
 
 	/**
 	 *
-	 * @param {function?} cb
+	 * @override
+	 * @returns {Promise<void>}
 	 */
-	load( cb ) {
+	async load() {
 		const iframe = document.createElement( 'iframe' );
 		iframe.className = 'content-no-res';
 		iframe.setAttribute( 'sandbox', '' );
 
-		this.parser.getBodyDOM( { remove_external: true }, ( _err, dom, type ) => {
-			this.parser.getHeadersHTML( ( _err, headers ) => {
-				this.buildMetaNode();
+		const result = await this.parser.getBodyDOM( { remove_external: true } );
+		const headers = await this.parser.getHeadersHTML();
 
-				const actions = this._buildActions();
-				headers.style.display = 'none';
+		this.buildMetaNode();
 
-				iframe.classList.add( `eml-type-${type}` );
-				iframe.setAttribute( 'srcdoc', dom.documentElement.outerHTML );
+		const actions = this._buildActions();
+		headers.style.display = 'none';
 
-				this.nodeView.append( actions, headers, iframe );
-				this._openWindow();
+		iframe.classList.add( `eml-type-${result.type}` );
+		iframe.setAttribute( 'srcdoc', result.dom.documentElement.outerHTML );
 
-				cb?.();
-			} );
-		} );
+		this.nodeView.append( actions, headers, iframe );
+		this._openWindow();
 	}
 
 

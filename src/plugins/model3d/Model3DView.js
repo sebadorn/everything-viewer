@@ -32,15 +32,21 @@ export class Model3DView extends BaseView {
 
 	/**
 	 *
-	 * @param {function?} cb
+	 * @override
+	 * @returns {Promise<void>}
 	 */
-	async load( cb ) {
+	async load() {
 		const babylonjsViewer = await import(
 			/* webpackChunkName: "babylonjs_viewer" */
 			'@babylonjs/viewer'
 		);
 
-		this._viewer = new babylonjsViewer.HTML3DElement();
+		this._viewer = new babylonjsViewer.HTML3DElement( {
+			cameraAutoOrbit: {
+				enabled: false,
+				speed: 0,
+			},
+		} );
 		this._viewer.extension = this.parser.ext;
 
 		this._viewer.addEventListener( 'environmenterror', ev => console.error( 'environmenterror', ev ) );
@@ -69,8 +75,6 @@ export class Model3DView extends BaseView {
 		setTimeout( () => {
 			this._viewer.source = URL.createObjectURL( this.parser.file );
 		}, 100 );
-
-		cb?.();
 	}
 
 

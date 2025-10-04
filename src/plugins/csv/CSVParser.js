@@ -15,14 +15,17 @@ export class CSVParser extends BaseParser {
 
 	/**
 	 *
-	 * @param {function} cb
+	 * @returns {Promise<any[]>}
 	 */
-	parse( cb ) {
-		this.getText( async ( _err, text ) => {
-			const { parse } = await import( /* webpackChunkName: "csv" */ '@vanillaes/csv' );
-			const tableData = parse( text );
-			cb( null, tableData );
-		} );
+	async parse() {
+		const text = await this.getText();
+
+		const { parse } = await import(
+			/* webpackChunkName: "csv" */
+			'@vanillaes/csv'
+		);
+
+		return parse( text );
 	}
 
 

@@ -1,4 +1,3 @@
-import { AudioView } from './AudioView.js';
 import { Plugin, Priority } from '../Plugin.js';
 
 
@@ -19,10 +18,20 @@ export class AudioPlugin extends Plugin {
 	/**
 	 * 
 	 * @override
-	 * @returns {AudioView}
+	 * @returns {Promise<AudioView>}
 	 */
-	getView() {
-		this._view ??= new AudioView( this.getParser() );
+	async getView() {
+		if( this._view ) {
+			return this._view;
+		}
+
+		const { AudioView } = await import(
+			/* webpackChunkName: "audioview" */
+			'./AudioView.js'
+		);
+
+		this._view = new AudioView( await this.getParser() );
+
 		return this._view;
 	}
 

@@ -30,9 +30,10 @@ export class VideoView extends BaseView {
 
 	/**
 	 *
-	 * @param {function?} cb
+	 * @override
+	 * @returns {Promise<void>}
 	 */
-	load( cb ) {
+	async load() {
 		this._objectURL = URL.createObjectURL( this.parser.file );
 
 		const video = document.createElement( 'video' );
@@ -48,7 +49,6 @@ export class VideoView extends BaseView {
 			this.buildMetaNode();
 
 			this.nodeView.append( note );
-			cb();
 		}
 		else {
 			video.addEventListener( 'loadedmetadata', () => {
@@ -64,8 +64,6 @@ export class VideoView extends BaseView {
 
 				this.nodeView.append( video );
 				this._openWindow();
-
-				cb?.();
 			} );
 
 			video.src = this._objectURL;

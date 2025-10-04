@@ -115,28 +115,20 @@ export class MidiView extends BaseView {
 
 	/**
 	 *
-	 * @param {function?} cb
+	 * @override
+	 * @returns {Promise<void>}
 	 */
-	load( cb ) {
-		this.parser.parse(
-			/**
-			 * @param {Error?} _err
-			 * @param {import('tone')} Tone
-			 * @param {import('@tonejs/midi').Midi} midiData 
-			 * @param {import('tone').PolySynth[]} synths 
-			 */
-			( _err, Tone, midiData, synths ) => {
-				this.Tone = Tone;
-				this.synths = synths;
+	async load() {
+		const result = await this.parser.parse();
 
-				this._addMetaData( midiData );
-				this.buildMetaNode();
-				this._buildPlayer( midiData );
+		this.Tone = result.Tone;
+		this.synths = result.synths;
 
-				this._openWindow();
-				cb?.();
-			}
-		);
+		this._addMetaData( result.midiData );
+		this.buildMetaNode();
+		this._buildPlayer( result.midiData );
+
+		this._openWindow();
 	}
 
 

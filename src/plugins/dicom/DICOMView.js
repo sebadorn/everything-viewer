@@ -416,78 +416,69 @@ export class DICOMView extends BaseView {
 
 	/**
 	 *
-	 * @param {function?} cb
+	 * @override
+	 * @returns {Promise<void>}
 	 */
-	load( cb ) {
-		this.parser.parse( async ( err, imageOrRecord ) => {
-			if( err ) {
-				return;
-			}
+	async load() {
+		const imageOrRecord = await this.parser.parse();
 
-			// DICOMDIR directory.
-			if( this.parser.isDir ) {
-				this.parser.loadDICOMDIRFiles( imageOrRecord, async ( _err, images ) => {
-					this._images = images;
-					this._numFrames = this._images.length;
+		// DICOMDIR directory.
+		if( this.parser.isDir ) {
+			this.parser.loadDICOMDIRFiles( imageOrRecord, async ( _err, images ) => {
+				this._images = images;
+				this._numFrames = this._images.length;
 
-					this.buildMetaNode();
-					this._buildControls();
-					const win = this._openWindow();
-
-					win.on( 'resized', () => this._handleResize() );
-
-					cb?.();
-
-					await this._initViewport();
-					this._viewport.setStack( this._images.map( image => image.imageId ) );
-
-					this.showFile( 0 );
-					this._controlGoto( 0 );
-				} );
-			}
-			// Only list of DICOMDIR entries.
-			else if( Array.isArray( imageOrRecord ) ) {
-				this._buildDICOMDIRFileList( imageOrRecord );
 				this.buildMetaNode();
-				this._openWindow();
-
-				cb?.();
-			}
-			// Single file.
-			else {
-				const dataSet = imageOrRecord.data;
-
-				this._numFrames = Number( dataSet.string( 'x00280008' ) || 1 );
-				this._frameDelay = Number( dataSet.string( 'x00181033' ) || this._frameDelay ); // [ms]
-				this._frameTime = Number( dataSet.string( 'x00181063' ) || this._frameTime ); // [ms]
-
-				this._addMetaInfo( dataSet );
-
-				this.buildMetaNode( { toggleForEmpty: true } );
 				this._buildControls();
 				const win = this._openWindow();
 
 				win.on( 'resized', () => this._handleResize() );
 
-				cb?.();
-
-				this._imageId = imageOrRecord.imageId;
 				await this._initViewport();
+				this._viewport.setStack( this._images.map( image => image.imageId ) );
 
-				let stack = [];
-
-				for( let i = 0; i < this._numFrames; i++ ) {
-					// Cornerstone reports an error that "frameIndex has to be >= 0" if
-					// the frame index is set to 0. Which does not make sense, but omitting
-					// the frame index for 0 gets rid of that message.
-					let frame = i > 0 ? this._imageId + '?frame=' + i : this._imageId;
-					stack.push( frame );
-				}
-
-				this._viewport.setStack( stack );
+				this.showFile( 0 );
 				this._controlGoto( 0 );
+			} );
+		}
+		// Only list of DICOMDIR entries.
+		else if( Array.isArray( imageOrRecord ) ) {
+			this._buildDICOMDIRFileList( imageOrRecord );
+			this.buildMetaNode();
+			this._openWindow();
+		}
+		// Single file.
+		else {
+			const dataSet = imageOrRecord.data;
+
+			this._numFrames = Number( dataSet.string( 'x00280008' ) || 1 );
+			this._frameDelay = Number( dataSet.string( 'x00181033' ) || this._frameDelay ); // [ms]
+			this._frameTime = Number( dataSet.string( 'x00181063' ) || this._frameTime ); // [ms]
+
+			this._addMetaInfo( dataSet );
+
+			this.buildMetaNode( { toggleForEmpty: true } );
+			this._buildControls();
+			const win = this._openWindow();
+
+			win.on( 'resized', () => this._handleResize() );
+
+			this._imageId = imageOrRecord.imageId;
+			await this._initViewport();
+
+			let stack = [];
+
+			for( let i = 0; i < this._numFrames; i++ ) {
+				// Cornerstone reports an error that "frameIndex has to be >= 0" if
+				// the frame index is set to 0. Which does not make sense, but omitting
+				// the frame index for 0 gets rid of that message.
+				let frame = i > 0 ? this._imageId + '?frame=' + i : this._imageId;
+				stack.push( frame );
 			}
-		} );
+
+			this._viewport.setStack( stack );
+			this._controlGoto( 0 );
+		}
 	}
 
 

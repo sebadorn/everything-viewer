@@ -87,31 +87,66 @@ export const UI = {
 
 
 	/**
-	 *
-	 * @param  {string}             name
-	 * @param  {string|HTMLElement} value
-	 * @param  {object?}            options
-	 * @param  {bool}               [options.valueAsHTML = false]
-	 * @return {HTMLElement}
+	 * 
+	 * @param {...(string|HTMLElement)} headers
+	 * @returns {HTMLTableRowElement}
 	 */
-	buildTableRow( name, value, options = {} ) {
-		const th = document.createElement( 'th' );
-		th.textContent = name;
+	buildTableHeaderRow( ...headers ) {
+		const row = document.createElement( 'tr' );
 
-		const td = document.createElement( 'td' );
+		for( let i = 0; i < headers.length; i++ ) {
+			const value = headers[i];
+			const th = document.createElement( 'th' );
 
-		if( value instanceof HTMLElement ) {
-			td.append( value );
+			if( value instanceof HTMLElement ) {
+				th.append( value );
+			}
+			else {
+				th.textContent = value;
+			}
+
+			row.append( th );
 		}
-		else if( options.valueAsHTML === true ) {
-			td.innerHTML = value;
-		}
-		else {
-			td.textContent = value;
-		}
+
+		return row;
+	},
+
+
+	/**
+	 *
+	 * @param  {object?} options
+	 * @param  {boolean} [options.valueAsHTML = false]
+	 * @param  {string?} name
+	 * @param  {...(string|HTMLElement)} cells
+	 * @return {HTMLTableRowElement}
+	 */
+	buildTableRow( options, name, ...cells ) {
+		options = options || {};
 
 		const row = document.createElement( 'tr' );
-		row.append( th, td );
+
+		if( name !== null ) {
+			const th = document.createElement( 'th' );
+			th.textContent = name;
+			row.append( th );
+		}
+
+		for( let i = 0; i < cells.length; i++ ) {
+			const value = cells[i];
+			const td = document.createElement( 'td' );
+
+			if( value instanceof HTMLElement ) {
+				td.append( value );
+			}
+			else if( options.valueAsHTML === true ) {
+				td.innerHTML = value;
+			}
+			else {
+				td.textContent = value;
+			}
+
+			row.append( td );
+		}
 
 		return row;
 	},
@@ -335,7 +370,7 @@ export const UI = {
 		const { Registry } = await import( '../plugins/Registry.js' );
 
 		const plugin = await Registry.getPluginForImport( fileOrDir );
-		const view = plugin.getView();
+		const view = await plugin.getView();
 		view.load();
 	},
 

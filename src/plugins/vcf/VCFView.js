@@ -1,3 +1,4 @@
+import { UI } from '../../ui/UI.js';
 import { BaseView } from '../BaseView.js';
 
 
@@ -15,17 +16,461 @@ export class VCFView extends BaseView {
 
 	/**
 	 *
-	 * @param {function?} cb
+	 * @private
+	 * @param {string} attr
+	 * @param {object} meta
+	 * @param {string} type
+	 * @param {string} value
+	 * @returns {HTMLElement}
 	 */
-	load( cb ) {
-		this.parser.getHTML( ( _err, html ) => {
-			this.buildMetaNode();
+	_buildItemDateTime( attr, meta, type, value ) {
+		return this._buildItemText( attr, meta, type, value );
+	}
 
-			this.nodeView.append( html );
-			this._openWindow();
 
-			cb?.();
-		} );
+	/**
+	 *
+	 * @private
+	 * @param {string} attr
+	 * @param {object} meta
+	 * @param {string} meta.encoding - e.g. "b"
+	 * @param {string} meta.type - e.g. "JPEG"
+	 * @param {string} type
+	 * @param {string} value
+	 * @returns {HTMLElement}
+	 */
+	_buildItemImage( attr, meta, type, value ) {
+		const name = this._getName( attr, meta );
+		const row = UI.buildTableRow( null, name, value );
+
+		if( meta.encoding === 'b' ) {
+			const imgType = String( meta.type ).toLowerCase();
+			const td = row.querySelector( 'td' );
+			td.innerHTML = `<img src="data:image/${imgType};base64,${value}" />`;
+		}
+
+		if( value.includes( '://' ) ) {
+			const td = row.querySelector( 'td' );
+			td.innerHTML = `<a href="${value}">${value}</a>`;
+		}
+
+		return row;
+	}
+
+
+	/**
+	 *
+	 * @private
+	 * @param {string} attr
+	 * @param {object} meta
+	 * @param {string} type
+	 * @param {string} value
+	 * @returns {HTMLElement}
+	 */
+	_buildItemPhone( attr, meta, type, value ) {
+		return this._buildItemText( attr, meta, type, value );
+	}
+
+
+	/**
+	 *
+	 * @private
+	 * @param {string} attr
+	 * @param {object} meta
+	 * @param {string} type
+	 * @param {*}      value
+	 * @returns {HTMLElement}
+	 */
+	_buildItemText( attr, meta, type, value ) {
+		const name = this._getName( attr, meta );
+		const options = {};
+
+		if( Array.isArray( value ) ) {
+			const nonEmpty = value.filter( ele => ele && ele.length > 0 );
+
+			if( attr === 'adr' ) {
+				let poBox = value[0] || '';
+				let extAddr = value[1] || '';
+				let street = value[2] || '';
+				let locality = value[3] || '';
+				let region = value[4] || '';
+				let postal = value[5] || '';
+				let country = value[6] || '';
+
+				value = '';
+
+				if( poBox.length > 0 ) {
+					value += poBox + '\n';
+				}
+
+				if( extAddr.length > 0 ) {
+					value += extAddr + '\n';
+				}
+
+				if( street.length > 0 ) {
+					value += street + '\n';
+				}
+
+				if( locality.length > 0 ) {
+					if( region.length > 0 ) {
+						value += `${locality}, ${region}`;
+
+						if( postal.length > 0 ) {
+							value += ' ' + postal;
+						}
+
+						value += '\n';
+					}
+					else {
+						value += locality + '\n';
+					}
+				}
+
+				if( locality.length < 1 && region.length > 0 ) {
+					value += region + '\n';
+				}
+
+				if( locality.length < 1 && postal.length > 0 ) {
+					value += postal + '\n';
+				}
+
+				if( country.length > 0 ) {
+					value += country + '\n';
+				}
+
+				if( value.endsWith( '\n' ) ) {
+					value = value.substring( 0, value.length - 1 );
+				}
+			}
+			else if( attr === 'n' ) {
+				let honorificPrefix = value[3] || '';
+				let honorificSuffix = value[4] || '';
+				let firstName = value[1] || '';
+				let middleName = value[2] || '';
+				let lastName = value[0] || '';
+
+				value = '';
+
+				if( honorificPrefix.length > 0 ) {
+					value += honorificPrefix + ' ';
+				}
+
+				if( firstName.length > 0 ) {
+					value += firstName + ' ';
+				}
+
+				if( middleName.length > 0 ) {
+					value += middleName + ' ';
+				}
+
+				if( lastName.length > 0 ) {
+					value += lastName + ' ';
+				}
+
+				if( honorificSuffix.length > 0 ) {
+					if( value.length > 0 ) {
+						value += ', ';
+					}
+
+					value += honorificSuffix + ' ';
+				}
+
+				value = value.trim();
+			}
+			else {
+				value = nonEmpty.join( ' ' );
+			}
+		}
+
+		// Make sure we really have a String.
+		value = String( value );
+
+		if( type === 'uri' && value.includes( '://' ) ) {
+			value = UI.escapeHTML( value.trim() );
+			value = `<a href="${value}">${value}</a>`;
+			options.valueAsHTML = true;
+		}
+		else if( value.includes( '\n' ) ) {
+			value = UI.escapeHTML( value );
+			value = value.replaceAll( '\n', '<br>' );
+			options.valueAsHTML = true;
+		}
+		else if( attr === 'email' && value.includes( '@' ) ) {
+			value = UI.escapeHTML( value.trim() );
+			value = `<a href="mailto:${value}">${value}</a>`;
+			options.valueAsHTML = true;
+		}
+
+		const row = UI.buildTableRow( options, name, value );
+
+		return row;
+	}
+
+
+	/**
+	 *
+	 * @private
+	 * @param {Array} data
+	 * @returns {string[]} 
+	 */
+	_getAttributesToIgnore( data ) {
+		return [
+			'rev',
+			'version',
+		];
+	}
+
+
+	/**
+	 *
+	 * @private
+	 * @param {string} attr
+	 * @param {object} meta
+	 * @returns {string}
+	 */
+	_getName( attr, meta ) {
+		const map = {
+			adr: {
+				HOME: 'Address (Home)',
+				WORK: 'Address (Work)',
+				default: 'Address',
+			},
+			anniversary: 'Anniversary',
+			bday: 'Birthday',
+			categories: 'Categories',
+			email: {
+				HOME: 'Email (Home)',
+				WORK: 'Email (Work)',
+				default: 'Email',
+			},
+			fn: 'Display Name',
+			gender: 'Gender',
+			geo: 'Geo.',
+			impp: 'Instant Messaging',
+			key: 'Key',
+			label: {
+				HOME: 'Label (Home)',
+				WORK: 'Label (Work)',
+				default: 'Label',
+			},
+			lang: 'Language',
+			logo: 'Logo',
+			member: 'Member',
+			n: 'Name',
+			nickname: 'Nickname',
+			note: 'Note',
+			org: 'Organization',
+			photo: 'Photo',
+			prodid: 'Created with',
+			related: 'Relation',
+			rev: 'Last updated',
+			role: 'Role',
+			sound: 'Sound',
+			tel: {
+				HOME: 'Phone (Home)',
+				WORK: 'Phone (Work)',
+				default: 'Phone',
+			},
+			title: 'Title',
+			tz: 'Time zone',
+			url: 'URL',
+			version: 'Version',
+		};
+
+		const item = map[attr];
+
+		if( !item ) {
+			return attr;
+		}
+
+		if( typeof item === 'string' ) {
+			return item;
+		}
+
+		let type = meta?.type;
+
+		if( Array.isArray( type ) ) {
+			for( let i = 0; i < type.length; i++ ) {
+				const t = type[i];
+
+				if( item[t] ) {
+					type = t;
+					break;
+				}
+			}
+		}
+
+		if( typeof type === 'string' ) {
+			type = type.toUpperCase();
+		}
+
+		return item[type] || item.default || attr;
+	}
+
+
+	/**
+	 *
+	 * @param {array} data
+	 * @return {object}
+	 */
+	build( data ) {
+		const card = document.createElement( 'div' );
+		card.className = 'vcard';
+
+		let version = null;
+		let lastUpdated = null;
+
+		for( let i = 0; i < data.length; i++ ) {
+			const vCardData = data[i];
+
+			if( !Array.isArray( vCardData ) ) {
+				continue;
+			}
+
+			const ignoreAttr = this._getAttributesToIgnore( vCardData );
+
+			const table = document.createElement( 'table' );
+			let hasTableItems = false;
+
+			for( let j = 0; j < vCardData.length; j++ ) {
+				const entry = vCardData[j];
+
+				if( !Array.isArray( entry ) || entry.length < 4 ) {
+					continue;
+				}
+
+				const attr = entry[0];
+				const meta = entry[1] || {};
+				const type = String( entry[2] ).toLowerCase();
+				const value = entry[3];
+
+				if( attr === 'version' ) {
+					version = value;
+				}
+				else if( attr === 'rev' ) {
+					lastUpdated = value;
+				}
+
+				if( ignoreAttr.includes( attr ) ) {
+					continue;
+				}
+
+				let item = null;
+
+				switch( type ) {
+					case 'binary':
+						if( VCFView.isImageType( meta.type ) ) {
+							item = this._buildItemImage( attr, meta, type, value );
+						}
+						else {
+							item = this._buildItemText( attr, meta, type, value );
+						}
+						break;
+
+					case 'date':
+					case 'date-and-or-time':
+					case 'date-time':
+					case 'time':
+					case 'timestamp':
+						item = this._buildItemDateTime( attr, meta, type, value );
+						break;
+
+					case 'phone-number':
+						item = this._buildItemPhone( attr, meta, type, value );
+						break;
+
+					// 'text', 'uri' ...
+					default:
+						item = this._buildItemText( attr, meta, type, value );
+						break;
+				}
+
+				if( item ) {
+					hasTableItems = true;
+					table.append( item );
+				}
+			}
+
+			if( hasTableItems ) {
+				card.append( table );
+			}
+		}
+
+		return {
+			version: version,
+			node: card,
+			lastUpdated: lastUpdated,
+		};
+	}
+
+
+	/**
+	 *
+	 * @param {string} type
+	 * @returns {boolean}
+	 */
+	static isImageType( type ) {
+		const imgTypes = [
+			'bmp',
+			'gif',
+			'jpeg',
+			'jpg',
+			'png',
+		];
+
+		type = String( type ).toLowerCase();
+
+		const parts = type.split( '/' );
+		type = parts[parts.length - 1];
+
+		return imgTypes.includes( type );
+	}
+
+
+	/**
+	 *
+	 * @override
+	 * @returns {Promise<void>}
+	 */
+	async load() {
+		const text = await this.parser.getText();
+
+		const container = document.createElement( 'div' );
+		container.className = 'container';
+
+		const data = await this.parser.parse( text );
+		let version = null;
+		let lastUpdated = null;
+
+		if( Array.isArray( data ) && data.length > 0 ) {
+			if( data[0] === 'vcard' ) {
+				const result = this.build( data );
+				version = result.version;
+				lastUpdated = result.lastUpdated;
+				container.append( result.node );
+			}
+			else {
+				data.forEach( entry => {
+					const result = this.build( entry );
+					version = result.version;
+					lastUpdated = result.lastUpdated;
+					container.append( result.node );
+				} );
+			}
+		}
+
+		if( version ) {
+			this.mdAdd( 'Version', version );
+		}
+
+		if( lastUpdated ) {
+			this.mdAdd( 'Last updated', lastUpdated );
+		}
+
+		this.buildMetaNode();
+
+		this.nodeView.append( container );
+		this._openWindow();
 	}
 
 

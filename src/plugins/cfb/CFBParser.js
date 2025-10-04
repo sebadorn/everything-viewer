@@ -69,18 +69,18 @@ export class CFBParser extends BaseParser {
 
 	/**
 	 *
-	 * @param {function} cb
+	 * @returns {Promise<MsgReader>}
 	 */
-	async parse( cb ) {
+	async parse() {
 		const MsgReader = ( await import(
 			/* webpackChunkName: "msgreader" */
 			'@kenjiuno/msgreader'
 		) ).default;
 
-		this.getArrayBuffer( ( _err, arrayBuffer ) => {
-			this._msg = new MsgReader( arrayBuffer );
-			cb( null, this._msg );
-		} );
+		const arrayBuffer = await this.getArrayBuffer();
+		this._msg = new MsgReader( arrayBuffer );
+
+		return this._msg;
 	}
 
 

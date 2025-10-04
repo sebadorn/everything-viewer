@@ -1,5 +1,3 @@
-import { Model3DParser } from './Model3DParser.js';
-import { Model3DView } from './Model3DView.js';
 import { Plugin, Priority } from '../Plugin.js';
 
 
@@ -28,10 +26,21 @@ export class Model3DPlugin extends Plugin {
 
 	/**
 	 *
-	 * @returns {Model3DParser}
+	 * @override
+	 * @returns {Promise<Model3DParser>}
 	 */
-	getParser() {
-		this._parser ??= new Model3DParser( this._importData );
+	async getParser() {
+		if( this._parser ) {
+			return this._parser;
+		}
+
+		const { Model3DParser } = await import(
+			/* webpackChunkName: "model3dparser" */
+			'./Model3DParser.js'
+		);
+
+		this._parser = new Model3DParser( this._importData );
+
 		return this._parser;
 	}
 
@@ -39,10 +48,20 @@ export class Model3DPlugin extends Plugin {
 	/**
 	 * 
 	 * @override
-	 * @returns {Model3DView}
+	 * @returns {Promise<Model3DView>}
 	 */
-	getView() {
-		this._view ??= new Model3DView( this.getParser() );
+	async getView() {
+		if( this._view ) {
+			return this._view;
+		}
+
+		const { Model3DView } = await import(
+			/* webpackChunkName: "model3dview" */
+			'./Model3DView.js'
+		);
+
+		this._view = new Model3DView( await this.getParser() );
+
 		return this._view;
 	}
 

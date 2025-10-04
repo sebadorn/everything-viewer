@@ -51,9 +51,9 @@ export class EMLParser extends BaseParser {
 	 *
 	 * @param {object}   options
 	 * @param {boolean} [options.remove_external = true]
-	 * @param {function} cb
+	 * @returns {Promise<object>}
 	 */
-	getBodyDOM( options, cb ) {
+	async getBodyDOM( options ) {
 		if( !options ) {
 			options = {};
 		}
@@ -83,20 +83,20 @@ export class EMLParser extends BaseParser {
 				DocumentUtils.removeExternalResources( doc );
 			}
 
-			cb( null, doc, type );
+			return {
+				type: type,
+				dom: doc,
+			};
 		}
-		else {
-			this.getText( ( _err, text ) => {
-				this.parse( text );
 
-				if( this._lastParsed ) {
-					this.getBodyDOM( options, cb );
-				}
-				else {
-					cb( new Error( 'Failed to parse' ), null, null );
-				}
-			} );
+		const text = await this.getText();
+		this.parse( text );
+
+		if( !this._lastParsed ) {
+			throw new Error( 'Failed to parse' );
 		}
+
+		return this.getBodyDOM( options );
 	}
 
 
@@ -121,22 +121,17 @@ export class EMLParser extends BaseParser {
 
 	/**
 	 *
-	 * @param {function} cb
+	 * @returns {Promise<HTMLElement>}
 	 */
-	getHeadersHTML( cb ) {
+	async getHeadersHTML() {
 		if( this._lastParsed ) {
-			const html = this.buildHeadersHTML( this._lastParsed.headers );
-
-			cb( null, html );
+			return this.buildHeadersHTML( this._lastParsed.headers );
 		}
-		else {
-			this.getText( ( _err, text ) => {
-				const data = this.parse( text );
-				const html = this.buildHeadersHTML( data.headers );
 
-				cb( null, html );
-			} );
-		}
+		const text = await this.getText();
+		const data = this.parse( text );
+
+		return this.buildHeadersHTML( data.headers );
 	}
 
 

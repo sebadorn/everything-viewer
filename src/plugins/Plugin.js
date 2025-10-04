@@ -32,9 +32,9 @@ export class Plugin {
 
 	/**
 	 *
-	 * @returns {BaseParser}
+	 * @returns {Promise<BaseParser>}
 	 */
-	getParser() {
+	async getParser() {
 		this._parser ??= new BaseParser( this._importData, !!this._importData?.dir );
 		return this._parser;
 	}
@@ -42,10 +42,10 @@ export class Plugin {
 
 	/**
 	 *
-	 * @returns {BaseView}
+	 * @returns {Promise<BaseView>}
 	 */
-	getView() {
-		this._view ??= new BaseView( this.getParser() );
+	async getView() {
+		this._view ??= new BaseView( await this.getParser() );
 		return this._view;
 	}
 
