@@ -119,6 +119,7 @@ export const FileHandler = {
 			'cfg',
 			'conf',
 			'mtl',
+			'srt',
 		],
 		powershell: [
 			'ps',
@@ -428,6 +429,7 @@ export const FileHandler = {
 			'application/x-python',
 			'application/x-ruby',
 			'application/x-shellscript',
+			'application/x-subrip', // .srt
 			'application/x-yaml',
 		];
 

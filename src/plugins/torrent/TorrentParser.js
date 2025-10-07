@@ -6,11 +6,10 @@ export class TorrentParser extends BaseParser {
 
 	/**
 	 *
-	 * @param {File}   file
-	 * @param {string} mimeType
+	 * @param {import('../Registry.js').ImportData} importData
 	 */
-	constructor( file, mimeType ) {
-		super( file, mimeType );
+	constructor( importData ) {
+		super( importData );
 	}
 
 

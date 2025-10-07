@@ -2,7 +2,7 @@
 
 Okay, not *everything*. The idea is to support a bunch of different formats and maybe provide some additional information or tools.
 
-Modules are lazyily loaded, so only the contents actually needed for parsing and viewing an opened file will be loaded.
+Modules are lazily loaded, so only the contents actually needed for parsing and viewing an opened file will be loaded.
 
 
 ## Supported formats
@@ -49,6 +49,7 @@ Modules are lazyily loaded, so only the contents actually needed for parsing and
 
 ### Other
 
+* Show single file web archive files (`.mhtml`, `.mht`).
 * Show meta data of Torrent identifier files (`.torrent`).
 * For `.zip` files show a list of its contents. Does not supported encrypted archives yet.
 
