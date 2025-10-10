@@ -1,6 +1,12 @@
 # Changelog
 
 
+## Build 2025-10-10
+
+* **chore:** update dependencies (`@babylonjs/*`, `@cornerstonejs/*`, `parse-torrent`)
+* **feat(mhtml):** add support for single file webpage archives (`.mhtml`, `.mht`)
+
+
 ## Build 2025-10-04
 
 * **chore:** update dependencies (`@babylonjs/*`, `@cornerstonejs/*`, `ical.js`, `@kenjiuno/msgreader`)

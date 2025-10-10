@@ -22,6 +22,7 @@
 .view-gif,
 .view-ical,
 .view-image,
+.view-mhtml,
 .view-nifti,
 .view-pdf,
 .view-text,
@@ -538,6 +539,18 @@
 		background-size: 20px 20px;
 		flex-grow: 0;
 		flex-shrink: 0;
+	}
+}
+
+
+.view-mhtml {
+	max-height: unset;
+
+	iframe {
+		border-radius: 4px;
+		height: 100%;
+		min-height: 500px;
+		width: 100%;
 	}
 }
 
