@@ -1,6 +1,11 @@
 # Changelog
 
 
+## Build 2025-10-xx
+
+* **feat(ai):** add support for `.safetensors` AI model files, show info from header
+
+
 ## Build 2025-10-10
 
 * **chore:** update dependencies (`@babylonjs/*`, `@cornerstonejs/*`, `parse-torrent`)
@@ -13,7 +18,7 @@
 * **chore:** remove dependency on `vcardjs`
 * **feat(ai):** add support for `.gguf` AI model files, show info from header
 * **feat(vcf):** use `ical.js` package instead of `vcardjs` and support more attributes
-* **refactor** reduce initial bundle size by loading more plugin view and parser code only when needed
+* **refactor:** reduce initial bundle size by loading more plugin view and parser code only when needed
 
 
 ## Build 2025-08-03

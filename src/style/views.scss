@@ -9,6 +9,12 @@
 		font-size: 24px;
 		max-width: vars.$max-width;
 	}
+
+	.clear {
+		clear: both;
+		height: 0.1px;
+		visibility: hidden;
+	}
 }
 
 
@@ -34,9 +40,9 @@
 
 
 .view-ai {
-	min-width: 1200px;
-
 	.header-info {
+		width: 100%;
+
 		h3 {
 			margin-bottom: 10px;
 		}
@@ -47,6 +53,7 @@
 			font-family: vars.$font-ms;
 			font-size: vars.$font-size-ms;
 			margin-bottom: 20px;
+			min-width: 600px;
 			width: 100%;
 
 			tr td:last-child {
@@ -72,6 +79,12 @@
 
 		.tokenizer-chat_template td {
 			white-space: pre-wrap;
+		}
+	}
+
+	.header-tensors {
+		tr td:nth-child( 2 ) {
+			white-space: nowrap;
 		}
 	}
 }

@@ -238,6 +238,7 @@ export const FileHandler = {
 			ical: 'text/calendar',
 			ics: 'text/calendar',
 			ifb: 'text/calendar',
+			safetensors: 'application/x-safetensors',
 			vcf: 'text/vcard',
 			vcs: 'text/calendar',
 		};
