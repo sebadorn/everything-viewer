@@ -11,7 +11,10 @@ export class AIPlugin extends Plugin {
 	 * @returns {number}
 	 */
 	canHandleImport( fileInfo ) {
-		return fileInfo.mimeType === 'application/x-gguf' ? Priority.HIGH : Priority.NONE;
+		return [
+			'application/x-gguf',
+			'application/x-safetensors',
+		].includes( fileInfo.mimeType ) ? Priority.HIGH : Priority.NONE;
 	}
 
 
@@ -63,9 +66,9 @@ export class AIPlugin extends Plugin {
 /**
  * @typedef {object} AIModelInfo
  * @property {string} type
- * @property {number} version
- * @property {number} tensor_count
- * @property {number} metadata_kv_count
- * @property {object} metadata
- * @property {object[]} tensors
+ * @property {number?} version
+ * @property {number?} tensor_count
+ * @property {number?} metadata_kv_count
+ * @property {object?} metadata
+ * @property {object[]?} tensors
  */

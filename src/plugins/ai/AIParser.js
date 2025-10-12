@@ -392,7 +392,9 @@ export class AIParser extends BaseParser {
 		// name (string with max length) + num dimensions (max 4) + dimensions (array) + type + tensor data offset
 		const entryMaxSize = 64 + 4 + 4 * 8 + 4 + 8;
 		const sectionMaxSize = tensorCount * entryMaxSize;
-		let tensorViewSlice = new DataView( await this.file.slice( offsetToSection, offsetToSection + sectionMaxSize ).arrayBuffer() );
+		let tensorViewSlice = new DataView(
+			await this.file.slice( offsetToSection, offsetToSection + sectionMaxSize ).arrayBuffer()
+		);
 
 		let offset = 0;
 		let numEntries = 0;
@@ -437,23 +439,64 @@ export class AIParser extends BaseParser {
 
 	/**
 	 *
+	 * @private
+	 * @param {DataView} headerDataView
+	 * @returns {import('./AIPlugin.js').AIModelInfo}
+	 */
+	_parseSafetensors( headerDataView ) {
+		const info = {};
+
+		try {
+			const json = this._textDecoder.decode( headerDataView.buffer.slice() );
+			const data = JSON.parse( json );
+
+			if( data.__metadata__ ) {
+				info.metadata = data.__metadata__;
+				delete data.__metadata__;
+			}
+
+			info.tensors = data;
+		}
+		catch( err ) {
+			console.error( '[AI._parseSafetensors]', err );
+		}
+
+		return info;
+	}
+
+
+	/**
+	 *
 	 * @returns {Promise<import('./AIPlugin.js').AIModelInfo>}
 	 */
 	async parse() {
-		const headerDataView = new DataView( await this.file.slice( 0, 24 ).arrayBuffer() );
-		const type = this._textDecoder.decode( headerDataView.buffer.slice( 0, 4 ) );
 
 		/** @type {import('./AIPlugin.js').AIModelInfo} */
-		let info = {
-			type: type,
-		};
+		let info = {};
 
-		if( type === 'GGUF' ) {
-			info = await this._parseGGUF( headerDataView );
-			info.type ??= type;
+		if( this.mimeType === 'application/x-safetensors' ) {
+			const headerSizeView = new DataView( await this.file.slice( 0, 8 ).arrayBuffer() );
+			const headerSize = headerSizeView.getBigUint64( 0, true );
+
+			const headerDataView = new DataView( await this.file.slice( 8, Number( headerSize ) + 8 ).arrayBuffer() );
+			info = this._parseSafetensors( headerDataView );
+			info.type ??= 'Safetensors';
+
+			console.debug( '[AIParser.parse] Safetensors', info );
 		}
+		else if( this.mimeType === 'application/x-gguf' ) {
+			const headerDataView = new DataView( await this.file.slice( 0, 24 ).arrayBuffer() );
+			const type = this._textDecoder.decode( headerDataView.buffer.slice( 0, 4 ) );
 
-		console.debug( '[AIParser.parse]', info );
+			info.type = type;
+
+			if( type === 'GGUF' ) {
+				info = await this._parseGGUF( headerDataView );
+				info.type ??= type;
+			}
+
+			console.debug( '[AIParser.parse] GGUF', info );
+		}
 
 		return info;
 	}

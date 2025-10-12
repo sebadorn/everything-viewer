@@ -14,6 +14,7 @@ Modules are lazily loaded, so only the contents actually needed for parsing and 
 ### AI
 
 * Show the header data of `.gguf` (GGML Universal File) AI model files.
+* Show the header data of `.safetensors` (Safetensors) AI model files.
 
 ### Audio
 
