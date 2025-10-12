@@ -1,7 +1,7 @@
 # Changelog
 
 
-## Build 2025-10-xx
+## Build 2025-10-12
 
 * **feat(ai):** add support for `.safetensors` AI model files, show info from header
 
