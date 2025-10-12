@@ -1,37 +1,37 @@
 # Everything Viewer
 
-Okay, not *everything*. The idea is to support a bunch of different formats and maybe provide some additional information or tools.
+The idea is to support a bunch of different formats and provide additional information or tools for some of them.
 
 Modules are lazily loaded, so only the contents actually needed for parsing and viewing an opened file will be loaded.
 
 
 ## Supported formats
 
-### 3D models
+### 📐 3D models
 
 * A simple viewer (Babylon Viewer) for single-file models in the format `.glb`, `.obj`, `.ply`, `.splat` and `.stl`.
 
-### AI
+### 🤖 AI
 
 * Show the header data of `.gguf` (GGML Universal File) AI model files.
 * Show the header data of `.safetensors` (Safetensors) AI model files.
 
-### Audio
+### 🎧 Audio
 
 * Show the default audio element to play formats supported by the browser.
 * Support Midi files (`.mid`) using Tone.js and a custom player UI.
 
-### Image
+### 🎨 Image
 
 * Shows an image if the browser supports the format.
 * Offers a tool for `.gif` files to step through each frame.
 
-### Medical
+### 🩺 Medical
 
 * Uses Cornerstone to view DCM/DICOM and NIFTI files (`.dcm`, `.dicom`, `.nii`) including showing a lot of meta data and playing images as animation if multiple are contained.
 	* Also works if drag & dropping a directory of DICOM files. Uses an optionally included `dicomdir` file for the order.
 
-### Office
+### 📎 Office
 
 * Show `.csv` table data as HTML table.
 * Show exported emails in `.eml` format. Lists headers and optionally the body with external resources removed or loaded.
@@ -40,15 +40,15 @@ Modules are lazily loaded, so only the contents actually needed for parsing and 
 * Show the contents of `.msg` files and list its attachments for viewing or extraction. Commonly used format for email exports.
 * Show a PDF viewer for `.pdf` files if the browser has PDF.js integrated.
 
-### Text/Code
+### 📑 Text/Code
 
 * Show the contents of text files with syntax highlighting for various programming/scripting/configuration/markup languages.
 
-### Video
+### 🎬 Video
 
 * Show the default video element to play formats supported by the browser.
 
-### Other
+### 📚 Other
 
 * Show single file web archive files (`.mhtml`, `.mht`).
 * Show meta data of Torrent identifier files (`.torrent`).
