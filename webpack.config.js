@@ -33,6 +33,11 @@ module.exports = {
 				include: path.resolve( __dirname, 'src', 'style', 'fonts' ),
 				type: 'asset/resource',
 			},
+			// {
+			// 	test: /\.json$/i,
+			// 	include: path.resolve( __dirname, 'src', 'ui', 'language' ),
+			// 	type: 'asset/resource',
+			// },
 			{
 				test: /\.wasm/,
 				include: path.resolve( __dirname, 'node_modules', '@cornerstonejs' ),
@@ -64,7 +69,11 @@ module.exports = {
 				},
 				{
 					from: path.resolve( __dirname, 'src', 'img', 'favicon' ),
-					to: '[name][ext]',
+					to: path.join( 'favicon', '[name][ext]' ),
+				},
+				{
+					from: path.resolve( __dirname, 'src', 'ui', 'language', '*.json' ),
+					to: path.join( 'language', '[name][ext]' ),
 				},
 			],
  		} ),

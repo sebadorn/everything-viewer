@@ -1,3 +1,4 @@
+import { t } from '../../ui/Language.js';
 import { BaseView } from '../BaseView.js';
 
 
@@ -51,8 +52,8 @@ export class CSVView extends BaseView {
 	async load() {
 		const tableData = await this.parser.parse();
 
-		this.mdAdd( 'Columns', tableData.length > 0 ? tableData[0].length : 0 );
-		this.mdAdd( 'Rows', tableData.length );
+		this.mdAdd( t( 'columns' ), tableData.length > 0 ? tableData[0].length : 0 );
+		this.mdAdd( t( 'rows' ), tableData.length );
 		this.buildMetaNode();
 
 		const html = this._build( tableData );

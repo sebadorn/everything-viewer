@@ -155,7 +155,7 @@ export class PlayerControls extends Component {
 			this._volumeControl = this._buildVolume();
 
 			bottom.append(
-				UI.build( '<span class="icon volume">volume_up</span>' ),
+				UI.build( `<span class="icon volume">${Icons.volume}</span>` ),
 				this._volumeControl.render()
 			);
 

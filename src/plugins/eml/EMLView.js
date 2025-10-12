@@ -1,5 +1,6 @@
 import { Button } from '../../ui/components/Button.js';
 import { ButtonGroup } from '../../ui/components/ButtonGroup.js';
+import { t } from '../../ui/Language.js';
 import { BaseView } from '../BaseView.js';
 
 
@@ -23,9 +24,9 @@ export class EMLView extends BaseView {
 	_buildActions() {
 		const header = new ButtonGroup( [
 			new Button( {
-				text: 'Show Headers',
+				text: t( 'eml.showHeaders' ),
 				onClick: () => {
-					this.nodeView.querySelector( 'iframe.content-res ')?.remove();
+					this.nodeView.querySelector( 'iframe.content-res' )?.remove();
 
 					const iframe = this.nodeView.querySelector( 'iframe.content-no-res' );
 					iframe.style.display = 'none';
@@ -35,10 +36,10 @@ export class EMLView extends BaseView {
 				},
 			} ),
 			new Button( {
-				text: 'Content (no external)',
+				text: t( 'eml.contentNoExternal' ),
 				classes: 'selected',
 				onClick: () => {
-					this.nodeView.querySelector( 'iframe.content-res ')?.remove();
+					this.nodeView.querySelector( 'iframe.content-res' )?.remove();
 
 					const iframe = this.nodeView.querySelector( 'iframe.content-no-res' );
 					iframe.style.display = '';
@@ -48,19 +49,15 @@ export class EMLView extends BaseView {
 				},
 			} ),
 			new Button( {
-				text: 'Content (with external)',
+				text: t( 'eml.contentExternal' ),
 				onClick: () => {
-					const didConfirm = window.confirm(
-						'Show the content and load its external resources?\n' +
-						'This could pose a security risk.\n\n' +
-						'Only agree if you trust the EML file.'
-					);
+					const didConfirm = window.confirm( t( 'eml.confirmExternal' ) );
 
 					if( !didConfirm ) {
 						return false;
 					}
 
-					this.nodeView.querySelector( 'iframe.content-res ')?.remove();
+					this.nodeView.querySelector( 'iframe.content-res' )?.remove();
 
 					const iframe = this.nodeView.querySelector( 'iframe.content-no-res' );
 					iframe.style.display = 'none';

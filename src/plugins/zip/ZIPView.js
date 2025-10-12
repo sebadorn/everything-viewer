@@ -1,3 +1,4 @@
+import { t } from '../../ui/Language.js';
 import { UI } from '../../ui/UI.js';
 import { BaseView } from '../BaseView.js';
 
@@ -26,7 +27,7 @@ export class ZIPView extends BaseView {
 			html = await this.parser.getHTML();
 
 			this.metaData.push( {
-				name: 'Uncompressed',
+				name: t( 'uncompressed' ),
 				value: UI.formatSize( this.parser.uncompressedSize ),
 			} );
 

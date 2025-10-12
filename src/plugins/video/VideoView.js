@@ -1,3 +1,4 @@
+import { t } from '../../ui/Language.js';
 import { UI } from '../../ui/UI.js';
 import { BaseView } from '../BaseView.js';
 
@@ -44,7 +45,7 @@ export class VideoView extends BaseView {
 		if( !video.canPlayType( this.parser.mimeType ) ) {
 			const note = document.createElement( 'p' );
 			note.className = 'note';
-			note.textContent = `Playback for video format not supported: "${this.parser.mimeType}"`;
+			note.textContent = t( 'video.notSupported' ).replace( '%s', this.parser.mimeType );
 
 			this.buildMetaNode();
 
@@ -58,8 +59,8 @@ export class VideoView extends BaseView {
 
 				video.width = video.videoWidth || 900;
 
-				this.mdAdd( 'Dimensions', video.width + '×' + video.height + ' px' );
-				this.mdAdd( 'Duration', UI.formatDuration( video.duration * 1000 ) );
+				this.mdAdd( t( 'dimensions' ), video.width + '×' + video.height + ' px' );
+				this.mdAdd( t( 'duration' ), UI.formatDuration( video.duration * 1000 ) );
 				this.buildMetaNode();
 
 				this.nodeView.append( video );

@@ -1,6 +1,7 @@
 import { Button } from '../../ui/components/Button.js';
 import { ButtonGroup } from '../../ui/components/ButtonGroup.js';
 import { Icons } from '../../ui/Icons.js';
+import { t } from '../../ui/Language.js';
 import { UI } from '../../ui/UI.js';
 import { BaseView } from '../BaseView.js';
 
@@ -31,7 +32,7 @@ export class GIFView extends BaseView {
 	_buildActions() {
 		const header = new ButtonGroup( [
 			new Button( {
-				text: 'Image',
+				text: t( 'image' ),
 				onClick: () => {
 					const frames = this.nodeView.querySelector( '.content-frames' );
 					frames.style.display = 'none';
@@ -41,7 +42,7 @@ export class GIFView extends BaseView {
 				},
 			} ),
 			new Button( {
-				text: 'Frames',
+				text: t( 'frames' ),
 				classes: 'selected',
 				onClick: () => {
 					const frames = this.nodeView.querySelector( '.content-frames' );
@@ -249,8 +250,8 @@ export class GIFView extends BaseView {
 		const gifReader = await this.parser.parse();
 		this._gifReader = gifReader;
 
-		this.mdAdd( 'Dimensions', gifReader.width + '×' + gifReader.height + ' px' );
-		this.mdAdd( 'Frames', gifReader.numFrames() );
+		this.mdAdd( t( 'dimensions' ), gifReader.width + '×' + gifReader.height + ' px' );
+		this.mdAdd( t( 'frames' ), gifReader.numFrames() );
 		this.buildMetaNode();
 
 		this.nodeView.append(

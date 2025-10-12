@@ -1,4 +1,5 @@
 import { FileHandler } from '../../FileHandler.js';
+import { t } from '../../ui/Language.js';
 import { UI } from '../../ui/UI.js';
 import { BaseParser } from '../BaseParser.js';
 
@@ -27,15 +28,15 @@ export class ZIPParser extends BaseParser {
 
 		const name = document.createElement( 'th' );
 		name.className = 'name';
-		name.textContent = 'Name';
+		name.textContent = t( 'name' );
 
 		const size = document.createElement( 'th' );
 		size.className = 'size';
-		size.textContent = 'Size';
+		size.textContent = t( 'size' );
 
 		const date = document.createElement( 'th' );
 		date.className = 'date';
-		date.textContent = 'Date';
+		date.textContent = t( 'date' );
 
 		const headRow = document.createElement( 'tr' );
 		headRow.className = 'head';

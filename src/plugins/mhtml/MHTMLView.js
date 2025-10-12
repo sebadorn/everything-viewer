@@ -1,3 +1,4 @@
+import { t } from '../../ui/Language.js';
 import { UI } from '../../ui/UI.js';
 import { BaseView } from '../BaseView.js';
 
@@ -13,8 +14,8 @@ export class MHTMLView extends BaseView {
 		super( parser, 'mhtml' );
 
 		this.metaData = [
-			{ name: 'Filename', value: this.parser.file.name },
-			{ name: 'Filesize', value: UI.formatSize( this.parser.file.size ) }
+			{ name: t( 'filename' ), value: this.parser.file.name },
+			{ name: t( 'filesize' ), value: UI.formatSize( this.parser.file.size ) }
 		];
 	}
 
@@ -57,7 +58,7 @@ export class MHTMLView extends BaseView {
 				}
 			}
 
-			this.mdAdd( key, value );
+			this.mdAdd( t( `mhtml.header.${key}`, key ), value );
 		}
 
 		this.buildMetaNode();

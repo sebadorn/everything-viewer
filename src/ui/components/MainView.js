@@ -1,5 +1,6 @@
 import { DocumentUtils } from '../../DocumentUtils.js';
 import { DropHandler } from '../DropHandler.js';
+import { t } from '../Language.js';
 import { UI } from '../UI.js';
 import { Button } from './Button.js';
 import { Component } from './Component.js';
@@ -18,7 +19,7 @@ export class MainView extends Component {
 
 		const btnOpen = new Button( {
 			classes: 'file-open',
-			text: 'Open…',
+			text: t( 'btnOpen' ),
 		} );
 		btnOpen.on( 'click', _ev => {
 			const input = document.createElement( 'input' );
@@ -30,13 +31,13 @@ export class MainView extends Component {
 		} );
 
 		const windowOpen = new Window( {
-			title: 'Everything Viewer',
+			title: t( 'appName' ),
 			closable: false,
 			x: 20,
 			y: 20,
 			content: [
 				btnOpen,
-				UI.build( '<a href="https://github.com/sebadorn/everything-viewer" id="github">GitHub</a>' ),
+				UI.build( `<a href="https://github.com/sebadorn/everything-viewer" id="github">${t( 'github' )}</a>` ),
 			],
 		} );
 
@@ -45,8 +46,8 @@ export class MainView extends Component {
 				<a href="https://github.com/sebadorn/everything-viewer/blob/main/CHANGELOG.md" target="_blank" class="build">BUILD ${DocumentUtils.getBuildNumber()}</a>
 				<div class="viewer">
 					<div class="note-dragdrop">
-						<h1>Everything Viewer</h1>
-						<span>Just drag &amp; drop your file here</span>
+						<h1>${t( 'appName' )}</h1>
+						<span>${t( 'mainDragDropNote' )}</span>
 					</div>
 				</div>
 			</main>

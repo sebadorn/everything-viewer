@@ -2,6 +2,7 @@ import { DocumentUtils } from '../../DocumentUtils.js';
 import { Button } from '../../ui/components/Button.js';
 import { ButtonGroup } from '../../ui/components/ButtonGroup.js';
 import { Icons } from '../../ui/Icons.js';
+import { t } from '../../ui/Language.js';
 import { UI } from '../../ui/UI.js';
 import { BaseView } from '../BaseView.js';
 
@@ -38,12 +39,12 @@ export class CFBView extends BaseView {
 				sender = `<${fileData.senderEmail}>`;
 			}
 
-			this.mdAdd( 'Sender', sender );
+			this.mdAdd( t( 'sender' ), sender );
 		}
 
 		if( Array.isArray( fileData.recipients ) ) {
 			fileData.recipients.forEach( r => {
-				let name = 'Recipient';
+				let name = t( 'recipient' );
 
 				if( r.recipType ) {
 					name += ' ' + String( r.recipType ).toUpperCase();
@@ -67,19 +68,19 @@ export class CFBView extends BaseView {
 		}
 
 		if( Array.isArray( fileData.attachments ) ) {
-			this.mdAdd( 'Attachments', fileData.attachments.length );
+			this.mdAdd( t( 'attachments' ), fileData.attachments.length );
 		}
 
 		if( fileData.creationTime ) {
-			this.mdAdd( 'Creation time', fileData.creationTime );
+			this.mdAdd( t( 'creationTime' ), fileData.creationTime );
 		}
 
 		if( fileData.lastModificationTime ) {
-			this.mdAdd( 'Last modification', fileData.lastModificationTime );
+			this.mdAdd( t( 'lastModification' ), fileData.lastModificationTime );
 		}
 
 		if( fileData.messageDeliveryTime ) {
-			this.mdAdd( 'Delivery time', fileData.messageDeliveryTime );
+			this.mdAdd( t( 'deliveryTime' ), fileData.messageDeliveryTime );
 		}
 	}
 
@@ -92,7 +93,7 @@ export class CFBView extends BaseView {
 	_buildActions() {
 		const header = new ButtonGroup( [
 			new Button( {
-				text: 'Content',
+				text: t( 'content' ),
 				classes: 'selected',
 				onClick: () => {
 					const body = this.nodeView.querySelector( '.content-body' );
@@ -103,7 +104,7 @@ export class CFBView extends BaseView {
 				},
 			} ),
 			new Button( {
-				text: 'Attachments',
+				text: t( 'attachments' ),
 				onClick: () => {
 					const body = this.nodeView.querySelector( '.content-body' );
 					body.style.display = 'none';
@@ -141,20 +142,20 @@ export class CFBView extends BaseView {
 		info.append(
 			UI.buildTableRow(
 				{ valueAsHTML: true },
-				'Filename:',
+				t( 'filename' ) + ':',
 				`<a href="${fileLink}" target="_blank"${download}>${fileName}</a>`,
 			),
-			UI.buildTableRow( null, 'Filesize:', UI.formatSize( attachment.contentLength || 0 ) ),
+			UI.buildTableRow( null, t( 'filesize' ) + ':', UI.formatSize( attachment.contentLength || 0 ) ),
 		);
 
 		if( typeof attachment.attachMimeTag === 'string' ) {
-			info.append( UI.buildTableRow( null, 'Type:', attachment.attachMimeTag ) );
+			info.append( UI.buildTableRow( null, t( 'type' ) + ':', attachment.attachMimeTag ) );
 		}
 
 		if( image ) {
 			UI.onImageComplete( image, () => {
 				const dimension = `${image.naturalWidth}×${image.naturalHeight} px`;
-				info.append( UI.buildTableRow( null, 'Dimensions:', dimension ) );
+				info.append( UI.buildTableRow( null, t( 'dimensions' ) + ':', dimension ) );
 
 				image.width = image.naturalWidth;
 				image.height = image.naturalHeight;

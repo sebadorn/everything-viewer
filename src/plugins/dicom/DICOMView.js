@@ -1,5 +1,6 @@
 import { Button } from '../../ui/components/Button.js';
 import { Icons } from '../../ui/Icons.js';
+import { t } from '../../ui/Language.js';
 import { UI } from '../../ui/UI.js';
 import { BaseView } from '../BaseView.js';
 import { DICOMParser } from './DICOMParser.js';
@@ -50,111 +51,111 @@ export class DICOMView extends BaseView {
 		} );
 
 		this._metaGroups.patient.push(
-			{ name: 'Patient ID', value: dataSet.string( 'x00100020' ) },
-			{ name: 'Issuer of Patient ID', value: dataSet.string( 'x00100021' ) },
-			{ name: 'Type of Patient ID', value: dataSet.string( 'x00100022' ) },
+			{ name: t( 'dicom.patient.id' ), value: dataSet.string( 'x00100020' ) },
+			{ name: t( 'dicom.patient.id.issuer' ), value: dataSet.string( 'x00100021' ) },
+			{ name: t( 'dicom.patient.id.type' ), value: dataSet.string( 'x00100022' ) },
 			{ hr: 1 },
-			{ name: 'Patient Name', value: dataSet.string( 'x00100010' ) },
-			{ name: 'Other Patient Names', value: dataSet.string( 'x00101001' ) },
-			{ name: 'Patient Birth Date', value: dataSet.string( 'x00100030' ) },
-			{ name: 'Patient Birth Time', value: dataSet.string( 'x00100032' ) },
-			{ name: 'Patient Sex', value: dataSet.string( 'x00100040' ) },
-			{ name: 'Ethnic Group', value: dataSet.string( 'x00102160' ) },
-			{ name: 'Patient Breed Desc.', value: dataSet.string( 'x00102292' ) },
-			{ name: 'Patient Species Desc.', value: dataSet.string( 'x00102201' ) },
-			{ name: 'Patient Comments', value: dataSet.string( 'x00104000' ) },
-			{ name: 'Strain Desc.', value: dataSet.string( 'x00100212' ) },
-			{ name: 'Strain Nomenclature', value: dataSet.string( 'x00100213' ) },
-			{ name: 'Strain Addit. Info.', value: dataSet.string( 'x00100218' ) },
+			{ name: t( 'dicom.patient.name' ), value: dataSet.string( 'x00100010' ) },
+			{ name: t( 'dicom.patient.name.other' ), value: dataSet.string( 'x00101001' ) },
+			{ name: t( 'dicom.patient.birthdate' ), value: dataSet.string( 'x00100030' ) },
+			{ name: t( 'dicom.patient.birthtime' ), value: dataSet.string( 'x00100032' ) },
+			{ name: t( 'dicom.patient.sex' ), value: dataSet.string( 'x00100040' ) },
+			{ name: t( 'dicom.patient.ethnic' ), value: dataSet.string( 'x00102160' ) },
+			{ name: t( 'dicom.patient.breed' ), value: dataSet.string( 'x00102292' ) },
+			{ name: t( 'dicom.patient.species' ), value: dataSet.string( 'x00102201' ) },
+			{ name: t( 'dicom.patient.comments' ), value: dataSet.string( 'x00104000' ) },
+			{ name: t( 'dicom.strain' ), value: dataSet.string( 'x00100212' ) },
+			{ name: t( 'dicom.strain.nomenclature' ), value: dataSet.string( 'x00100213' ) },
+			{ name: t( 'dicom.strain.info' ), value: dataSet.string( 'x00100218' ) },
 			{ hr: 1 },
-			{ name: 'Responsible Person', value: dataSet.string( 'x00102297' ) },
-			{ name: 'Resp. Person Role', value: dataSet.string( 'x00102298' ) },
-			{ name: 'Resp. Organization', value: dataSet.string( 'x00102299' ) },
+			{ name: t( 'dicom.responsible.person' ), value: dataSet.string( 'x00102297' ) },
+			{ name: t( 'dicom.responsible.role' ), value: dataSet.string( 'x00102298' ) },
+			{ name: t( 'dicom.responsible.org' ), value: dataSet.string( 'x00102299' ) },
 		);
 
 		this._metaGroups.patientStudy.push(
-			{ name: 'Admitting Diagnoses Desc.', value: dataSet.string( 'x00081080' ) },
-			{ name: 'Patient\'s Age (years)', value: dataSet.string( 'x00101010' ) },
-			{ name: 'Patient\'s Size (m)', value: dataSet.string( 'x00101020' ) },
-			{ name: 'Patient\'s BMI', value: dataSet.string( 'x00101022' ) },
-			{ name: 'Measured AP Dimension (mm)', value: dataSet.string( 'x00101023' ) },
-			{ name: 'Measured Lateral Dimension (mm)', value: dataSet.string( 'x00101024' ) },
-			{ name: 'Patient\'s Weight (kg)', value: dataSet.string( 'x00101030' ) },
-			{ name: 'Medical Alerts', value: dataSet.string( 'x00102000' ) },
-			{ name: 'Allergies', value: dataSet.string( 'x00102110' ) },
-			{ name: 'Occupation', value: dataSet.string( 'x00102180' ) },
-			{ name: 'Smoking Status', value: dataSet.string( 'x001021a0' ) },
-			{ name: 'Addit. Patient History', value: dataSet.string( 'x001021b0' ) },
-			{ name: 'Pregnancy Status', value: DICOMParser.getPregnancyStatus( dataSet.string( 'x001021c0' ) ) },
-			{ name: 'Last Menstrual Date', value: dataSet.string( 'x001021d0' ) },
-			{ name: 'Patient\'s Sex Neutered', value: dataSet.string( 'x00102203' ) },
-			{ name: 'Reason for Visit', value: dataSet.string( 'x00321066' ) },
-			{ name: 'Admission ID', value: dataSet.string( 'x00380010' ) },
-			{ name: 'Service Episode ID', value: dataSet.string( 'x00380060' ) },
-			{ name: 'Service Episode Desc.', value: dataSet.string( 'x00380062' ) },
-			{ name: 'Patient State', value: dataSet.string( 'x00380500' ) },
+			{ name: t( 'dicom.patient.admitDiagnoses' ), value: dataSet.string( 'x00081080' ) },
+			{ name: t( 'dicom.patient.age' ), value: dataSet.string( 'x00101010' ) },
+			{ name: t( 'dicom.patient.size' ), value: dataSet.string( 'x00101020' ) },
+			{ name: t( 'dicom.patient.bmi' ), value: dataSet.string( 'x00101022' ) },
+			{ name: t( 'dicom.patient.apDim' ), value: dataSet.string( 'x00101023' ) },
+			{ name: t( 'dicom.patient.latDim' ), value: dataSet.string( 'x00101024' ) },
+			{ name: t( 'dicom.patient.weight' ), value: dataSet.string( 'x00101030' ) },
+			{ name: t( 'dicom.patient.medAlerts' ), value: dataSet.string( 'x00102000' ) },
+			{ name: t( 'dicom.patient.allergies' ), value: dataSet.string( 'x00102110' ) },
+			{ name: t( 'dicom.patient.occupation' ), value: dataSet.string( 'x00102180' ) },
+			{ name: t( 'dicom.patient.smoking' ), value: dataSet.string( 'x001021a0' ) },
+			{ name: t( 'dicom.patient.history' ), value: dataSet.string( 'x001021b0' ) },
+			{ name: t( 'dicom.patient.pregnancy' ), value: DICOMParser.getPregnancyStatus( dataSet.string( 'x001021c0' ) ) },
+			{ name: t( 'dicom.patient.lastMenstruation' ), value: dataSet.string( 'x001021d0' ) },
+			{ name: t( 'dicom.patient.neutered' ), value: dataSet.string( 'x00102203' ) },
+			{ name: t( 'dicom.patient.reason' ), value: dataSet.string( 'x00321066' ) },
+			{ name: t( 'dicom.patient.admissionId' ), value: dataSet.string( 'x00380010' ) },
+			{ name: t( 'dicom.patient.service.id' ), value: dataSet.string( 'x00380060' ) },
+			{ name: t( 'dicom.patient.service' ), value: dataSet.string( 'x00380062' ) },
+			{ name: t( 'dicom.patient.state' ), value: dataSet.string( 'x00380500' ) },
 		);
 
 		this._metaGroups.generalStudy.push(
-			{ name: 'Study Date', value: dataSet.string( 'x00080020' ) },
-			{ name: 'Study Time', value: dataSet.string( 'x00080030' ) },
-			{ name: 'Accession Number', value: dataSet.string( 'x00080050' ) },
-			{ name: 'Referring Physician Name', value: dataSet.string( 'x00080090' ) },
-			{ name: 'Consulting Physician\'s Name', value: dataSet.string( 'x0008109c' ) },
-			{ name: 'Study Desc.', value: dataSet.string( 'x00081030' ) },
-			{ name: 'Physician(s) of Record', value: dataSet.string( 'x00081048' ) },
-			{ name: 'Physician(s) Reading Study', value: dataSet.string( 'x00081060' ) },
-			{ name: 'Study ID', value: dataSet.string( 'x00200010' ) },
-			{ name: 'Requesting Service', value: dataSet.string( 'x00321033' ) },
+			{ name: t( 'dicom.study.date' ), value: dataSet.string( 'x00080020' ) },
+			{ name: t( 'dicom.study.time' ), value: dataSet.string( 'x00080030' ) },
+			{ name: t( 'dicom.accessionNumber' ), value: dataSet.string( 'x00080050' ) },
+			{ name: t( 'dicom.referringPhysician' ), value: dataSet.string( 'x00080090' ) },
+			{ name: t( 'dicom.consultingPhysician' ), value: dataSet.string( 'x0008109c' ) },
+			{ name: t( 'dicom.study' ), value: dataSet.string( 'x00081030' ) },
+			{ name: t( 'dicom.physiciansOfRecord' ), value: dataSet.string( 'x00081048' ) },
+			{ name: t( 'dicom.physiciansReadingStudy' ), value: dataSet.string( 'x00081060' ) },
+			{ name: t( 'dicom.study.id' ), value: dataSet.string( 'x00200010' ) },
+			{ name: t( 'dicom.requestingService' ), value: dataSet.string( 'x00321033' ) },
 		);
 
 		this._metaGroups.generalSeries.push(
-			{ name: 'Series Date', value: dataSet.string( 'x00080021' ) },
-			{ name: 'Series Time', value: dataSet.string( 'x00080031' ) },
-			{ name: 'Modality', value: DICOMParser.getModalityName( dataSet.string( 'x00080060' ) ) },
-			{ name: 'Series Desc.', value: dataSet.string( 'x0008103e' ) },
-			{ name: 'Performing Physician\'s Name', value: dataSet.string( 'x00081050' ) },
-			{ name: 'Operator\'s Name', value: dataSet.string( 'x00081070' ) },
-			{ name: 'Anatomical Orientation Type', value: dataSet.string( 'x00102210' ) },
-			{ name: 'Body Part Examined', value: dataSet.string( 'x00180015' ) },
-			{ name: 'Protocol Name', value: dataSet.string( 'x00181030' ) },
-			{ name: 'Patient Position', value: dataSet.string( 'x00185100' ) },
-			{ name: 'Series Number', value: dataSet.string( 'x00200011' ) },
-			{ name: 'Laterality', value: dataSet.string( 'x00200060' ) },
-			{ name: 'Performed Procedure Step Desc.', value: dataSet.string( 'x00400254' ) },
-			{ name: 'Comments on the Procedure Step', value: dataSet.string( 'x00400280' ) },
+			{ name: t( 'dicom.series.date' ), value: dataSet.string( 'x00080021' ) },
+			{ name: t( 'dicom.series.time' ), value: dataSet.string( 'x00080031' ) },
+			{ name: t( 'dicom.modality' ), value: DICOMParser.getModalityName( dataSet.string( 'x00080060' ) ) },
+			{ name: t( 'dicom.series' ), value: dataSet.string( 'x0008103e' ) },
+			{ name: t( 'dicom.performingPhysician' ), value: dataSet.string( 'x00081050' ) },
+			{ name: t( 'dicom.series.operator' ), value: dataSet.string( 'x00081070' ) },
+			{ name: t( 'dicom.anatomicalOrientation' ), value: dataSet.string( 'x00102210' ) },
+			{ name: t( 'dicom.bodyPart' ), value: dataSet.string( 'x00180015' ) },
+			{ name: t( 'dicom.protocols' ), value: dataSet.string( 'x00181030' ) },
+			{ name: t( 'dicom.series.patientPosition' ), value: dataSet.string( 'x00185100' ) },
+			{ name: t( 'dicom.series.number' ), value: dataSet.string( 'x00200011' ) },
+			{ name: t( 'dicom.series.laterality' ), value: dataSet.string( 'x00200060' ) },
+			{ name: t( 'dicom.performedProcedureStep' ), value: dataSet.string( 'x00400254' ) },
+			{ name: t( 'dicom.procedureStepComments' ), value: dataSet.string( 'x00400280' ) },
 		);
 
 		this._metaGroups.generalImage.push(
-			{ name: 'Image Type', value: dataSet.string( 'x00080008' ) },
-			{ name: 'Patient Orientation', value: dataSet.string( 'x00200020' ) },
-			{ name: 'Image Laterality', value: dataSet.string( 'x00200062' ) },
-			{ name: 'Image Comments', value: dataSet.string( 'x00204000' ) },
+			{ name: t( 'dicom.image.type' ), value: dataSet.string( 'x00080008' ) },
+			{ name: t( 'dicom.image.patientOrientation' ), value: dataSet.string( 'x00200020' ) },
+			{ name: t( 'dicom.image.laterality' ), value: dataSet.string( 'x00200062' ) },
+			{ name: t( 'dicom.image.comments' ), value: dataSet.string( 'x00204000' ) },
 		);
 
 		this._metaGroups.generalEquipment.push(
-			{ name: 'Manufacturer', value: dataSet.string( 'x00080070' ) },
-			{ name: 'Institution Name', value: dataSet.string( 'x00080080' ) },
-			{ name: 'Institution Address', value: dataSet.string( 'x00080081' ) },
-			{ name: 'Station Name', value: dataSet.string( 'x00081010' ) },
-			{ name: 'Institutional Department Name', value: dataSet.string( 'x00081040' ) },
-			{ name: 'Manufacturer\'s Model Name', value: dataSet.string( 'x00081090' ) },
-			{ name: 'Device Serial Number', value: dataSet.string( 'x00181000' ) },
-			{ name: 'Device UID', value: dataSet.string( 'x00181002' ) },
-			{ name: 'Gantry ID', value: dataSet.string( 'x00181008' ) },
-			{ name: 'Software Versions', value: dataSet.string( 'x00181020' ) },
-			{ name: 'Spatial Resolution', value: dataSet.string( 'x00181050' ) },
-			{ name: 'Date of Last Calibration', value: dataSet.string( 'x00181200' ) },
-			{ name: 'Time of Last Calibration', value: dataSet.string( 'x00181201' ) },
+			{ name: t( 'manufacturer' ), value: dataSet.string( 'x00080070' ) },
+			{ name: t( 'dicom.equipment.institution' ), value: dataSet.string( 'x00080080' ) },
+			{ name: t( 'dicom.equipment.institution.address' ), value: dataSet.string( 'x00080081' ) },
+			{ name: t( 'dicom.equipment.station' ), value: dataSet.string( 'x00081010' ) },
+			{ name: t( 'dicom.equipment.institution.department' ), value: dataSet.string( 'x00081040' ) },
+			{ name: t( 'dicom.equipment.model' ), value: dataSet.string( 'x00081090' ) },
+			{ name: t( 'dicom.equipment.device.sn' ), value: dataSet.string( 'x00181000' ) },
+			{ name: t( 'dicom.equipment.device.uid' ), value: dataSet.string( 'x00181002' ) },
+			{ name: t( 'dicom.equipment.gantry.id' ), value: dataSet.string( 'x00181008' ) },
+			{ name: t( 'dicom.equipment.softwareVersions' ), value: dataSet.string( 'x00181020' ) },
+			{ name: t( 'dicom.equipment.spatialRes' ), value: dataSet.string( 'x00181050' ) },
+			{ name: t( 'dicom.equipment.calibration.lastDate' ), value: dataSet.string( 'x00181200' ) },
+			{ name: t( 'dicom.equipment.calibration.lastTime' ), value: dataSet.string( 'x00181201' ) },
 		);
 
 		if( isFirstRun ) {
-			this.mdAddGroup( 'Patient', this._metaGroups.patient );
-			this.mdAddGroup( 'Patient Study', this._metaGroups.patientStudy );
-			this.mdAddGroup( 'General Study', this._metaGroups.generalStudy );
-			this.mdAddGroup( 'General Series', this._metaGroups.generalSeries );
-			this.mdAddGroup( 'General Image', this._metaGroups.generalImage );
-			this.mdAddGroup( 'General Equipment', this._metaGroups.generalEquipment );
+			this.mdAddGroup( t( 'dicom.patient' ), this._metaGroups.patient );
+			this.mdAddGroup( t( 'dicom.patientStudy' ), this._metaGroups.patientStudy );
+			this.mdAddGroup( t( 'dicom.generalStudy' ), this._metaGroups.generalStudy );
+			this.mdAddGroup( t( 'dicom.generalSeries' ), this._metaGroups.generalSeries );
+			this.mdAddGroup( t( 'dicom.generalImage' ), this._metaGroups.generalImage );
+			this.mdAddGroup( t( 'dicom.generalEquipment' ), this._metaGroups.generalEquipment );
 		}
 	}
 
@@ -172,7 +173,7 @@ export class DICOMView extends BaseView {
 					<div class="wrap wrap-frame-controls"></div>
 					<div class="wrap wrap-playback">
 						<select class="speed">
-							<option value="${this._frameTime}">Default: ${this._frameTime} ms</option>
+							<option value="${this._frameTime}">${t( 'default' )}: ${this._frameTime} ms</option>
 							<option value="16.7">16.7 ms</option>
 							<option value="33.3">33.3 ms</option>
 							<option value="66.7">66.7 ms</option>

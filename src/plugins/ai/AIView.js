@@ -1,3 +1,4 @@
+import { t } from '../../ui/Language.js';
 import { UI } from '../../ui/UI.js';
 import { BaseView } from '../BaseView.js';
 
@@ -43,7 +44,7 @@ export class AIView extends BaseView {
 		const tableGeneral = document.createElement( 'table' );
 		tableGeneral.classList.add( 'header-general' );
 		tableGeneral.append(
-			UI.buildTableHeaderRow( 'Name', 'Type', 'Value' ),
+			UI.buildTableHeaderRow( t( 'name' ), t( 'type' ), t( 'value' ) ),
 			UI.buildTableRow( null, null, 'type', 'String', info.type ),
 		);
 
@@ -52,7 +53,7 @@ export class AIView extends BaseView {
 		this._addRowIfExists( tableGeneral, info.tensor_count, 'tensor_count', 'Uint64' );
 
 		node.append(
-			UI.build( '<h3>General</h3>' ),
+			UI.build( `<h3>${t( 'general' )}</h3>` ),
 			tableGeneral,
 		);
 
@@ -65,20 +66,20 @@ export class AIView extends BaseView {
 					const value = info.metadata[key];
 
 					tableMetadata.append(
-						UI.buildTableHeaderRow( 'Name', 'Value' ),
+						UI.buildTableHeaderRow( t( 'name' ), t( 'value' ) ),
 						UI.buildTableRow( null, null, key, value ),
 					);
 				}
 			}
 			else {
 				tableMetadata.append(
-					UI.buildTableHeaderRow( 'Name', 'Type', 'Value' ),
+					UI.buildTableHeaderRow( t( 'name' ), t( 'type' ), t( 'value' ) ),
 					...this._buildMetadataRows( info.metadata ),
 				);
 			}
 
 			node.append(
-				UI.build( '<h3>Metadata</h3>' ),
+				UI.build( `<h3>${t( 'metadata' )}</h3>` ),
 				tableMetadata,
 			);
 		}
@@ -87,12 +88,12 @@ export class AIView extends BaseView {
 			const tableTensors = document.createElement( 'table' );
 			tableTensors.classList.add( 'header-tensors' );
 			tableTensors.append(
-				UI.buildTableHeaderRow( 'Name', 'Dimensions', 'Type' ),
+				UI.buildTableHeaderRow( t( 'name' ), t( 'dimensions' ), t( 'type' ) ),
 				...this._buildTensorRows( info.tensors ),
 			);
 
 			node.append(
-				UI.build( '<h3>Tensors</h3>' ),
+				UI.build( `<h3>${t( 'tensors' )}</h3>` ),
 				tableTensors,
 			);
 		}

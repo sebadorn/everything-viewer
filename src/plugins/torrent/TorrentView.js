@@ -1,3 +1,4 @@
+import { t } from '../../ui/Language.js';
 import { UI } from '../../ui/UI.js';
 import { BaseView } from '../BaseView.js';
 
@@ -92,10 +93,10 @@ export class TorrentView extends BaseView {
 			<table class="files">
 				<thead>
 					<tr>
-						<th class="file-name">Name</th>
-						<th class="file-path">Path</th>
-						<th class="file-size">Size</th>
-						<th class="file-offset">Offset</th>
+						<th class="file-name">${t( 'name' )}</th>
+						<th class="file-path">${t( 'path' )}</th>
+						<th class="file-size">${t( 'size' )}</th>
+						<th class="file-offset">${t( 'offset' )}</th>
 					</tr>
 				</thead>
 			</table>
@@ -178,19 +179,7 @@ export class TorrentView extends BaseView {
 	 * @returns {string}
 	 */
 	_getTitle( key ) {
-		const map = {
-			announce: 'Announce / Tracker URLs',
-			comment: 'Comment',
-			created: 'Created',
-			createdBy: 'Created By',
-			files: 'Files',
-			infoHash: 'Info Hash',
-			length: 'Size',
-			name: 'Name',
-			pieces: 'Pieces',
-		};
-
-		return map[key] || key;
+		return t( `torrent.${key}`, key );
 	}
 
 

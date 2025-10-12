@@ -1,3 +1,4 @@
+import { t } from '../../ui/Language.js';
 import { UI } from '../../ui/UI.js';
 import { BaseView } from '../BaseView.js';
 
@@ -44,7 +45,7 @@ export class AudioView extends BaseView {
 		if( !audio.canPlayType( this.parser.mimeType ) ) {
 			const note = document.createElement( 'p' );
 			note.className = 'note';
-			note.textContent = `Playback for audio format not supported: "${this.parser.mimeType}"`;
+			note.textContent = t( 'audio.notSupported' ).replace( '%s', this.parser.mimeType );
 
 			this.buildMetaNode();
 

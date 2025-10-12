@@ -1,3 +1,4 @@
+import { t } from '../../ui/Language.js';
 import { BaseView } from '../BaseView.js';
 
 
@@ -47,7 +48,7 @@ export class ImageView extends BaseView {
 			image.height = image.naturalHeight;
 			image.width = image.naturalWidth;
 
-			this.mdAdd( 'Dimensions', image.naturalWidth + '×' + image.naturalHeight + ' px' );
+			this.mdAdd( t( 'dimensions' ), image.naturalWidth + '×' + image.naturalHeight + ' px' );
 			this.buildMetaNode();
 
 			this.nodeView.append( image );
@@ -57,7 +58,7 @@ export class ImageView extends BaseView {
 		image.onerror = () => {
 			const note = document.createElement( 'p' );
 			note.className = 'note';
-			note.textContent = `Image format not supported: "${this.parser.mimeType}"`;
+			note.textContent = t( 'image.notSupported' ).replace( '%s', this.parser.mimeType );
 
 			this.buildMetaNode();
 
