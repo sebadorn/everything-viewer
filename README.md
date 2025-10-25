@@ -1,8 +1,12 @@
 # Everything Viewer
 
-The idea is to support a bunch of different formats and provide additional information or tools for some of them.
+**An online viewer for various file formats.**
 
-Modules are lazily loaded, so only the contents actually needed for parsing and viewing an opened file will be loaded.
+<img src="./screenshots/2025-07-15_multi.png?raw=true" alt="Screenshot of the web application showing multiple open windows: MIDI player, GIF viewer with single frames, SPLAT viewer using BabylonJS" height="486" /><br>
+
+**Try it: https://sebadorn.github.io/everything-viewer/**
+
+Runs locally in the browser, no files are uploaded to any server. Modules are loaded lazily, so only the contents actually needed for parsing and viewing an opened file will be loaded.
 
 
 ## Supported formats
