@@ -1,28 +1,28 @@
 export const Language = {
 
 
-	/** @type {string?} */
-	current: null,
-
-	fallback: 'en',
-
 	supported: [
 		'de',
 		'en',
 	],
 
-	/** @type {object?} */
-	_language: null,
-
-	_storageKey: 'everythingviewer.language.selected',
-
+	/** @type {string?} */
+	_current: null,
 
 	/**
 	 *
+	 * @returns {string?}
 	 */
-	apply() {
-		// TODO:
+	get current() {
+		return this._current ?? this._fallback;
 	},
+
+	_fallback: 'en',
+
+	/** @type {object} */
+	_languages: {},
+
+	_storageKey: 'everythingviewer.language.selected',
 
 
 	/**
@@ -42,6 +42,34 @@ export const Language = {
 
 	/**
 	 *
+	 * @param {string} langNow
+	 * @param {string} langNext
+	 * @returns {string}
+	 */
+	getConfirmMessage( langNow, langNext ) {
+		const txtNow = this._languages[langNow]?.['language.reload'];
+		const txtNext = this._languages[langNext]?.['language.reload'];
+
+		let txt = '';
+
+		if( txtNow ) {
+			txt += txtNow;
+		}
+
+		if( txtNext ) {
+			if( txtNow ) {
+				txt += '\n\n';
+			}
+
+			txt += txtNext;
+		}
+
+		return txt;
+	},
+
+
+	/**
+	 *
 	 * @returns {string?}
 	 */
 	getSaved() {
@@ -52,6 +80,7 @@ export const Language = {
 	/**
 	 *
 	 * @param {string?} langCode
+	 * @returns {Promise<boolean>}
 	 */
 	async load( langCode ) {
 		if( !langCode ) {
@@ -66,25 +95,29 @@ export const Language = {
 		}
 
 		if( !this.supported.includes( langCode ) ) {
-			console.warn( '[Language.load] Unsupported language:', langCode );
-			langCode = this.fallback;
+			console.warn( `[Language.load] Unsupported language: ${langCode}` );
+			langCode = this._fallback;
 		}
 
-		if( langCode === this.current ) {
-			return;
+		if( langCode === this._current ) {
+			console.debug( `[Language.load] Language did not change, nothing to do: ${langCode}` );
+			return false;
 		}
 
 		try {
 			const response = await fetch( `/language/${langCode}.json` );
-			this._language = await response.json();
-			this.current = langCode;
+			this._languages[langCode] = await response.json();
+			this._current = langCode;
 			this.saveCurrent();
 
-			console.debug( '[Language.load] Loaded:', langCode );
+			console.debug( `[Language.load] Loaded: ${langCode}` );
 		}
 		catch( err ) {
 			console.error( '[Language.load]', err );
+			return false;
 		}
+
+		return true;
 	},
 
 
@@ -92,7 +125,7 @@ export const Language = {
 	 *
 	 */
 	saveCurrent() {
-		localStorage.setItem( this._storageKey, this.current );
+		localStorage.setItem( this._storageKey, this._current );
 	},
 
 
@@ -106,5 +139,5 @@ export const Language = {
  * @returns {string}
  */
 export function t( key, fallback ) {
-	return Language._language?.[key] || fallback || key;
+	return Language._languages[Language._current]?.[key] || fallback || key;
 };

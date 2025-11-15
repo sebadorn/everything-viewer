@@ -56,7 +56,7 @@ Runs locally in the browser, no files are uploaded to any server. Modules are lo
 
 * Show single file web archive files (`.mhtml`, `.mht`).
 * Show meta data of Torrent identifier files (`.torrent`).
-* For `.zip` files show a list of its contents. Does not supported encrypted archives yet.
+* For `.zip` files show a list of its contents. Does not supported password-protected archives yet.
 
 
 ## Libraries/Packages

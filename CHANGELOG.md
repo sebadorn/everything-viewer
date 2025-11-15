@@ -1,6 +1,13 @@
 # Changelog
 
 
+## Build 2025-1x-xx
+
+* **chore:** update dependencies (`@babylonjs/*`, `@cornerstonejs/*`, `file-type`, `highlightjs-line-numbers.js`, `sass`, `sass-loader`)
+* **chore:** add screenshot to README and improve its presentation
+* **feat:** add language selection, support "en" and "de"
+
+
 ## Build 2025-10-12
 
 * **feat(ai):** add support for `.safetensors` AI model files, show info from header

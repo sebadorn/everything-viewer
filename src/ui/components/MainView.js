@@ -1,9 +1,10 @@
 import { DocumentUtils } from '../../DocumentUtils.js';
 import { DropHandler } from '../DropHandler.js';
-import { t } from '../Language.js';
+import { Language, t } from '../Language.js';
 import { UI } from '../UI.js';
 import { Button } from './Button.js';
 import { Component } from './Component.js';
+import { DropDown } from './DropDown.js';
 import { Window } from './Window.js';
 
 
@@ -30,14 +31,36 @@ export class MainView extends Component {
 			input.click();
 		} );
 
+		const dropDownLanguage = new DropDown(
+			Language.supported.map( l => (
+				{ value: l, text: t( `language.${l}`, l ) }
+			) ),
+			{
+				classes: 'language',
+				selected: Language.current,
+			},
+		);
+		dropDownLanguage.on( 'change', async ev => {
+			const changed = await Language.load( ev.detail.value );
+
+			if( changed ) {
+				const message = Language.getConfirmMessage( ev.detail.oldValue, ev.detail.value );
+
+				if( confirm( message ) ) {
+					location.reload();
+				}
+			}
+		} );
+
 		const windowOpen = new Window( {
 			title: t( 'appName' ),
 			closable: false,
-			x: 20,
-			y: 20,
+			x: 40,
+			y: 40,
 			content: [
 				btnOpen,
 				UI.build( `<a href="https://github.com/sebadorn/everything-viewer" id="github">${t( 'github' )}</a>` ),
+				dropDownLanguage,
 			],
 		} );
 
