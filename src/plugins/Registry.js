@@ -131,7 +131,7 @@ export const Registry = {
 	 * @returns {Promise<Plugin>}
 	 */
 	async getPluginForImport( fileOrDir ) {
-		if( fileOrDir instanceof FileSystemDirectoryEntry ) {
+		if( fileOrDir.isDirectory ) {
 			return await this._getPluginForDirectoryImport( fileOrDir );
 		}
 
