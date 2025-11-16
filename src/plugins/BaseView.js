@@ -16,9 +16,9 @@ export class BaseView {
 		this.type = type;
 
 		this.metaData = [
-			{ name: 'Filename', value: this.parser.file.name },
-			{ name: 'Type', value: this.parser.mimeType },
-			{ name: 'Filesize', value: UI.formatSize( this.parser.file.size ) },
+			{ name: t( 'filename' ), value: this.parser.file.name },
+			{ name: t( 'type' ), value: this.parser.mimeType },
+			{ name: t( 'filesize' ), value: UI.formatSize( this.parser.file.size ) },
 		];
 
 		this.nodeView = document.createElement( 'div' );
