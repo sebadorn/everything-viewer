@@ -105,7 +105,7 @@ export const Language = {
 		}
 
 		try {
-			const response = await fetch( `/language/${langCode}.json` );
+			const response = await fetch( `./language/${langCode}.json` );
 			this._languages[langCode] = await response.json();
 			this._current = langCode;
 			this.saveCurrent();
