@@ -46,6 +46,7 @@ export class Model3DView extends BaseView {
 				enabled: false,
 				speed: 0,
 			},
+			engine: 'WebGL',
 		} );
 		this._viewer.extension = this.parser.ext;
 
