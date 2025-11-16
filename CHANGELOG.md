@@ -1,11 +1,14 @@
 # Changelog
 
 
-## Build 2025-1x-xx
+## Build 2025-11-16
 
 * **chore:** update dependencies (`@babylonjs/*`, `@cornerstonejs/*`, `file-type`, `highlightjs-line-numbers.js`, `sass`, `sass-loader`)
 * **chore:** add screenshot to README and improve its presentation
 * **feat:** add language selection, support "en" and "de"
+* **fix:** fix check if opened content is directory because Chromium does not support checking for the standard element `FileSystemDirectoryEntry`
+* **fix(model3d):** weird graphical glitch with high GPU load caused by tiled background
+* **fix(model3d):** prefer BabylonJS to use WebGL instead of WebGPU, because support for WebGPU is not quite there yet in browsers on Linux
 
 
 ## Build 2025-10-12
