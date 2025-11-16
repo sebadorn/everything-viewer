@@ -10,6 +10,8 @@
   "license": "MIT",
   "author": "Sebastian Dorn",
   "dependencies": {
+    "@babylonjs/core": "^8.37.0",
+    "@babylonjs/loaders": "^8.37.0",
     "@babylonjs/materials": "^8.37.0",
     "@babylonjs/viewer": "^8.37.0",
     "@cornerstonejs/core": "^4.10.2",
