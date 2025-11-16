@@ -10,6 +10,7 @@ export const Icons = {
 	pause: 'pause',
 	play: 'play_arrow',
 	stop: 'stop',
+	volume: 'volume_up',
 
 	format_zip: 'folder_zip',
 

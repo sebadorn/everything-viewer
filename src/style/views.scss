@@ -549,7 +549,6 @@
 
 	img {
 		background: vars.$bg-alpha-tiles;
-		background-size: 20px 20px;
 		flex-grow: 0;
 		flex-shrink: 0;
 	}
@@ -570,8 +569,7 @@
 
 .view-model3d {
 	babylon-viewer {
-		background-image: vars.$bg-alpha-tiles;
-		background-size: 20px 20px;
+		background: vars.$bg-alpha-tiles;
 		border-radius: vars.$border-radius;
 		height: 100%;
 		min-height: 200px;

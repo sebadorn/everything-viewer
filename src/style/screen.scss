@@ -74,7 +74,7 @@ a#github {
 	font-family: vars.$font-ms;
 	font-size: 14px;
 	line-height: 17px;
-	margin-left: 10px;
+	margin-left: 20px;
 	padding-left: 30px !important;
 	padding: 6px 18px;
 	text-align: center;
@@ -86,6 +86,11 @@ a#github {
 	}
 }
 
+.dropdown.language {
+	margin-left: 10px;
+	max-width: 110px;
+}
+
 
 select {
 	background-color: vars.$color-primary;
@@ -95,7 +100,12 @@ select {
 	font-family: vars.$font-ms;
 	font-size: 14px;
 	max-width: 300px;
-	padding: 2px 3px;
+	padding: 5px 6px;
+
+	&:hover {
+		background-color: color.scale( vars.$color-primary, $lightness: -20% );
+		cursor: pointer;
+	}
 }
 
 table {

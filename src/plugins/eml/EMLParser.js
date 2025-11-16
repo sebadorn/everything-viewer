@@ -1,4 +1,5 @@
 import { DocumentUtils } from '../../DocumentUtils.js';
+import { t } from '../../ui/Language.js';
 import { BaseParser } from '../BaseParser.js';
 
 
@@ -27,7 +28,7 @@ export class EMLParser extends BaseParser {
 		headers.forEach( header => {
 			const name = document.createElement( 'th' );
 			name.className = 'header-name';
-			name.textContent = header.name;
+			name.textContent = t( 'eml.header.' + String( header.name ).toLowerCase(), header.name );
 
 			const value = document.createElement( 'td' );
 			value.className = 'header-value';

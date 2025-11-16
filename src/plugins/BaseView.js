@@ -1,4 +1,5 @@
 import { Window } from '../ui/components/Window.js';
+import { t } from '../ui/Language.js';
 import { UI } from '../ui/UI.js';
 
 
@@ -17,7 +18,7 @@ export class BaseView {
 		this.metaData = [
 			{ name: 'Filename', value: this.parser.file.name },
 			{ name: 'Type', value: this.parser.mimeType },
-			{ name: 'Filesize', value: UI.formatSize( this.parser.file.size ) }
+			{ name: 'Filesize', value: UI.formatSize( this.parser.file.size ) },
 		];
 
 		this.nodeView = document.createElement( 'div' );
@@ -159,7 +160,7 @@ export class BaseView {
 			const line = UI.build(
 				'<div class="option option-toggle-empty">' +
 					'<input type="checkbox" id="metadata-toggle-empty" value="1" />' +
-					'<label for="metadata-toggle-empty">Omit empty entries</label>' +
+					`<label for="metadata-toggle-empty">${t( 'omitEmptyEntries' )}</label>` +
 				'</div>'
 			);
 
@@ -202,7 +203,7 @@ export class BaseView {
 	async load() {
 		const note = document.createElement( 'p' );
 		note.className = 'note';
-		note.textContent = `No parser found for file of type: "${this.parser.mimeType}"`;
+		note.textContent = t( 'noParserFound' ).replace( '%s', this.parser.mimeType );
 
 		this.buildMetaNode();
 

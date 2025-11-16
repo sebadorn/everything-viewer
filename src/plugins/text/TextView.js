@@ -1,6 +1,7 @@
 import { FileHandler } from '../../FileHandler.js';
 import { Button } from '../../ui/components/Button.js';
 import { ButtonGroup } from '../../ui/components/ButtonGroup.js';
+import { t } from '../../ui/Language.js';
 import { BaseView } from '../BaseView.js';
 
 
@@ -31,7 +32,7 @@ export class TextView extends BaseView {
 	_buildButtonsJson( block ) {
 		return new ButtonGroup( [
 			new Button( {
-				text: 'Original',
+				text: t( 'original' ),
 				classes: 'selected',
 				onClick: () => {
 					delete block.dataset.highlighted;
@@ -42,7 +43,7 @@ export class TextView extends BaseView {
 				},
 			} ),
 			new Button( {
-				text: 'Formatted',
+				text: t( 'formatted' ),
 				onClick: () => {
 					let formatted = this._originalText;
 
@@ -366,12 +367,12 @@ export class TextView extends BaseView {
 			block.className += ' language-' + lang;
 			hljs.highlightElement( block );
 
-			this.mdAdd( 'Language', lang );
+			this.mdAdd( t( 'text.language' ), lang );
 		}
 
 		hljs.lineNumbersBlock( block );
 
-		this.mdAdd( 'Lines', ( text.match( /\n/g ) || [] ).length );
+		this.mdAdd( t( 'text.lines' ), ( text.match( /\n/g ) || [] ).length );
 		this.buildMetaNode();
 		this._openWindow( { width: 1000 } );
 	}

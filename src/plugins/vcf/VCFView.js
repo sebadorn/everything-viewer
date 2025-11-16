@@ -1,3 +1,4 @@
+import { t } from '../../ui/Language.js';
 import { UI } from '../../ui/UI.js';
 import { BaseView } from '../BaseView.js';
 
@@ -231,50 +232,50 @@ export class VCFView extends BaseView {
 	_getName( attr, meta ) {
 		const map = {
 			adr: {
-				HOME: 'Address (Home)',
-				WORK: 'Address (Work)',
-				default: 'Address',
+				HOME: t( 'vcf.addressHome' ),
+				WORK: t( 'vcf.addressWork' ),
+				default: t( 'address' ),
 			},
-			anniversary: 'Anniversary',
-			bday: 'Birthday',
-			categories: 'Categories',
+			anniversary: t( 'vcf.anniversary' ),
+			bday: t( 'vcf.birthday' ),
+			categories: t( 'categories' ),
 			email: {
-				HOME: 'Email (Home)',
-				WORK: 'Email (Work)',
-				default: 'Email',
+				HOME: t( 'vcf.emailHome' ),
+				WORK: t( 'vcf.emailWork' ),
+				default: t( 'email' ),
 			},
-			fn: 'Display Name',
-			gender: 'Gender',
-			geo: 'Geo.',
-			impp: 'Instant Messaging',
-			key: 'Key',
+			fn: t( 'displayName' ),
+			gender: t( 'vcf.gender' ),
+			geo: t( 'vcf.geo' ),
+			impp: t( 'vcf.impp' ),
+			key: t( 'key' ),
 			label: {
-				HOME: 'Label (Home)',
-				WORK: 'Label (Work)',
-				default: 'Label',
+				HOME: t( 'vcf.labelHome' ),
+				WORK: t( 'vcf.labelWork' ),
+				default: t( 'vcf.label' ),
 			},
-			lang: 'Language',
-			logo: 'Logo',
-			member: 'Member',
-			n: 'Name',
-			nickname: 'Nickname',
-			note: 'Note',
-			org: 'Organization',
-			photo: 'Photo',
-			prodid: 'Created with',
-			related: 'Relation',
-			rev: 'Last updated',
-			role: 'Role',
-			sound: 'Sound',
+			lang: t( 'language' ),
+			logo: t( 'vcf.logo' ),
+			member: t( 'vcf.member' ),
+			n: t( 'name' ),
+			nickname: t( 'vcf.nickname' ),
+			note: t( 'vcf.note' ),
+			org: t( 'vcf.org' ),
+			photo: t( 'photo' ),
+			prodid: t( 'vcf.prodid' ),
+			related: t( 'vcf.related' ),
+			rev: t( 'vcf.rev' ),
+			role: t( 'vcf.role' ),
+			sound: t( 'vcf.sound' ),
 			tel: {
-				HOME: 'Phone (Home)',
-				WORK: 'Phone (Work)',
-				default: 'Phone',
+				HOME: t( 'vcf.phoneHome' ),
+				WORK: t( 'vcf.phoneWork' ),
+				default: t( 'vcf.phone' ),
 			},
-			title: 'Title',
-			tz: 'Time zone',
-			url: 'URL',
-			version: 'Version',
+			title: t( 'title' ),
+			tz: t( 'timezone' ),
+			url: t( 'url' ),
+			version: t( 'version' ),
 		};
 
 		const item = map[attr];
@@ -460,11 +461,11 @@ export class VCFView extends BaseView {
 		}
 
 		if( version ) {
-			this.mdAdd( 'Version', version );
+			this.mdAdd( t( 'version' ), version );
 		}
 
 		if( lastUpdated ) {
-			this.mdAdd( 'Last updated', lastUpdated );
+			this.mdAdd( t( 'lastUpdated' ), lastUpdated );
 		}
 
 		this.buildMetaNode();

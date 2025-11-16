@@ -1,9 +1,9 @@
-import { viewport } from '@cornerstonejs/tools/utilities';
 import { Button } from '../../ui/components/Button.js';
 import { UI } from '../../ui/UI.js';
 import { BaseView } from '../BaseView.js';
 import { NIFTIParser } from './NIFTIParser.js';
 import { Icons } from '../../ui/Icons.js';
+import { t } from '../../ui/Language.js';
 
 
 export class NIFTIView extends BaseView {
@@ -51,7 +51,7 @@ export class NIFTIView extends BaseView {
 					<div class="wrap wrap-frame-controls"></div>
 					<div class="wrap wrap-playback">
 						<select class="speed">
-							<option value="${this._frameTime}">Default: ${this._frameTime} ms</option>
+							<option value="${this._frameTime}">${t( 'default' )}: ${this._frameTime} ms</option>
 							<option value="16.7">16.7 ms</option>
 							<option value="33.3">33.3 ms</option>
 							<option value="66.7">66.7 ms</option>
@@ -307,7 +307,7 @@ export class NIFTIView extends BaseView {
 		this._initViewport( () => {
 			this._frameIndex = this._viewports.axial.getCurrentImageIdIndex();
 
-			this.mdAdd( 'Photometric Interpretation', this._volume.metadata.PhotometricInterpretation || '' );
+			this.mdAdd( t( 'nifti.photometricInterpretation' ), this._volume.metadata.PhotometricInterpretation || '' );
 			this.buildMetaNode();
 
 			this._updateControls();

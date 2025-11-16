@@ -1,4 +1,5 @@
 import { PlayerControls, PlayerState } from '../../ui/components/PlayerControls.js';
+import { t } from '../../ui/Language.js';
 import { UI } from '../../ui/UI.js';
 import { BaseView } from '../BaseView.js';
 
@@ -32,11 +33,11 @@ export class MidiView extends BaseView {
 	 */
 	_addMetaData( midiData ) {
 		if( midiData.name ) {
-			this.mdAdd( 'Name', midiData.name );
+			this.mdAdd( t( 'name' ), midiData.name );
 		}
 
-		this.mdAdd( 'Tracks', midiData.tracks.length );
-		this.mdAdd( 'Duration', UI.formatDuration( midiData.duration * 1000 ) );
+		this.mdAdd( t( 'audio.tracks' ), midiData.tracks.length );
+		this.mdAdd( t( 'duration' ), UI.formatDuration( midiData.duration * 1000 ) );
 	}
 
 
