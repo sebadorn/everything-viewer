@@ -3,8 +3,8 @@ const CssMinimizerPlugin = require( 'css-minimizer-webpack-plugin' );
 const MiniCssExtractPlugin = require( 'mini-css-extract-plugin' );
 const TerserPlugin = require( 'terser-webpack-plugin' );
 
-const fs = require( 'node:fs' );
-const path = require( 'node:path' );
+const fs = require( 'fs' );
+const path = require( 'path' );
 
 const outputDir = path.resolve( __dirname, 'dist' );
 
@@ -94,6 +94,9 @@ module.exports = {
 			},
 		},
 	],
+	externals: {
+        'node:fs/promises': 'commonjs2 node:fs/promises',
+    },
 	resolve: {
 		fallback: {
 			'buffer': require.resolve( 'buffer/' ),
