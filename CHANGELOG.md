@@ -1,6 +1,11 @@
 # Changelog
 
 
+## Build 2026-xx-xx
+
+* **chore:** update dependencies (`@babylonjs/*`, `@cornerstonejs/*`, `@kenjiuno/msgreader`, `@vanillaes/csv`, `copy-webpack-plugin`, `css-loader`, `css-minimizer-webpack-plugin`, `file-type`, `mini-css-extract-plugin`, `sass`, `sass-loader`, `terser-webpack-plugin`, `webpack`, `webpack-cli`)
+
+
 ## Build 2025-11-16
 
 * **chore:** update dependencies (`@babylonjs/*`, `@cornerstonejs/*`, `file-type`, `highlightjs-line-numbers.js`, `sass`, `sass-loader`)

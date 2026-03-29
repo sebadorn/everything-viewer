@@ -10,20 +10,19 @@
   "license": "MIT",
   "author": "Sebastian Dorn",
   "dependencies": {
-    "@babylonjs/core": "^8.37.0",
-    "@babylonjs/loaders": "^8.37.0",
-    "@babylonjs/materials": "^8.37.0",
-    "@babylonjs/viewer": "^8.37.0",
-    "@cornerstonejs/core": "^4.10.2",
-    "@cornerstonejs/dicom-image-loader": "^4.10.2",
-    "@cornerstonejs/nifti-volume-loader": "^4.10.2",
-    "@cornerstonejs/tools": "^4.10.2",
+    "@babylonjs/core": "^9.0.0",
+    "@babylonjs/loaders": "^9.0.0",
+    "@babylonjs/materials": "^9.0.0",
+    "@babylonjs/viewer": "^9.0.0",
+    "@cornerstonejs/dicom-image-loader": "^4.20.0",
+    "@cornerstonejs/nifti-volume-loader": "^4.20.0",
+    "@cornerstonejs/tools": "^4.20.0",
     "@kenjiuno/msgreader": "^1.26.0",
     "@tonejs/midi": "^2.0.28",
-    "@vanillaes/csv": "^3.0.4",
+    "@vanillaes/csv": "^4.0.3",
     "buffer": "^6.0.3",
     "dicom-parser": "^1.8.21",
-    "file-type": "^21.1.0",
+    "file-type": "^22.0.0",
     "highlight.js": "^11.11.1",
     "highlightjs-line-numbers.js": "^2.9.1",
     "ical.js": "^2.2.1",
@@ -34,15 +33,15 @@
     "tone": "^15.1.22"
   },
   "devDependencies": {
-    "copy-webpack-plugin": "^13.0.1",
+    "copy-webpack-plugin": "^14.0.0",
     "css-loader": "^7.1.2",
-    "css-minimizer-webpack-plugin": "^7.0.2",
+    "css-minimizer-webpack-plugin": "^8.0.0",
     "mini-css-extract-plugin": "^2.9.4",
     "sass": "^1.94.0",
     "sass-loader": "^16.0.6",
     "style-loader": "^4.0.0",
     "terser-webpack-plugin": "^5.3.14",
     "webpack": "^5.102.1",
-    "webpack-cli": "^6.0.1"
+    "webpack-cli": "^7.0.2"
   }
 }
