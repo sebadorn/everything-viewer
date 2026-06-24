@@ -91,7 +91,7 @@ export class EMLParser extends BaseParser {
 		}
 
 		const text = await this.getText();
-		this.parse( text );
+		await this.parse( text );
 
 		if( !this._lastParsed ) {
 			throw new Error( 'Failed to parse' );
@@ -130,7 +130,7 @@ export class EMLParser extends BaseParser {
 		}
 
 		const text = await this.getText();
-		const data = this.parse( text );
+		const data = await this.parse( text );
 
 		return this.buildHeadersHTML( data.headers );
 	}
@@ -141,7 +141,17 @@ export class EMLParser extends BaseParser {
 	 * @param  {string} text
 	 * @return {object?}
 	 */
-	parse( text ) {
+	async parse( text ) {
+		const simpleParser = ( await import(
+			/* webpackChunkName: "mailparser" */
+			'mailparser'
+		) ).simpleParser;
+
+		const result = await simpleParser( await this.getText() );
+		console.warn(result);
+		return null;
+
+
 		this._lastParsed = null;
 
 		text = text.trimStart();

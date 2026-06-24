@@ -5,6 +5,7 @@ const TerserPlugin = require( 'terser-webpack-plugin' );
 
 const fs = require( 'fs' );
 const path = require( 'path' );
+const { ProvidePlugin, NormalModuleReplacementPlugin } = require( 'webpack' );
 
 const outputDir = path.resolve( __dirname, 'dist' );
 
@@ -61,6 +62,13 @@ module.exports = {
 		path: outputDir,
 	},
 	plugins: [
+		new ProvidePlugin( {
+			Buffer: ['buffer', 'Buffer'],
+            process: 'process/browser',
+        } ),
+        new NormalModuleReplacementPlugin( /^node:/, resource => {
+            resource.request = resource.request.replace( /^node:/, '' );
+        } ),
 		new CopyPlugin( {
 			patterns: [
 				{
@@ -94,14 +102,14 @@ module.exports = {
 			},
 		},
 	],
-	externals: {
-        'node:fs/promises': 'commonjs2 node:fs/promises',
-    },
 	resolve: {
 		fallback: {
-			'buffer': require.resolve( 'buffer/' ),
-			'fs': false,
-			'path': require.resolve( 'path-browserify' ),
+			buffer: require.resolve( 'buffer' ),
+			crypto: require.resolve( 'crypto-browserify' ),
+			fs: false,
+			path: require.resolve( 'path-browserify' ),
+			stream: require.resolve( 'stream-browserify' ),
+			vm: require.resolve( 'vm-browserify' ),
 		},
 	},
 };

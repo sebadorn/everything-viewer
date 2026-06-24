@@ -3,7 +3,9 @@
 
 ## Build 2026-xx-xx
 
-* **chore:** update dependencies (`@babylonjs/*`, `@cornerstonejs/*`, `@kenjiuno/msgreader`, `@vanillaes/csv`, `copy-webpack-plugin`, `css-loader`, `css-minimizer-webpack-plugin`, `file-type`, `mini-css-extract-plugin`, `sass`, `sass-loader`, `terser-webpack-plugin`, `webpack`, `webpack-cli`)
+* **chore:** add dependencies (`crypto-browserify`, `mailparser`, `process`, `setimmediate`, `stream-browserify`, `vm-browserify`)
+* **chore:** update dependencies (`@babylonjs/*`, `@cornerstonejs/*`, `@kenjiuno/msgreader`, `@vanillaes/csv`, `copy-webpack-plugin`, `css-loader`, `css-minimizer-webpack-plugin`, `file-type`, `mini-css-extract-plugin`, `parse-torrent`, `sass`, `sass-loader`, `terser-webpack-plugin`, `webpack`, `webpack-cli`)
+* **fix(eml):** support more formats
 
 
 ## Build 2025-11-16
