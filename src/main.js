@@ -1,3 +1,5 @@
+require( 'setimmediate' ); // attaches to global scope
+
 import './style/stackoverflow-dark.min.css';
 import './style/main.scss';
 

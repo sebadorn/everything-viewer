@@ -266,8 +266,8 @@ export class DICOMParser extends BaseParser {
 			'@cornerstonejs/dicom-image-loader'
 		);
 
-		core.init();
-		dicomLoader.init();
+		await core.init();
+		await dicomLoader.init();
 
 		this.cache = core.cache;
 		this.wadouri = dicomLoader.wadouri;

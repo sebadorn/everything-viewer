@@ -1,6 +1,41 @@
 # Changelog
 
 
+## Build 2026-07-12
+
+* **chore:** add dependencies
+	* `crypto-browserify@3.12.1`
+	* `mailparser@3.9.14`
+	* `process@0.11.10`
+	* `setimmediate@1.0.5`
+	* `stream-browserify@3.0.0`
+	* `vm-browserify@1.1.2`
+* **chore:** update dependencies
+	* `@babylonjs/core@9.13.0`
+	* `@babylonjs/loaders@9.13.0`
+	* `@babylonjs/materials@9.13.0`
+	* `@babylonjs/viewer@9.13.0`
+	* `@cornerstonejs/dicom-image-loader@4.22.13`
+	* `@cornerstonejs/nifti-volume-loader@4.22.13`
+	* `@cornerstonejs/tools@4.22.13`
+	* `@kenjiuno/msgreader@1.28.0`
+	* `@vanillaes/csv@4.1.3`
+	* `copy-webpack-plugin@14.0.0`
+	* `css-loader@7.1.4`
+	* `css-minimizer-webpack-plugin@8.0.0`
+	* `file-type@22.0.1`
+	* `mini-css-extract-plugin@2.10.2`
+	* `parse-torrent@11.0.21`
+	* `sass@1.101.0`
+	* `sass-loader@17.0.0`
+	* `terser-webpack-plugin@5.6.1`
+	* `webpack@5.108.4`
+	* `webpack-cli@7.2.1`
+* **feat(eml):** support more formats
+* **feat(eml):** new tab for attachments
+* **fix(eml):** showing content without external resources did not work anymore
+
+
 ## Build 2025-11-16
 
 * **chore:** update dependencies (`@babylonjs/*`, `@cornerstonejs/*`, `file-type`, `highlightjs-line-numbers.js`, `sass`, `sass-loader`)

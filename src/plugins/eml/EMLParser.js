@@ -1,5 +1,4 @@
 import { DocumentUtils } from '../../DocumentUtils.js';
-import { t } from '../../ui/Language.js';
 import { BaseParser } from '../BaseParser.js';
 
 
@@ -8,43 +7,25 @@ export class EMLParser extends BaseParser {
 
 	/**
 	 *
-	 * @param {import('../plugins/Registry.js').ImportData} data
+	 * @param {import('../Registry.js').ImportData} data
 	 */
 	constructor( data ) {
 		super( data );
 
 		this._lastParsed = null;
+		this._objectURLs = {};
 	}
 
 
 	/**
 	 *
-	 * @param {object[]} headers
-	 * @return {HTMLElement}
 	 */
-	buildHeadersHTML( headers ) {
-		const table = document.createElement( 'table' );
+	destroy() {
+		for( const dataId in this._objectURLs ) {
+			URL.revokeObjectURL( this._objectURLs[dataId] );
+		}
 
-		headers.forEach( header => {
-			const name = document.createElement( 'th' );
-			name.className = 'header-name';
-			name.textContent = t( 'eml.header.' + String( header.name ).toLowerCase(), header.name );
-
-			const value = document.createElement( 'td' );
-			value.className = 'header-value';
-			value.textContent = header.value;
-
-			const row = document.createElement( 'tr' );
-			row.append( name, value );
-
-			table.append( row );
-		} );
-
-		const container = document.createElement( 'div' );
-		container.className = 'headers';
-		container.append( table );
-
-		return container;
+		this._objectURLs = {};
 	}
 
 
@@ -64,20 +45,15 @@ export class EMLParser extends BaseParser {
 		}
 
 		if( this._lastParsed ) {
-			let body = DocumentUtils.decodeContent( this._lastParsed.body );
+			let type = 'plaintext';
 			let doc = null;
 
-			let contentType = this.getHeader( this._lastParsed.headers, 'content-type' ) || '';
-			contentType = contentType.toLowerCase();
-
-			let type = 'plaintext';
-
-			if( contentType.startsWith( 'text/html' ) ) {
-				doc = DocumentUtils.buildDocument( body );
+			if( this._lastParsed.html ) {
+				doc = DocumentUtils.buildDocument( this._lastParsed.html );
 				type = 'html';
 			}
 			else {
-				doc = DocumentUtils.buildDocument( `<pre>${body}</pre>` );
+				doc = DocumentUtils.buildDocument( `<pre>${this._lastParsed.text}</pre>` );
 			}
 
 			if( doc && options.remove_external ) {
@@ -90,8 +66,7 @@ export class EMLParser extends BaseParser {
 			};
 		}
 
-		const text = await this.getText();
-		this.parse( text );
+		await this.parse();
 
 		if( !this._lastParsed ) {
 			throw new Error( 'Failed to parse' );
@@ -102,114 +77,60 @@ export class EMLParser extends BaseParser {
 
 
 	/**
-	 * 
-	 * @param {object[]} headers 
-	 * @param {string}   key 
-	 * @returns {string?}
-	 */
-	getHeader( headers, key ) {
-		headers = headers || {};
-
-		for( const header of headers ) {
-			if( header.name.toLowerCase() === key ) {
-				return header.value;
-			}
-		}
-
-		return null;
-	}
-
-
-	/**
 	 *
-	 * @returns {Promise<HTMLElement>}
+	 * @param {import('mailparser').Attachment} attachment
+	 * @returns {HTMLElement?}
 	 */
-	async getHeadersHTML() {
-		if( this._lastParsed ) {
-			return this.buildHeadersHTML( this._lastParsed.headers );
-		}
-
-		const text = await this.getText();
-		const data = this.parse( text );
-
-		return this.buildHeadersHTML( data.headers );
-	}
-
-
-	/**
-	 *
-	 * @param  {string} text
-	 * @return {object?}
-	 */
-	parse( text ) {
-		this._lastParsed = null;
-
-		text = text.trimStart();
-		let textParts = text.split( '\r\n\r\n' );
-
-		if( textParts.length !== 2 ) {
-			textParts = text.split( '\n\n' );
-		}
-
-		if( textParts.length < 2 ) {
+	getImage( attachment ) {
+		if( !attachment || !String( attachment.contentType ).startsWith( 'image/' ) ) {
 			return null;
 		}
 
-		const textHeaders = textParts.splice( 0, 1 )[0].trim();
-		const textBody = textParts.join( '\n\n' );
+		const image = new Image();
+		image.loading = 'lazy';
+		image.onerror = err => console.error( '[EMLParser.getImage]', err );
+		image.src = this.getObjectURL( attachment );
 
-		const data = {
-			headers: [],
-			body: textBody
-		};
+		return image;
+	}
 
-		let currentKey = null;
-		let currentValue = null;
-		let startNewPair = true;
 
-		let lines = textHeaders.split( '\r\n' );
+	/**
+	 *
+	 * @param {import('mailparser').Attachment} attachment 
+	 * @returns {string}
+	 */
+	getObjectURL( attachment ) {
+		const key = attachment.cid;
 
-		if( lines.length === 1 ) {
-			lines = textHeaders.split( '\n' );
+		if( this._objectURLs[key] ) {
+			return this._objectURLs[key];
 		}
 
-		for( const line of lines ) {
-			// Continuing a multi-line value.
-			if(
-				line.startsWith( ' ' ) ||
-				line.startsWith( '\t' )
-			) {
-				currentValue += line.trimStart();
-				startNewPair = false;
-			}
-			// Key and value have been set.
-			else if( currentKey ) {
-				data.headers.push( {
-					name: currentKey,
-					value: currentValue
-				} );
+		return this._objectURLs[key] = URL.createObjectURL(
+			new Blob( [attachment.content], { type: attachment.contentType } )
+		);
+	}
 
-				startNewPair = true;
-			}
 
-			// Starting a new key-value pair.
-			if( startNewPair ) {
-				const parts = line.split( ': ' );
-				currentKey = parts[0];
-				currentValue = parts.slice( 1 ).join( ': ' );
-			}
+	/**
+	 *
+	 * @returns {import('mailparser').ParsedMail}
+	 */
+	async parse() {
+		if( this._lastParsed ) {
+			return this._lastParsed;
 		}
 
-		if( currentKey ) {
-			data.headers.push( {
-				name: currentKey,
-				value: currentValue
-			} );
-		}
+		const simpleParser = ( await import(
+			/* webpackChunkName: "mailparser" */
+			'mailparser'
+		) ).simpleParser;
 
-		this._lastParsed = data;
+		this._lastParsed = await simpleParser( await this.getText() );
+		console.debug( '[EMLParser.parse]', this._lastParsed );
 
-		return data;
+		return this._lastParsed;
 	}
 
 

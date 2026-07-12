@@ -38,7 +38,7 @@ Runs locally in the browser, no files are uploaded to any server. Modules are lo
 ### 📎 Office
 
 * Show `.csv` table data as HTML table.
-* Show exported emails in `.eml` format. Lists headers and optionally the body with external resources removed or loaded.
+* Show exported emails in `.eml` format. Lists headers, attachments, and optionally the body with external resources removed or loaded.
 * Show calendar events (`.ical`, `.ics`, `.ifb`, `.vcs`).
 * Show visiting cards / vCards (`.vcf`).
 * Show the contents of `.msg` files and list its attachments for viewing or extraction. Commonly used format for email exports.
@@ -70,6 +70,7 @@ Runs locally in the browser, no files are uploaded to any server. Modules are lo
 * highlightjs-line-numbers.js – https://wcoder.github.io/highlightjs-line-numbers.js/
 * ical.js – https://github.com/mozilla-comm/ical.js
 * JSZip – https://github.com/Stuk/jszip
+* mailparser – https://github.com/nodemailer/mailparser
 * msgreader – https://github.com/HiraokaHyperTools/msgreader
 * omggif – https://github.com/deanm/omggif
 * parse-torrent – https://www.npmjs.com/package/parse-torrent
